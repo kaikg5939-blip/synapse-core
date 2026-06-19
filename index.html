@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>SYNAPSE CORE v8.0 | SUPREMO MODO</title>
+    <title>SYNAPSE CORE v8.5 | SUPREMO</title>
     <style>
         :root { 
             --blue: #00f0ff; 
             --bg: #030305; 
-            --panel: rgba(5, 5, 10, 0.75); 
+            --panel: rgba(5, 5, 10, 0.85); 
             --border: rgba(0, 240, 255, 0.25); 
             --text: #ffffff; 
             --glow: 0 0 20px rgba(0, 240, 255, 0.4);
@@ -26,7 +26,6 @@
             position: relative; 
         }
 
-        /* ESTÉTICA DE CORES DE FUNDO NEBULOSA */
         body::before {
             content: '';
             position: absolute;
@@ -38,11 +37,11 @@
             z-index: 0;
         }
 
-        /* LOGIN GLASSMORPHISM AVANÇADO */
+        /* LOGIN GLASSMORPHISM */
         #login-overlay { 
             position: fixed; 
             inset: 0; 
-            background: rgba(0, 0, 0, 0.9); 
+            background: rgba(0, 0, 0, 0.95); 
             backdrop-filter: blur(30px); 
             z-index: 9999; 
             display: flex; 
@@ -52,7 +51,7 @@
         .login-card { 
             background: rgba(15, 15, 25, 0.6); 
             padding: 50px 40px; 
-            border-radius: 8px; 
+            border-radius: 4px; 
             border: 1px solid var(--border); 
             text-align: center; 
             width: 90%; 
@@ -65,15 +64,12 @@
             padding: 15px; 
             background: rgba(0, 0, 0, 0.5); 
             border: 1px solid #222; 
-            border-radius: 4px;
             color: var(--blue); 
             font-size: 1.3rem; 
             text-align: center; 
             outline: none; 
-            transition: 0.3s; 
             letter-spacing: 4px;
         }
-        .login-card input:focus { border-color: var(--blue); box-shadow: var(--glow); color: #fff; }
         .login-card button { 
             margin-top: 35px; 
             width: 100%;
@@ -82,15 +78,12 @@
             color: #000; 
             font-weight: bold; 
             border: none;
-            border-radius: 4px;
             cursor: pointer; 
-            transition: 0.3s; 
             text-transform: uppercase;
             letter-spacing: 2px;
         }
-        .login-card button:hover { background: #fff; box-shadow: 0 0 25px #fff; }
 
-        /* CABEÇALHO SUPREMO */
+        /* CABEÇALHO */
         .header { 
             padding: 20px 40px; 
             background: var(--panel); 
@@ -100,7 +93,6 @@
             align-items: center; 
             backdrop-filter: blur(15px); 
             z-index: 100; 
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
         }
         .nav-brand { font-weight: 700; letter-spacing: 3px; color: var(--blue); font-size: 0.9rem; text-shadow: var(--glow); }
         .nav-actions { display: flex; gap: 15px; }
@@ -117,146 +109,126 @@
         }
         .btn-top:hover { background: var(--blue); color: #000; box-shadow: var(--glow); }
         .btn-sair { border-color: #ff3355; color: #ff3355; }
-        .btn-sair:hover { background: #ff3355; color: #000; box-shadow: 0 0 15px #ff3355; }
 
-        /* PALCO CENTRAL INTERATIVO */
-        .stage { display: flex; flex: 1; overflow: hidden; padding: 30px; gap: 30px; z-index: 1; position: relative; }
+        /* PALCO CENTRAL */
+        .stage { display: flex; flex: 1; overflow: hidden; padding: 20px; gap: 20px; z-index: 1; }
         
-        /* CONTAINER DO CUBO (AGORA CENTRALIZADO E IMPONENTE) */
-        .visual-container { 
-            flex: 1;
+        /* SIDEBAR / ÁREA DO CUBO (SISTEMA DE ANCORAGEM FIXA) */
+        .sidebar { 
+            width: 160px; 
             display: flex; 
             flex-direction: column; 
             align-items: center; 
-            justify-content: center; 
-            position: relative;
-            background: rgba(5, 5, 10, 0.4);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            backdrop-filter: blur(5px);
-        }
-
-        /* BASE DO CUBO CIBERNÉTICA */
-        .cube-base {
-            position: absolute;
-            width: 160px;
-            height: 20px;
-            background: #0a0a15;
-            border: 2px solid var(--border);
-            bottom: 30%;
-            transform: rotateX(60deg);
-            box-shadow: 0 0 30px var(--blue), inset 0 0 15px var(--blue);
-            border-radius: 50%;
+            justify-content: flex-start; 
+            padding-top: 20px;
+            gap: 40px; 
+            border-right: 1px solid var(--border); 
         }
         
-        /* O CUBO SUPREMO */
-        .cube-scene { width: 120px; height: 120px; perspective: 600px; transform: translateY(-30px); }
-        .cube { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; animation: rotateContinuous 8s infinite linear; }
-        .cube.speaking { animation: rotateContinuous 0.6s infinite linear; }
-        .cube.speaking .face { border-color: #00ffcc; box-shadow: inset 0 0 20px rgba(0, 255, 204, 0.4); }
+        /* CUBO REATIVO E REDIMENSIONADO */
+        .cube-scene { width: 70px; height: 70px; perspective: 400px; }
+        .cube { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; animation: spinContinuous 6s infinite linear; }
+        .cube.speaking { animation: spinContinuous 0.5s infinite linear; }
+        .cube.speaking .face { border-color: #00ffcc; box-shadow: inset 0 0 15px rgba(0, 255, 204, 0.3); }
         
-        @keyframes rotateContinuous { 100% { transform: rotateX(360deg) rotateY(360deg); } }
+        @keyframes spinContinuous { 100% { transform: rotateX(360deg) rotateY(360deg); } }
         
         .face { 
             position: absolute; 
-            width: 120px; 
-            height: 120px; 
+            width: 70px; 
+            height: 70px; 
             border: 2px solid var(--blue); 
-            background: rgba(0, 240, 255, 0.03); 
-            box-shadow: inset 0 0 20px rgba(0, 240, 255, 0.2); 
-            transition: all 0.3s;
+            background: rgba(0, 240, 255, 0.02); 
+            box-shadow: inset 0 0 15px rgba(0, 240, 255, 0.15); 
+            transition: 0.3s;
+            -webkit-backface-visibility: visible;
+            backface-visibility: visible;
         }
-        .front  { transform: rotateY(  0deg) translateZ(60px); }
-        .back   { transform: rotateY(180deg) translateZ(60px); }
-        .right  { transform: rotateY( 90deg) translateZ(60px); }
-        .left   { transform: rotateY(-90deg) translateZ(60px); }
-        .top    { transform: rotateX( 90deg) translateZ(60px); }
-        .bottom { transform: rotateX(-90deg) translateZ(60px); }
+        .front  { transform: rotateY(  0deg) translateZ(35px); }
+        .back   { transform: rotateY(180deg) translateZ(35px); }
+        .right  { transform: rotateY( 90deg) translateZ(35px); }
+        .left   { transform: rotateY(-90deg) translateZ(35px); }
+        .top    { transform: rotateX( 90deg) translateZ(35px); }
+        .bottom { transform: rotateX(-90deg) translateZ(35px); }
 
-        /* SELETOR DE TEMAS INJETADO NA LATERAL DA TELA */
-        .theme-panel { position: absolute; left: 20px; top: 20px; display: flex; flex-direction: column; gap: 15px; background: rgba(0,0,0,0.5); padding: 12px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); }
-        .dot { width: 20px; height: 20px; border-radius: 50%; cursor: pointer; transition: 0.2s; }
-        .dot:hover { transform: scale(1.2); }
+        .palette { display: flex; gap: 10px; }
+        .dot { width: 18px; height: 18px; border-radius: 50%; cursor: pointer; }
 
-        /* PAINEL DE CONVERSA LATERAL FLUIDO */
-        #chat-flow { width: 450px; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 20px; background: var(--panel); border: 1px solid var(--border); border-radius: 8px; backdrop-filter: blur(15px); }
-        .message { padding: 18px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05); max-width: 90%; line-height: 1.6; font-size: 0.95rem; }
-        .user-msg { align-self: flex-end; background: rgba(0, 240, 255, 0.05); border-color: var(--blue); color: var(--blue); font-weight: bold; }
-        .ai-msg { align-self: flex-start; background: rgba(20, 20, 30, 0.6); border-color: rgba(250,250,250,0.1); }
-        
-        .btn-ouvir { 
-            margin-top: 12px; padding: 8px 16px; background: transparent; color: var(--blue); border: 1px solid var(--blue); cursor: pointer; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; transition: 0.2s;
-        }
-        .btn-ouvir:hover { background: var(--blue); color: #000; }
+        /* CONVERSAÇÃO */
+        #chat-flow { flex: 1; overflow-y: auto; padding: 10px; display: flex; flex-direction: column; gap: 15px; background: var(--panel); border: 1px solid var(--border); border-radius: 4px; backdrop-filter: blur(10px); }
+        .message { padding: 16px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.05); max-width: 85%; line-height: 1.5; font-size: 0.95rem; }
+        .user-msg { align-self: flex-end; background: rgba(0, 240, 255, 0.05); border-color: var(--blue); color: var(--blue); }
+        .ai-msg { align-self: flex-start; background: rgba(15, 15, 20, 0.6); }
+        .img-result { max-width: 100%; border: 1px solid var(--blue); margin-top: 10px; border-radius: 2px; }
 
-        /* DIGITAL COMMAND BAR (RODAPÉ PREMIUM UNIFICADO) */
+        /* CONTROLES / DIGITAL COMMAND BAR */
         .dock { 
-            padding: 30px 40px; 
+            padding: 20px 40px; 
             background: var(--panel); 
             border-top: 1px solid var(--border); 
             display: flex; 
             flex-direction: column; 
-            gap: 20px; 
+            gap: 15px; 
             backdrop-filter: blur(15px); 
             z-index: 100; 
-            box-shadow: 0 -10px 40px rgba(0,0,0,0.5);
         }
-        .disclaimer { font-size: 0.65rem; color: #555; text-align: center; letter-spacing: 1.5px; text-transform: uppercase; font-weight: bold; }
-        .console-row { display: flex; gap: 20px; align-items: center; }
+        .disclaimer { font-size: 0.6rem; color: #444; text-align: center; letter-spacing: 1px; text-transform: uppercase; }
+        .console-row { display: flex; gap: 15px; align-items: center; }
         
-        .input-wrapper { flex: 1; position: relative; background: #000; border: 1px solid #222; border-radius: 4px; padding-left: 20px; transition: 0.3s; }
-        .input-wrapper::before { content: 'COMANDO:'; position: absolute; left: 20px; top: 18px; font-size: 0.85rem; color: #555; font-weight: bold; letter-spacing: 1px; }
-        .input-wrapper:focus-within { border-color: var(--blue); box-shadow: var(--glow); }
+        .input-wrapper { flex: 1; position: relative; background: #000; border: 1px solid #222; border-radius: 4px; }
+        .input-wrapper::before { content: 'COMANDO:'; position: absolute; left: 15px; top: 16px; font-size: 0.8rem; color: #444; font-weight: bold; }
         
         .console-input { 
             width: 100%;
-            padding: 18px 20px 18px 90px; 
+            padding: 15px 15px 15px 90px; 
             background: transparent;
             border: none;
             color: #fff; 
             outline: none; 
-            font-size: 1rem; 
-            font-weight: 500;
+            font-size: 0.95rem; 
         }
         
         .btn-core { 
-            height: 58px;
-            padding: 0 40px; 
+            height: 50px;
+            padding: 0 30px; 
             border: none; 
             border-radius: 4px;
             font-weight: bold; 
             cursor: pointer; 
-            transition: 0.3s; 
-            font-size: 0.9rem;
+            transition: 0.2s; 
+            font-size: 0.85rem;
             text-transform: uppercase;
-            letter-spacing: 1.5px;
         }
         .btn-send { background: var(--blue); color: #000; box-shadow: var(--glow); }
-        .btn-send:hover { background: #fff; box-shadow: 0 0 25px #fff; }
-        
-        .btn-mic { background: rgba(20, 20, 30, 0.8); color: #fff; border: 1px solid #333; display: flex; align-items: center; gap: 10px; }
-        .btn-mic:hover { border-color: var(--blue); color: var(--blue); }
-        .btn-mic.active { background: #ff3355; border-color: #ff3355; color: #fff; box-shadow: 0 0 20px rgba(255,51,85,0.4); }
+        .btn-mic { background: rgba(20, 20, 30, 0.8); color: #fff; border: 1px solid #333; }
+        .btn-mic.active { background: #ff3355; border-color: #ff3355; box-shadow: 0 0 15px #ff3355; }
 
-        /* DESIGN DINÂMICO PARA TELEFONE (RESPONSIVIDADE SUPREMA) */
-        @media (max-width: 950px) {
-            .stage { flex-direction: column; padding: 15px; gap: 15px; }
-            .visual-container { min-height: 280px; flex: none; }
-            #chat-flow { width: 100%; flex: 1; min-height: 200px; }
-            .cube-scene { width: 80px; height: 80px; }
-            .face { width: 80px; height: 80px; }
-            .front  { transform: rotateY(  0deg) translateZ(40px); }
-            .back   { transform: rotateY(180deg) translateZ(40px); }
-            .right  { transform: rotateY( 90deg) translateZ(40px); }
-            .left   { transform: rotateY(-90deg) translateZ(40px); }
-            .top    { transform: rotateX( 90deg) translateZ(40px); }
-            .bottom { transform: rotateX(-90deg) translateZ(40px); }
-            .cube-base { width: 110px; bottom: 20%; }
-            .theme-panel { left: auto; right: 20px; top: 20px; flex-direction: row; }
-            .dock { padding: 20px 15px; }
+        /* RESPONSIVIDADE SUPREMA CELULAR */
+        @media (max-width: 768px) {
+            .header { padding: 15px 20px; }
+            .stage { flex-direction: column; padding: 10px; gap: 10px; }
+            .sidebar { 
+                width: 100%; 
+                height: auto; 
+                flex-direction: row; 
+                justify-content: space-between; 
+                align-items: center; 
+                padding: 10px; 
+                border-right: none; 
+                border-bottom: 1px solid var(--border);
+            }
+            .cube-scene { width: 45px; height: 45px; }
+            .face { width: 45px; height: 45px; }
+            .front  { transform: rotateY(  0deg) translateZ(22.5px); }
+            .back   { transform: rotateY(180deg) translateZ(22.5px); }
+            .right  { transform: rotateY( 90deg) translateZ(22.5px); }
+            .left   { transform: rotateY(-90deg) translateZ(22.5px); }
+            .top    { transform: rotateX( 90deg) translateZ(22.5px); }
+            .bottom { transform: rotateX(-90deg) translateZ(22.5px); }
+            .dock { padding: 15px; }
             .console-row { flex-wrap: wrap; gap: 10px; }
             .input-wrapper { min-width: 100%; }
-            .btn-core { flex: 1; height: 55px; }
+            .btn-core { flex: 1; height: 50px; }
         }
     </style>
 </head>
@@ -266,26 +238,21 @@
         <div class="login-card">
             <h3>SYNAPSE CORE</h3>
             <input type="password" id="access-key" placeholder="CHAVE" onkeydown="if(event.key==='Enter') autenticar()">
-            <button onclick="autenticar()">INICIAR SISTEMA</button>
-            <p id="error-alert" style="color:#ff3355; font-size:0.75rem; margin-top:15px; display:none;">SINAL REJEITADO</p>
+            <button onclick="autenticar()">CONECTAR</button>
+            <p id="error-alert" style="color:#ff3355; font-size:0.75rem; margin-top:15px; display:none;">ACESSO RECUSADO</p>
         </div>
     </div>
 
     <div class="header">
-        <div class="nav-brand">SYNAPSE_CORE_SUPREMO v8.0</div>
+        <div class="nav-brand">SYNAPSE CORE</div>
         <div class="nav-actions">
-            <button class="btn-top" onclick="alert('STATUS: OPERACIONAL\nLATENCIA: 105ms\nHOST: RENDER_SERVER_MAIN')">STATUS</button>
+            <button class="btn-top" onclick="exibirStatus()">STATUS</button>
             <button class="btn-top btn-sair" onclick="desconectar()">SAIR</button>
         </div>
     </div>
 
     <div class="stage">
-        <div class="visual-container">
-            <div class="theme-panel">
-                <div class="dot" style="background:#00f0ff;" onclick="alterarTema('#00f0ff')"></div>
-                <div class="dot" style="background:#00ffcc;" onclick="alterarTema('#00ffcc')"></div>
-                <div class="dot" style="background:#ff0055;" onclick="alterarTema('#ff0055')"></div>
-            </div>
+        <div class="sidebar">
             <div class="cube-scene">
                 <div class="cube" id="sys-cube">
                     <div class="face front"></div><div class="face back"></div>
@@ -293,9 +260,12 @@
                     <div class="face top"></div><div class="face bottom"></div>
                 </div>
             </div>
-            <div class="cube-base"></div>
+            <div class="palette">
+                <div class="dot" style="background:#00f0ff;" onclick="alterarTema('#00f0ff')"></div>
+                <div class="dot" style="background:#00ffcc;" onclick="alterarTema('#00ffcc')"></div>
+                <div class="dot" style="background:#ff0055;" onclick="alterarTema('#ff0055')"></div>
+            </div>
         </div>
-
         <div id="chat-flow"></div>
     </div>
 
@@ -303,7 +273,7 @@
         <div class="disclaimer">O sistema pode cometer erros assim como qualquer humano ou robô. Verifique as informações.</div>
         <div class="console-row">
             <div class="input-wrapper">
-                <input type="text" id="console-in" class="console-input" placeholder="DIGITE SEU COMANDO AQUI..." onkeydown="if(event.key==='Enter') enviarMensagem('texto')">
+                <input type="text" id="console-in" class="console-input" placeholder="DIGITE SEU COMANDO..." onkeydown="if(event.key==='Enter') enviarMensagem('texto')">
             </div>
             <button class="btn-core btn-send" onclick="enviarMensagem('texto')">ENVIAR</button>
             <button class="btn-core btn-mic" id="btn-mic" onclick="capturarVoz()">FALAR</button>
@@ -315,7 +285,7 @@
         let modoAtual = 'texto';
 
         window.onload = () => {
-            if (sessionStorage.getItem('syn_auth_v8') === 'valid') {
+            if (sessionStorage.getItem('syn_auth_v85') === 'valid') {
                 document.getElementById('login-overlay').style.display = 'none';
             }
         };
@@ -323,7 +293,7 @@
         function autenticar() {
             const key = document.getElementById('access-key').value.trim().toUpperCase();
             if (key === "CORE-SKYPE-2026") {
-                sessionStorage.setItem('syn_auth_v8', 'valid');
+                sessionStorage.setItem('syn_auth_v85', 'valid');
                 document.getElementById('login-overlay').style.opacity = '0';
                 setTimeout(() => document.getElementById('login-overlay').style.display = 'none', 400);
             } else {
@@ -332,25 +302,37 @@
         }
 
         function desconectar() {
-            sessionStorage.removeItem('syn_auth_v8');
+            sessionStorage.removeItem('syn_auth_v85');
             window.location.reload();
         }
 
         function alterarTema(hex) { document.documentElement.style.setProperty('--blue', hex); }
 
-        function renderBalao(texto, isAi) {
+        function exibirStatus() {
+            alert(
+                "SISTEMA OPERACIONAL SYNAPSE\n" +
+                "-----------------------------------\n" +
+                "DESENVOLVEDOR: SKYPE\n" +
+                "ESTABELECIDO: JUNHO DE 2026\n" +
+                "GERENCIAMENTO: EXCLUSIVO (1 USUÁRIO AUTORIZADO)\n" +
+                "AMBIENTE: SECURE OPERATIONAL CORE\n" +
+                "STATUS: ONLINE"
+            );
+        }
+
+        function renderBalao(texto, isAi, isImage = false) {
             const painel = document.getElementById('chat-flow');
             const div = document.createElement('div');
             div.className = `message ${isAi ? 'ai-msg' : 'user-msg'}`;
-            div.innerText = texto;
-
-            if (isAi && modoAtual === 'texto') {
-                const btnOuvir = document.createElement('button');
-                btnOuvir.className = 'btn-ouvir';
-                btnOuvir.innerText = 'OUVIR AUDIO';
-                btnOuvir.onclick = () => executarVoz(texto);
-                div.appendChild(document.createElement('br'));
-                div.appendChild(btnOuvir);
+            
+            if (isImage) {
+                const img = document.createElement('img');
+                img.className = 'img-result';
+                img.src = texto;
+                div.innerText = "IMAGEM GERADA:";
+                div.appendChild(img);
+            } else {
+                div.innerText = texto;
             }
 
             painel.appendChild(div);
@@ -363,8 +345,18 @@
             if (!prompt) return;
 
             modoAtual = modo;
-            renderBalao(prompt, false);
             input.value = '';
+
+            // Engine de detecção para Geração de Imagem
+            if (prompt.toLowerCase().startsWith("gerar imagem") || prompt.toLowerCase().startsWith("criar imagem")) {
+                renderBalao(prompt, false);
+                const queryDesc = prompt.replace(/(gerar imagem|criar imagem)/i, "").trim();
+                const urlImagem = `https://image.pollinations.ai/prompt/${encodeURIComponent(queryDesc)}?width=512&height=512&nologo=true`;
+                setTimeout(() => { renderBalao(urlImagem, true, true); }, 1000);
+                return;
+            }
+
+            renderBalao(prompt, false);
             historico.push({ role: "user", content: prompt });
 
             try {
@@ -381,7 +373,7 @@
 
                 if (modoAtual === 'voz') { executarVoz(respostaIA); }
             } catch (error) {
-                renderBalao("FALHA DE SINCRONIZACAO COM O SERVIDOR.", true);
+                renderBalao("ERRO DE CONEXÃO COM O SERVIDOR.", true);
             }
         }
 
@@ -411,7 +403,7 @@
             rec.start();
         }
 
-        function ejecutarVoz(texto) {
+        function executarVoz(texto) {
             window.speechSynthesis.cancel();
             const fala = new SpeechSynthesisUtterance(texto);
             fala.lang = 'pt-BR';
@@ -420,7 +412,5 @@
             window.speechSynthesis.speak(fala);
         }
     </script>
-</body>
-</html>
 </body>
 </html>
