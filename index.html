@@ -2,53 +2,54 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SYNAPSE_CORE_v4.5_FIXED</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>SYNAPSE_V4.5_FINAL</title>
     <style>
         :root { --bg: #000; --accent: #0066FF; }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: monospace; }
-        body { background: var(--bg); color: #fff; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
-
-        /* HEADER FIXO - CUBO ESQUERDA + BOTOES DIREITA */
-        .header-fixed { 
-            height: 60px; 
-            display: flex; 
-            align-items: center; 
-            padding: 0 15px; 
-            border-bottom: 1px solid #333;
-            background: #000;
-        }
-        .cube-tiny { width: 30px; height: 30px; border: 1px solid var(--accent); flex-shrink: 0; }
-        .controls-top { display: flex; gap: 10px; margin-left: auto; }
+        body { background: var(--bg); color: #fff; margin: 0; font-family: monospace; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
         
-        .btn-top { padding: 8px 12px; background: #111; border: 1px solid #444; color: #fff; border-radius: 4px; font-size: 0.8rem; }
+        /* LOGIN DE DISPOSITIVO */
+        #setup-screen { position: fixed; top:0; left:0; width:100%; height:100%; background:#000; z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+        .setup-btn { padding: 20px; width: 80%; margin: 10px; border: 1px solid var(--accent); background: transparent; color: #fff; cursor: pointer; }
 
-        /* CHAT WINDOW */
-        #chat-window { flex: 1; overflow-y: auto; padding: 15px; }
+        /* INTERFACE */
+        .mobile-mode .desktop-only { display: none !important; }
+        .header-mobile { height: 50px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; border-bottom: 1px solid #222; }
         
-        /* INPUT AREA FIXA NO TOPO - PARA NÃO BRIGAR COM TECLADO */
-        .input-box { padding: 10px; border-bottom: 1px solid #333; }
-        input { width: 100%; padding: 12px; background: #000; color: #fff; border: 1px solid #444; }
+        #chat-window { flex: 1; overflow-y: auto; padding: 20px; }
+        .msg { padding: 15px; border-radius: 12px; margin-bottom: 10px; font-size: 1.1rem; } /* Maior para leitura */
+        
+        .controls-mobile { padding: 20px; border-top: 1px solid #222; display: flex; gap: 10px; }
+        .btn-big { flex: 1; padding: 20px; background: var(--accent); color: #fff; border: none; border-radius: 12px; font-weight: bold; font-size: 1rem; }
     </style>
 </head>
 <body>
-    <div class="header-fixed">
-        <div class="cube-tiny"></div>
-        <div class="controls-top">
-            <button class="btn-top" onclick="enviar()">SEND</button>
-            <button class="btn-top" onclick="toggleMic()">MIC</button>
-        </div>
+
+    <div id="setup-screen">
+        <h2 style="margin-bottom: 30px;">CONFIGURAR TERMINAL</h2>
+        <button class="setup-btn" onclick="startMode('desktop')">COMPUTADOR (FULL)</button>
+        <button class="setup-btn" onclick="startMode('mobile')">CELULAR (CLEAN)</button>
     </div>
-    <div class="input-box"><input type="text" id="user-input" placeholder="Prompt..."></div>
+
+    <div class="header-mobile">
+        <div id="cube-desktop" class="desktop-only" style="width:30px; height:30px; border:1px solid var(--accent)"></div>
+        <span>SYNAPSE_V4.5</span>
+    </div>
+
     <div id="chat-window"></div>
 
+    <div class="controls-mobile">
+        <input type="text" id="user-input" style="flex:2; padding:15px; background:#111; border:none; color:#fff;">
+        <button class="btn-big" onclick="enviar()">SEND</button>
+        <button class="btn-big" id="mic-btn" onclick="toggleMic()">MIC</button>
+    </div>
+
     <script>
-        // Forçar reload se o cache estiver lixo
-        if(!localStorage.getItem('v4.5')) {
-            localStorage.setItem('v4.5', 'true');
-            window.location.reload(true);
+        function startMode(mode) {
+            if(mode === 'mobile') document.body.classList.add('mobile-mode');
+            document.getElementById('setup-screen').style.display = 'none';
         }
-        // ... (resto da lógica)
+        // ... (resto da lógica de enviar/falar)
     </script>
 </body>
 </html>
