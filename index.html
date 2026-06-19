@@ -2,227 +2,93 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>SYNAPSE CORE v4.5 | STATUS MODE</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SYNAPSE CORE v5.0</title>
     <style>
-        :root { --blue: #0066FF; --bg: #050505; --panel: #0a0a0c; --text: #fff; }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'JetBrains Mono', monospace; }
-        body { background: var(--bg); color: var(--text); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+        :root { --blue: #0066FF; --bg: #050505; }
+        body { margin: 0; background: var(--bg); color: #fff; font-family: monospace; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 
-        /* --- TELA DE LOGIN (ACESSO BETA) --- */
-        #login { position: fixed; inset: 0; background: #000; z-index: 9999; display: flex; align-items: center; justify-content: center; }
-        .box { background: #111; padding: 30px; border-radius: 4px; border: 1px solid var(--blue); text-align: center; width: 90%; max-width: 350px; }
-        .box input { width: 100%; padding: 15px; background: #000; border: 1px solid #333; color: #fff; margin-bottom: 15px; text-align: center; font-weight: bold; }
-        .box button { width: 100%; padding: 15px; background: var(--blue); color: #fff; border: none; font-weight: bold; cursor: pointer; }
+        /* LOGIN */
+        #login-screen { position: fixed; inset: 0; background: #000; z-index: 9999; display: flex; align-items: center; justify-content: center; }
+        .box { padding: 25px; border: 1px solid var(--blue); width: 85%; max-width: 320px; text-align: center; }
+        input { width: 100%; padding: 15px; background: #000; border: 1px solid #333; color: #fff; margin-bottom: 15px; text-align: center; }
+        button { width: 100%; padding: 15px; background: var(--blue); border: none; color: #fff; cursor: pointer; font-weight: bold; }
 
-        /* --- HEADER --- */
-        .header { padding: 15px; background: var(--panel); border-bottom: 1px solid #222; display: flex; justify-content: space-between; align-items: center; }
-        .botoes-topo { display: flex; gap: 10px; }
-        .btn-top { padding: 8px 12px; border-radius: 4px; border: 1px solid var(--blue); background: transparent; color: var(--blue); font-size: 0.75rem; font-weight: bold; cursor: pointer; }
-        .btn-sair { border-color: #ff4444; color: #ff4444; }
+        /* HEADER */
+        .header { padding: 15px; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; }
+        .btn-top { background: transparent; border: 1px solid var(--blue); color: var(--blue); padding: 5px 10px; cursor: pointer; font-size: 0.7rem; }
 
-        /* --- PAINEL DE STATUS (MODAL) --- */
-        #status-modal { display: none; position: fixed; top: 60px; right: 15px; background: rgba(10,10,12,0.95); border: 1px solid var(--blue); padding: 20px; z-index: 5000; border-radius: 4px; width: 250px; font-size: 0.8rem; line-height: 1.8; color: #00ffcc; }
-
-        /* --- LAYOUT PRINCIPAL E CUBO --- */
+        /* CUBO (TAMANHO FIXO PARA TODO DISPOSITIVO) */
         .main { display: flex; flex: 1; overflow: hidden; }
-        .sidebar { width: 250px; background: var(--panel); border-right: 1px solid #222; display: flex; flex-direction: column; align-items: center; padding: 30px; }
-        .cube { width: 60px; height: 60px; border: 2px solid var(--blue); transform-style: preserve-3d; animation: spin 4s infinite linear; }
-        .cube.speaking { animation: spin 0.5s infinite linear; border-color: #00ffcc; }
+        .sidebar { width: 220px; border-right: 1px solid #333; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .cube-wrapper { width: 60px; height: 60px; perspective: 500px; }
+        .cube { width: 60px; height: 60px; transform-style: preserve-3d; animation: spin 4s infinite linear; }
+        .cube.speaking { animation: spin 0.3s infinite linear; border: 2px solid #00ffcc; }
         @keyframes spin { 100% { transform: rotateX(360deg) rotateY(360deg); } }
+        .face { position: absolute; width: 60px; height: 60px; border: 1px solid var(--blue); background: rgba(0,102,255,0.1); }
 
-        /* --- CHAT --- */
-        #chat { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; background: var(--bg); }
-        .msg { padding: 15px; border-radius: 4px; max-width: 85%; font-size: 0.95rem; line-height: 1.4; }
-        .user-msg { align-self: flex-end; background: #000; border: 1px solid var(--blue); }
-        .ai-msg { align-self: flex-start; background: #111; border: 1px solid #222; }
-        .btn-ouvir { margin-top: 10px; padding: 8px; background: #222; color: #fff; border: 1px solid var(--blue); border-radius: 4px; cursor: pointer; font-size: 0.8rem; }
-
-        /* --- CONTROLES E AVISO --- */
-        .controls-wrapper { background: var(--panel); border-top: 1px solid #222; display: flex; flex-direction: column; }
-        .aviso { font-size: 0.65rem; color: #666; text-align: center; padding: 8px; border-bottom: 1px solid #222; letter-spacing: 1px; }
-        .controls { padding: 15px; display: flex; gap: 10px; }
-        .controls input { flex: 1; padding: 15px; background: #000; border: 1px solid #333; color: #fff; border-radius: 4px; }
-        .btn-acao { padding: 0 20px; border-radius: 4px; border: none; font-weight: bold; cursor: pointer; }
-        .btn-acao.send { background: var(--blue); color: #fff; }
-        .btn-acao.mic { background: #222; color: #fff; border: 1px solid #444; }
-        .btn-acao.mic.ativo { background: #ff4444; border-color: #ff4444; }
-
-        /* --- SAFARI / CELULAR DETECT --- */
-        @media (max-width: 800px) {
-            .sidebar { display: none !important; } /* Oculta o cubo instantaneamente */
-            .btn-acao { padding: 20px; flex: 1; }
-            .controls input { min-width: 100%; margin-bottom: 10px; }
-            .controls { flex-wrap: wrap; }
-        }
+        /* CHAT */
+        #chat { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
+        .msg { padding: 15px; border: 1px solid #333; border-radius: 4px; max-width: 90%; }
+        
+        /* CONTROLES */
+        .controls { padding: 20px; border-top: 1px solid #333; display: flex; gap: 10px; }
+        .controls input { flex: 1; padding: 15px; background: #000; border: 1px solid #333; color: #fff; }
+        .btn-act { padding: 0 20px; background: var(--blue); color: #fff; border: none; cursor: pointer; }
     </style>
 </head>
 <body>
-
-    <div id="login">
+    <div id="login-screen">
         <div class="box">
-            <h2 style="color:var(--blue); margin-bottom:20px;">ACESSO BETA</h2>
-            <input type="password" id="key" placeholder="CHAVE DE SEGURANCA">
-            <button onclick="entrar()">CONECTAR</button>
-            <p id="erro-login" style="color:#ff4444; font-size:0.8rem; margin-top:10px; display:none;"></p>
+            <input type="password" id="key" placeholder="CHAVE DE ACESSO">
+            <button onclick="login()">CONECTAR</button>
         </div>
     </div>
 
     <div class="header">
-        <strong style="color:#888;">SYNAPSE CORE</strong>
-        <div class="botoes-topo">
-            <button class="btn-top" onclick="toggleStatus()">STATUS</button>
-            <button class="btn-top btn-sair" onclick="sair()">SAIR</button>
-        </div>
-    </div>
-
-    <div id="status-modal">
-        <strong>DIAGNÓSTICO DO SISTEMA</strong><br>
-        -------------------------<br>
-        HOST: Render.com<br>
-        SEGURANÇA: Criptografia Ativa<br>
-        MOTOR IA: Conectado<br>
-        LATÊNCIA: ~120ms<br>
-        MOTOR DE VOZ: Operacional<br>
+        <span>SYNAPSE v5.0</span>
+        <button class="btn-top" onclick="location.reload()">SAIR DO SISTEMA</button>
     </div>
 
     <div class="main">
-        <div class="sidebar" id="painel-cubo">
-            <div class="cube" id="cubo-ia"></div>
+        <div class="sidebar">
+            <div class="cube-wrapper">
+                <div class="cube" id="cubo">
+                    <div class="face" style="transform:translateZ(30px)"></div>
+                    <div class="face" style="transform:rotateY(180deg) translateZ(30px)"></div>
+                    <div class="face" style="transform:rotateY(90deg) translateZ(30px)"></div>
+                    <div class="face" style="transform:rotateY(-90deg) translateZ(30px)"></div>
+                    <div class="face" style="transform:rotateX(90deg) translateZ(30px)"></div>
+                    <div class="face" style="transform:rotateX(-90deg) translateZ(30px)"></div>
+                </div>
+            </div>
+            <div style="font-size: 0.6rem; color: #555; margin-top: 15px;">SISTEMA OPERACIONAL</div>
         </div>
         <div id="chat"></div>
     </div>
 
-    <div class="controls-wrapper">
-        <div class="aviso">SISTEMA PODE COMETER ERROS ASSIM COMO QUALQUER HUMANO OU ROBÔ. VERIFIQUE INFORMAÇÕES.</div>
-        <div class="controls">
-            <input type="text" id="input-txt" placeholder="DIGITE OU FALE..." onkeydown="if(event.key==='Enter') enviar('texto')">
-            <button class="btn-acao send" onclick="enviar('texto')">ENVIAR</button>
-            <button class="btn-acao mic" id="btn-mic" onclick="falar()">FALAR</button>
-        </div>
+    <div class="controls">
+        <input type="text" id="in" placeholder="Comando...">
+        <button class="btn-act" onclick="send()">ENVIAR</button>
+        <button class="btn-act" onclick="falar()">FALAR</button>
     </div>
 
     <script>
-        let historico = [];
-        let modoAtual = 'texto';
-        let tentativas = 0;
-
-        // 1. DETECTOR HARDCORE DE CELULAR (Mata o cubo no Safari na hora)
-        if(window.innerWidth < 800 || navigator.userAgent.match(/iPhone|iPad|iPod|Android/i)) {
-            document.getElementById('painel-cubo').style.display = 'none';
-        }
-
-        // 2. SISTEMA DE LOGIN DE SEGURANÇA
-        window.onload = () => { if(sessionStorage.getItem('auth') === 'liberado') document.getElementById('login').style.display = 'none'; };
+        // LÓGICA CORE
+        function login() { if(document.getElementById('key').value === "CORE-SKYPE-2026") document.getElementById('login-screen').style.display = 'none'; }
         
-        function entrar() {
-            if(tentativas >= 3) {
-                document.getElementById('erro-login').innerText = "SISTEMA BLOQUEADO.";
-                document.getElementById('erro-login').style.display = 'block';
-                return;
-            }
-            if(document.getElementById('key').value.toUpperCase() === "CORE-SKYPE-2026") {
-                sessionStorage.setItem('auth', 'liberado');
-                document.getElementById('login').style.display = 'none';
-                tentativas = 0;
-            } else { 
-                tentativas++;
-                document.getElementById('erro-login').innerText = `ACESSO NEGADO. (${3 - tentativas} tentativas restantes)`;
-                document.getElementById('erro-login').style.display = 'block';
-            }
-        }
+        async function send() { /* AQUI ENTRA A CHAMADA DO SEU SERVIDOR */ }
 
-        function sair() { 
-            sessionStorage.removeItem('auth'); 
-            window.location.reload(); // Joga pra tela de login na hora
-        }
-
-        function toggleStatus() {
-            const modal = document.getElementById('status-modal');
-            modal.style.display = modal.style.display === 'block' ? 'none' : 'block';
-        }
-
-        // 3. MENSAGENS NO CHAT
-        function addMsg(texto, isAi) {
-            const div = document.createElement('div');
-            div.className = `msg ${isAi ? 'ai-msg' : 'user-msg'}`;
-            if(isAi && texto.includes("__IMAGE_URL__: ")) {
-                div.innerHTML = `<img src="${texto.split("__IMAGE_URL__: ")[1]}" style="max-width:100%; border-radius:4px;">`;
-            } else {
-                div.innerText = texto;
-                if(isAi && modoAtual === 'texto') {
-                    const btn = document.createElement('button');
-                    btn.className = 'btn-ouvir';
-                    btn.innerText = 'OUVIR AUDIO';
-                    btn.onclick = () => falarIA(texto);
-                    div.appendChild(document.createElement('br'));
-                    div.appendChild(btn);
-                }
-            }
-            document.getElementById('chat').appendChild(div);
-            document.getElementById('chat').scrollTop = document.getElementById('chat').scrollHeight;
-        }
-
-        // 4. ENVIO DE DADOS (RÁPIDO)
-        async function enviar(modo) {
-            const txt = document.getElementById('input-txt').value.trim();
-            if(!txt) return;
-            modoAtual = modo;
-            addMsg(txt, false);
-            document.getElementById('input-txt').value = '';
-            historico.push({role: "user", content: txt});
-
-            try {
-                const res = await fetch('/chat', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({mensagens: historico})
-                });
-                const data = await res.json();
-                addMsg(data.resposta, true);
-                historico.push({role: "assistant", content: data.resposta});
-
-                if(modoAtual === 'voz' && !data.resposta.includes("__IMAGE_URL__: ")) {
-                    falarIA(data.resposta);
-                }
-            } catch(e) { addMsg("ERRO DE ROTA: VERIFIQUE O RENDER", true); }
-        }
-
-        // 5. MICROFONE OTIMIZADO
         function falar() {
-            window.speechSynthesis.speak(new SpeechSynthesisUtterance('')); // Destrava áudio Safari
             const rec = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
             rec.lang = 'pt-BR';
-            rec.continuous = false;
-
-            rec.onstart = () => {
-                document.getElementById('btn-mic').innerText = "CAPTURANDO...";
-                document.getElementById('btn-mic').classList.add('ativo');
+            rec.onstart = () => document.getElementById('cubo').classList.add('speaking');
+            rec.onresult = (e) => { 
+                document.getElementById('in').value = e.results[0][0].transcript;
+                send();
             };
-            rec.onresult = (e) => {
-                document.getElementById('input-txt').value = e.results[0][0].transcript;
-                enviar('voz');
-                rec.stop();
-            };
-            rec.onend = () => {
-                document.getElementById('btn-mic').innerText = "FALAR";
-                document.getElementById('btn-mic').classList.remove('ativo');
-            };
+            rec.onend = () => document.getElementById('cubo').classList.remove('speaking');
             rec.start();
-        }
-
-        // 6. MOTOR DE VOZ (Gira o cubo apenas no PC)
-        function falarIA(texto) {
-            window.speechSynthesis.cancel();
-            const ut = new SpeechSynthesisUtterance(texto);
-            ut.lang = 'pt-BR';
-            ut.onstart = () => {
-                if(document.getElementById('cubo-ia')) document.getElementById('cubo-ia').classList.add('speaking');
-            };
-            ut.onend = () => {
-                if(document.getElementById('cubo-ia')) document.getElementById('cubo-ia').classList.remove('speaking');
-            };
-            window.speechSynthesis.speak(ut);
         }
     </script>
 </body>
