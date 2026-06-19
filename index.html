@@ -3,93 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SYNAPSE_CORE_FINAL</title>
+    <title>SYNAPSE CORE v5.5</title>
     <style>
-        :root { --blue: #0066FF; --bg: #000000; --text: #ffffff; }
-        body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Courier New', monospace; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+        :root { --blue: #0066FF; --bg: #000000; }
+        body { margin: 0; background: var(--bg); color: #fff; font-family: 'Segoe UI', sans-serif; height: 100vh; display: flex; flex-direction: column; }
 
-        /* TELA DE LOGIN (BLOQUEIO TOTAL) */
-        #login-screen { position: fixed; inset: 0; background: #000; z-index: 9999; display: flex; align-items: center; justify-content: center; }
-        .login-box { padding: 30px; border: 1px solid var(--blue); width: 85%; max-width: 320px; }
-        .login-box input { width: 100%; padding: 15px; background: #000; border: 1px solid #444; color: #fff; margin-bottom: 15px; text-align: center; }
-        .login-box button { width: 100%; padding: 15px; background: var(--blue); border: none; color: #fff; cursor: pointer; font-weight: bold; }
+        /* LOGIN MODERNO */
+        #login-overlay { position: fixed; inset: 0; background: #000; z-index: 9999; display: flex; align-items: center; justify-content: center; }
+        .login-card { border: 1px solid var(--blue); padding: 40px; width: 300px; text-align: center; background: #050505; }
+        .login-card input { width: 100%; padding: 12px; background: #000; border: 1px solid #333; color: #fff; margin-bottom: 15px; }
+        .login-card button { width: 100%; padding: 12px; background: var(--blue); color: #fff; border: none; font-weight: bold; cursor: pointer; }
 
-        /* HEADER E STATUS */
-        .header { padding: 15px; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; background: #050505; }
-        .btn-top { background: #000; border: 1px solid var(--blue); color: var(--blue); padding: 5px 10px; cursor: pointer; font-size: 0.7rem; }
+        /* TOPO */
+        .top-bar { padding: 15px; border-bottom: 1px solid #222; display: flex; justify-content: space-between; align-items: center; }
+        .btn-system { padding: 5px 12px; border: 1px solid var(--blue); background: transparent; color: var(--blue); cursor: pointer; font-size: 0.7rem; }
 
-        /* ÁREA CENTRAL E CUBO */
-        .main { display: flex; flex: 1; overflow: hidden; }
-        .sidebar { width: 120px; border-right: 1px solid #333; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .cube { width: 60px; height: 60px; transform-style: preserve-3d; animation: spin 4s infinite linear; }
-        .cube.speaking { animation: spin 0.2s infinite linear; border-color: #00ffcc; }
+        /* TERMINAL E CUBO */
+        .terminal-stage { display: flex; flex: 1; overflow: hidden; padding: 20px; gap: 20px; }
+        .visual-side { width: 150px; display: flex; flex-direction: column; align-items: center; justify-content: center; border-right: 1px solid #222; }
+        
+        /* CUBO GIRANDO */
+        .cube-box { width: 80px; height: 80px; perspective: 500px; }
+        .cube { width: 80px; height: 80px; transform-style: preserve-3d; animation: spin 4s infinite linear; }
+        .cube.speaking { animation: spin 0.3s infinite linear; border: 2px solid #00ffcc; }
         @keyframes spin { 100% { transform: rotateX(360deg) rotateY(360deg); } }
-        .face { position: absolute; width: 60px; height: 60px; border: 1px solid var(--blue); background: #000; }
+        .face { position: absolute; width: 80px; height: 80px; border: 1px solid var(--blue); background: rgba(0,102,255,0.05); }
 
-        /* CHAT */
-        #chat { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
-        .msg { padding: 15px; border: 1px solid #222; border-radius: 2px; max-width: 90%; }
-
-        /* ENTRADA FIXA */
-        .controls { padding: 20px; background: #050505; border-top: 1px solid #333; display: flex; gap: 10px; }
-        .controls input { flex: 1; padding: 15px; background: #000; border: 1px solid var(--blue); color: #fff; outline: none; }
-        .btn-act { padding: 0 20px; background: var(--blue); color: #fff; border: none; cursor: pointer; font-weight: bold; }
+        /* CHAT E CONTROLES */
+        #chat-window { flex: 1; overflow-y: auto; padding: 10px; }
+        .controls { padding: 20px; border-top: 1px solid #222; display: flex; gap: 10px; }
+        .controls input { flex: 1; padding: 15px; background: #000; border: 1px solid #444; color: #fff; }
+        .btn-act { padding: 0 20px; background: var(--blue); color: #fff; border: none; cursor: pointer; }
     </style>
 </head>
 <body>
 
-    <div id="login-screen">
-        <div class="box">
-            <input type="password" id="key" placeholder="ACESSO BETA">
-            <button onclick="login()">ENTRAR</button>
+    <div id="login-overlay">
+        <div class="login-card">
+            <h3 style="margin-bottom:20px; color:var(--blue);">SYNAPSE CORE</h3>
+            <input type="password" id="key" placeholder="CHAVE DE ACESSO">
+            <button onclick="login()">CONECTAR</button>
         </div>
     </div>
 
-    <div class="header">
-        <span>SYNAPSE_CORE</span>
-        <button class="btn-top" onclick="location.reload()">SAIR</button>
+    <div class="top-bar">
+        <span>CORE v5.5 | STATUS: ONLINE</span>
+        <div>
+            <button class="btn-system" onclick="alert('LATENCIA: 120ms')">STATUS</button>
+            <button class="btn-system" style="border-color:red; color:red;" onclick="location.reload()">SAIR</button>
+        </div>
     </div>
 
-    <div class="main">
-        <div class="sidebar">
-            <div class="cube" id="cubo">
-                <div class="face" style="transform:translateZ(30px)"></div>
-                <div class="face" style="transform:rotateY(180deg) translateZ(30px)"></div>
-                <div class="face" style="transform:rotateY(90deg) translateZ(30px)"></div>
-                <div class="face" style="transform:rotateY(-90deg) translateZ(30px)"></div>
-                <div class="face" style="transform:rotateX(90deg) translateZ(30px)"></div>
-                <div class="face" style="transform:rotateX(-90deg) translateZ(30px)"></div>
+    <div class="terminal-stage">
+        <div class="visual-side">
+            <div class="cube-box">
+                <div class="cube" id="cubo">
+                    <div class="face" style="transform:translateZ(40px)"></div>
+                    <div class="face" style="transform:rotateY(180deg) translateZ(40px)"></div>
+                    <div class="face" style="transform:rotateY(90deg) translateZ(40px)"></div>
+                    <div class="face" style="transform:rotateY(-90deg) translateZ(40px)"></div>
+                    <div class="face" style="transform:rotateX(90deg) translateZ(40px)"></div>
+                    <div class="face" style="transform:rotateX(-90deg) translateZ(40px)"></div>
+                </div>
             </div>
         </div>
-        <div id="chat"></div>
+        <div id="chat-window"></div>
     </div>
 
     <div class="controls">
-        <input type="text" id="in" placeholder="DIGITE AQUI...">
-        <button class="btn-act" onclick="send()">SEND</button>
-        <button class="btn-act" onclick="falar()">MIC</button>
+        <input type="text" id="input" placeholder="DIGITE OU FALE...">
+        <button class="btn-act" onclick="enviar()">ENVIAR</button>
+        <button class="btn-act" onclick="falar()">FALAR</button>
     </div>
 
     <script>
-        function login() { if(document.getElementById('key').value === "CORE-SKYPE-2026") document.getElementById('login-screen').style.display = 'none'; }
+        function login() { if(document.getElementById('key').value === "CORE-SKYPE-2026") document.getElementById('login-overlay').style.display = 'none'; }
         
-        // Lógica de envio
-        async function send() {
-            const input = document.getElementById('in');
-            if(!input.value) return;
-            // Adicionar msg na tela...
-            input.value = '';
-        }
-
-        // Lógica de Voz
         function falar() {
             const rec = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-            rec.lang = 'pt-BR';
             rec.onstart = () => document.getElementById('cubo').classList.add('speaking');
-            rec.onresult = (e) => { 
-                document.getElementById('in').value = e.results[0][0].transcript;
-                send();
-            };
+            rec.onresult = (e) => { document.getElementById('input').value = e.results[0][0].transcript; };
             rec.onend = () => document.getElementById('cubo').classList.remove('speaking');
             rec.start();
         }
