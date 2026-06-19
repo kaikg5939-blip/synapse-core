@@ -1,250 +1,88 @@
-<script>
-        async function validarAcesso() {
-            const input = document.getElementById("auth-key");
-            const erro = document.getElementById("auth-error-msg");
-            const chave = input.value.trim();
-            
-            try {
-                const res = await fetch('/login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ chave })
-                });
-                const data = await res.json();
-                
-                if (data.autenticado) {
-                    document.getElementById("auth-screen").style.display = "none";
-                    sessionStorage.setItem("synapse_auth_session", "granted");
-                    rolarChatParaFim();
-                } else {
-                    erro.innerText = `> ${data.erro}`;
-                    erro.style.display = "block";
-                    input.value = "";
-                }
-            } catch(e) {
-                erro.innerText = "> ERRO DE CONEXÃO COM O SERVER.";
-                erro.style.display = "block";
-            }
-        }
-
-        if (sessionStorage.getItem("synapse_auth_session") === "granted") {
-            document.getElementById("auth-screen").style.display = "none";
-        }
-
-        let chatsSalvos = JSON.parse(localStorage.getItem('synapse_chats_v5')) || {};
-        let chatIdAtual = localStorage.getItem('synapse_chat_id_atual_v5') || '';
-        let historico = [];
-        let maosLivres = false;
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>SYNAPSE CORE</title>
+    <style>
+        :root { --bg: #000; --accent: #0066FF; --text: #fff; }
+        body { background: var(--bg); color: var(--text); margin: 0; font-family: -apple-system, sans-serif; height: 100vh; display: flex; flex-direction: column; }
         
-        const chatWindow = document.getElementById('chat-window');
-        const historyContainer = document.getElementById('history-container');
-        const cube = document.getElementById('main-cube');
-
-        const corSalva = localStorage.getItem('synapse_cube_color') || '#0066FF';
-        document.documentElement.style.setProperty('--cube-color', corSalva);
-
-        function mudarCorCubo(hex) { document.documentElement.style.setProperty('--cube-color', hex); localStorage.setItem('synapse_cube_color', hex); }
+        #chat-window { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
+        .msg { padding: 15px; border-radius: 18px; max-width: 85%; font-size: 16px; }
+        .ai-msg { align-self: flex-start; background: #1c1c1e; }
+        .user-msg { align-self: flex-end; background: var(--accent); }
         
-        function toggleImersivo() { 
-            const isImmersive = document.body.classList.toggle('immersive'); 
-            const btn = document.getElementById('immersive-btn');
-            btn.innerText = isImmersive ? "[ Sair do Modo Imersivo ]" : "[ Modo Imersivo ]";
-            rolarChatParaFim();
-        }
+        .controls { padding: 20px; background: #000; display: flex; gap: 10px; }
+        input { flex: 1; padding: 15px; border-radius: 25px; border: none; background: #1c1c1e; color: white; }
+        .btn { padding: 15px; border-radius: 25px; border: none; background: var(--accent); color: white; font-weight: bold; }
+        #mic-btn { background: #444; }
+        #mic-btn.active { background: #ff3b30; }
+    </style>
+</head>
+<body>
+    <div id="chat-window"></div>
+    <div class="controls">
+        <input type="text" id="user-input" placeholder="Mensagem...">
+        <button id="mic-btn" class="btn" onclick="toggleMic()">🎤</button>
+        <button class="btn" onclick="enviar()">OK</button>
+    </div>
 
-        function abrirModal() { document.getElementById('info-modal').style.display = 'flex'; }
-        function fecharModal() { document.getElementById('info-modal').style.display = 'none'; }
-        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('active'); document.getElementById('overlay').classList.toggle('active'); renderizarHistoricoLateral(); }
+    <script>
+        let rec;
+        let isSpeaking = false;
 
-        function rolarChatParaFim() {
-            setTimeout(() => { chatWindow.scrollTop = chatWindow.scrollHeight; }, 50);
-        }
-
-        function iniciarNovoChat() {
-            chatIdAtual = 'chat_' + Date.now();
-            historico = [];
-            localStorage.setItem('synapse_chat_id_atual_v5', chatIdAtual);
-            chatsSalvos[chatIdAtual] = { titulo: "Novo Canal", mensagens: [] };
-            salvarNoStorage();
-            chatWindow.innerHTML = '';
-            addBubble('Core Synapse ativo. Escreva ou fale para interagir.', true);
-            if(document.getElementById('sidebar').classList.contains('active')) toggleSidebar();
-        }
-
-        function excluirChatEspecifico(id, evento) {
-            evento.stopPropagation(); 
-            if(confirm("Eliminar canal permanentemente?")) {
-                delete chatsSalvos[id];
-                salvarNoStorage();
-                if(id === chatIdAtual) {
-                    const keys = Object.keys(chatsSalvos);
-                    if(keys.length > 0) { carregarChatEspecifico(keys[0]); } else { iniciarNovoChat(); }
-                } else { renderizarHistoricoLateral(); }
+        function toggleMic() {
+            if (isSpeaking) return; // Não abre se IA estiver falando
+            if (!rec) {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                rec = new SpeechRecognition();
+                rec.lang = 'pt-BR';
+                rec.onresult = (e) => {
+                    const texto = e.results[0][0].transcript;
+                    document.getElementById('user-input').value = texto;
+                    enviar();
+                    document.getElementById('mic-btn').classList.remove('active');
+                };
+                rec.onend = () => document.getElementById('mic-btn').classList.remove('active');
             }
+            rec.start();
+            document.getElementById('mic-btn').classList.add('active');
         }
 
-        function carregarChatEspecifico(id) {
-            chatIdAtual = id;
-            localStorage.setItem('synapse_chat_id_atual_v5', id);
-            historico = chatsSalvos[id].mensagens;
-            chatWindow.innerHTML = '';
-            if(!historico || historico.length === 0) { addBubble("Canal limpo.", true); } 
-            else { historico.forEach(m => addBubble(m.content, m.role === 'assistant')); }
-            toggleSidebar();
-        }
-
-        function renderizarHistoricoLateral() {
-            historyContainer.innerHTML = '';
-            Object.keys(chatsSalvos).sort((a,b) => b.split('_')[1] - a.split('_')[1]).forEach(id => {
-                const container = document.createElement('div');
-                container.className = `history-item-container ${id === chatIdAtual ? 'active-container' : ''}`;
-                const item = document.createElement('button');
-                item.className = 'history-item';
-                item.innerText = chatsSalvos[id].titulo || "Canal Ativo";
-                item.onclick = () => carregarChatEspecifico(id);
-                const btnDeletar = document.createElement('button');
-                btnDeletar.className = 'delete-chat-btn';
-                btnDeletar.innerText = 'Excluir';
-                btnDeletar.onclick = (e) => excluirChatEspecifico(id, e);
-                container.appendChild(item);
-                container.appendChild(btnDeletar);
-                historyContainer.appendChild(container);
-            });
-        }
-
-        function salvarNoStorage() { localStorage.setItem('synapse_chats_v5', JSON.stringify(chatsSalvos)); }
-
-        function copiarTexto(texto) {
-            const textoLimpo = texto.replace(/__IMAGE_URL__:[^\s]+/g, "");
-            navigator.clipboard.writeText(textoLimpo);
-        }
-
-        function addBubble(texto, isAi) {
-            const div = document.createElement('div');
-            div.className = `msg ${isAi ? 'ai-msg' : 'user-msg'}`;
-            
-            if (isAi && texto.includes("__IMAGE_URL__:")) {
-                const match = texto.match(/__IMAGE_URL__:([^\s"'\n]+)/);
-                if (match) {
-                    const url = match[1];
-                    div.innerText = "Arquivo unificado renderizado:";
-                    
-                    const imgBlock = document.createElement('div');
-                    imgBlock.className = 'image-container-block';
-                    
-                    const img = document.createElement('img');
-                    img.src = url;
-                    img.className = 'image-media';
-                    img.addEventListener('load', () => rolarChatParaFim());
-                    
-                    const actionsPanel = document.createElement('div');
-                    actionsPanel.className = 'image-actions-panel';
-                    
-                    const linkVisualizar = document.createElement('a');
-                    linkVisualizar.className = 'control-btn';
-                    linkVisualizar.href = url;
-                    linkVisualizar.target = '_blank';
-                    linkVisualizar.innerText = '• Abrir';
-                    
-                    const linkDownload = document.createElement('a');
-                    linkDownload.className = 'control-btn';
-                    linkDownload.href = url;
-                    linkDownload.download = `synapse_render_${Date.now()}.png`;
-                    linkDownload.innerText = '• Baixar';
-                    
-                    actionsPanel.appendChild(linkVisualizar);
-                    actionsPanel.appendChild(linkDownload);
-                    imgBlock.appendChild(img);
-                    imgBlock.appendChild(actionsPanel);
-                    div.appendChild(imgBlock);
-                } else { div.innerText = texto; }
-            } else {
-                div.innerText = texto;
-            }
-
-            if (isAi) {
-                const controls = document.createElement('div');
-                controls.className = 'msg-controls';
-
-                const btnCopiar = document.createElement('button');
-                btnCopiar.className = 'control-btn';
-                btnCopiar.innerText = 'Copiar';
-                btnCopiar.onclick = () => copiarTexto(texto);
-                controls.appendChild(btnCopiar);
-
-                if (!texto.includes("__IMAGE_URL__:")) {
-                    const btnOuvir = document.createElement('button');
-                    btnOuvir.className = 'control-btn';
-                    btnOuvir.innerText = 'Ouvir';
-                    btnOuvir.onclick = () => talkIA(texto);
-                    controls.appendChild(btnOuvir);
-                }
-                div.appendChild(controls);
-            }
-            
-            chatWindow.appendChild(div);
-            rolarChatParaFim();
-        }
-
-        // FUNÇÃO ATUALIZADA: Força o áudio a ligar assim que recebe a resposta do Core
-        async function enviar(txt) {
+        async function enviar() {
             const input = document.getElementById('user-input');
-            const val = txt || input.value.trim();
-            if(!val) return;
+            const msg = input.value.trim();
+            if(!msg) return;
 
-            addBubble(val, false);
-            input.value = "";
-            historico.push({ role: "user", content: val });
-            
-            if(historico.length === 1) { chatsSalvos[chatIdAtual].titulo = val.substring(0, 14) + "..."; }
-            
-            const pensandoDiv = document.createElement('div');
-            pensandoDiv.className = "msg ai-msg";
-            pensandoDiv.innerText = "Processando sinal...";
-            chatWindow.appendChild(pensandoDiv);
-            rolarChatParaFim();
+            // Mostra msg usuário
+            const div = document.createElement('div');
+            div.className = 'msg user-msg';
+            div.innerText = msg;
+            document.getElementById('chat-window').appendChild(div);
+            input.value = '';
 
             try {
                 const res = await fetch('/chat', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ mensagens: historico })
+                    body: JSON.stringify({ mensagens: [{ role: 'user', content: msg }] })
                 });
                 const data = await res.json();
-                if(chatWindow.contains(pensandoDiv)) chatWindow.removeChild(pensandoDiv);
                 
-                addBubble(data.resposta, true);
-                historico.push({ role: "assistant", content: data.resposta });
-                chatsSalvos[chatIdAtual].mensagens = historico;
-                salvarNoStorage();
-
-                // MARCHA: Executa o áudio automático da resposta, mesmo se foi digitado
-                if(!data.resposta.includes("__IMAGE_URL__:")) {
-                    talkIA(data.resposta);
-                }
-            } catch(e) {
-                if(chatWindow.contains(pensandoDiv)) chatWindow.removeChild(pensandoDiv);
-                addBubble("Falha de conexao com o Core.", true);
-            }
+                // Mostra resposta IA
+                const divAi = document.createElement('div');
+                divAi.className = 'msg ai-msg';
+                divAi.innerText = data.resposta;
+                document.getElementById('chat-window').appendChild(divAi);
+                
+                // Fala automática com trava de segurança
+                isSpeaking = true;
+                const ut = new SpeechSynthesisUtterance(data.resposta);
+                ut.onend = () => { isSpeaking = false; };
+                window.speechSynthesis.speak(ut);
+            } catch(e) { alert("Erro de conexão"); }
         }
-
-        let rec;
-        function inicializarMicrofone() {
-            try {
-                const SpeechInstance = window.SpeechRecognition || window.webkitSpeechRecognition;
-                if (SpeechInstance) {
-                    rec = new SpeechInstance();
-                    rec.continuous = false; rec.interimResults = false; rec.lang = 'pt-BR';
-                    rec.onstart = () => { cube.classList.add('listening'); };
-                    rec.onend = () => { cube.classList.remove('listening'); };
-                    rec.onresult = (e) => {
-                        const textoCapturado = e.results[0][0].transcript;
-                        if(textoCapturado.trim().length > 0) enviar(textoCapturado);
-                    };
-                }
-            } catch(err) { console.log("Erro modulo voz."); }
-        }
-
-        function falar() { 
-            if(!rec) { inicializarMicrofone(); }
-            if(!rec) { alert("Sem suporte a microfone local."); return; }
+    </script>
+</body>
+</html>
