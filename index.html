@@ -3,58 +3,266 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>SYNAPSE_CORE_v4.5</title>
+    <title>SYNAPSE CORE | SUPREMO</title>
     <style>
-        :root { --blue: #0066FF; --bg: #000; }
+        :root { --blue: #0066FF; --bg: #050505; --panel: #0a0a0c; --text: #f4f4f5; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'JetBrains Mono', monospace; }
-        body { background: var(--bg); color: #fff; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
+        body { background: var(--bg); color: var(--text); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 
-        /* LOGIN MODERNO (FLUTUANTE) */
-        #login-layer { position: fixed; inset: 0; background: #000; z-index: 9999; display: flex; align-items: center; justify-content: center; }
-        .login-card { width: 90%; max-width: 320px; padding: 40px; border: 1px solid #222; text-align: center; }
-        .login-card input { width: 100%; padding: 15px; background: #050505; border: 1px solid #333; color: var(--blue); text-align: center; margin-bottom: 20px; }
-        .login-card button { width: 100%; padding: 15px; background: var(--blue); border: none; color: #fff; font-weight: bold; cursor: pointer; }
+        /* --- LOGIN MODERNO (GLASSMORPHISM) --- */
+        #login-screen { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(10px); z-index: 9999; display: flex; align-items: center; justify-content: center; transition: opacity 0.5s; }
+        .login-box { background: rgba(10, 10, 12, 0.9); padding: 40px; border-radius: 16px; border: 1px solid rgba(0, 102, 255, 0.3); text-align: center; width: 90%; max-width: 380px; box-shadow: 0 0 30px rgba(0, 102, 255, 0.1); }
+        .login-box h2 { letter-spacing: 4px; color: var(--blue); margin-bottom: 30px; font-size: 1.2rem; text-transform: uppercase; }
+        .login-input { width: 100%; padding: 18px; background: #000; border: 1px solid #333; color: #fff; border-radius: 8px; text-align: center; font-size: 1rem; margin-bottom: 20px; outline: none; transition: 0.3s; }
+        .login-input:focus { border-color: var(--blue); }
+        .login-btn { width: 100%; padding: 18px; background: var(--blue); color: #fff; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; transition: 0.3s; }
+        .login-btn:hover { background: #0052cc; }
 
-        /* UI DO CHAT */
-        .nav { padding: 20px; display: flex; justify-content: space-between; border-bottom: 1px solid #222; }
-        #chat { flex: 1; overflow-y: auto; padding: 20px; }
-        .controls { padding: 20px; display: flex; gap: 10px; border-top: 1px solid #222; }
+        /* --- HEADER E NAVEGAÇÃO --- */
+        .top-nav { padding: 15px 25px; background: var(--panel); border-bottom: 1px solid #1a1a1a; display: flex; justify-content: space-between; align-items: center; z-index: 10; }
+        .logo { font-weight: bold; letter-spacing: 2px; color: #888; font-size: 0.85rem; }
+        .menu-options { cursor: pointer; color: var(--blue); font-weight: bold; padding: 5px 10px; border-radius: 4px; border: 1px solid transparent; }
+        .menu-options:hover { border-color: var(--blue); }
+
+        /* --- LAYOUT PRINCIPAL (PC vs MOBILE) --- */
+        .main-stage { display: flex; flex: 1; overflow: hidden; }
+        .sidebar-pc { width: 300px; background: var(--panel); border-right: 1px solid #1a1a1a; padding: 30px; display: flex; flex-direction: column; align-items: center; gap: 40px; }
+        
+        /* O CUBO 3D (Fica parado, só gira quando fala) */
+        .scene { width: 80px; height: 80px; perspective: 600px; }
+        .cube { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transform: rotateX(-15deg) rotateY(20deg); transition: transform 0.3s ease; }
+        .cube.speaking { animation: spin 2s infinite linear; } /* Animação ativada apenas na fala */
+        @keyframes spin { 100% { transform: rotateX(345deg) rotateY(380deg); } }
+        .face { position: absolute; width: 80px; height: 80px; background: rgba(0, 102, 255, 0.05); border: 2px solid var(--blue); box-shadow: inset 0 0 15px rgba(0, 102, 255, 0.2); }
+        .front  { transform: translateZ(40px); }
+        .back   { transform: rotateY(180deg) translateZ(40px); }
+        .right  { transform: rotateY(90deg) translateZ(40px); }
+        .left   { transform: rotateY(-90deg) translateZ(40px); }
+        .top    { transform: rotateX(90deg) translateZ(40px); }
+        .bottom { transform: rotateX(-90deg) translateZ(40px); }
+
+        .colors { display: flex; gap: 15px; }
+        .dot { width: 22px; height: 22px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; }
+        .dot:hover { border-color: #fff; }
+
+        /* --- JANELA DE CHAT --- */
+        #chat-window { flex: 1; overflow-y: auto; padding: 30px; display: flex; flex-direction: column; gap: 20px; scrollbar-width: none; background: var(--bg); }
+        .msg { padding: 18px 22px; border-radius: 12px; max-width: 80%; font-size: 0.95rem; line-height: 1.6; }
+        .user-msg { align-self: flex-end; background: #000; border: 1px solid var(--blue); border-bottom-right-radius: 2px; }
+        .ai-msg { align-self: flex-start; background: var(--panel); border: 1px solid #1a1a1a; border-bottom-left-radius: 2px; }
+        .image-render { max-width: 100%; border-radius: 8px; margin-top: 10px; border: 1px solid #333; }
+
+        /* --- CONTROLES DE ENTRADA --- */
+        .input-area { padding: 20px; background: var(--panel); border-top: 1px solid #1a1a1a; display: flex; gap: 12px; }
+        input#user-input { flex: 1; padding: 18px; background: #000; border: 1px solid #333; color: #fff; border-radius: 8px; font-size: 1rem; outline: none; transition: 0.3s; }
+        input#user-input:focus { border-color: var(--blue); }
+        .btn { padding: 0 30px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 0.9rem; transition: 0.2s; }
+        .btn-send { background: var(--blue); color: #fff; }
+        .btn-send:hover { background: #0052cc; }
+        .btn-mic { background: #1a1a1a; color: #fff; border: 1px solid #333; }
+        .btn-mic:hover { border-color: #ff4444; color: #ff4444; }
+
+        /* --- RESPONSIVO AUTOMÁTICO (CELULAR) --- */
+        @media (max-width: 850px) {
+            .sidebar-pc { display: none !important; } /* Some o cubo e a barra lateral */
+            .msg { max-width: 95%; font-size: 1.1rem; } /* Texto maior para ler melhor */
+            .input-area { padding: 15px; position: sticky; bottom: 0; flex-wrap: wrap; }
+            input#user-input { min-width: 100%; flex: none; }
+            .btn { flex: 1; padding: 20px; font-size: 1rem; } /* Botões gigantes */
+            #login-screen { padding: 15px; }
+        }
     </style>
 </head>
 <body>
 
-    <div id="login-layer">
-        <div class="login-card">
-            <h3 style="margin-bottom: 20px; letter-spacing: 3px;">LOGIN_SYSTEM</h3>
-            <input type="password" id="key-input" placeholder="ACCESS_KEY">
-            <button onclick="handleLogin()">INICIAR CONEXÃO</button>
+    <div id="login-screen">
+        <div class="login-box">
+            <h2>SYNAPSE CORE</h2>
+            <input type="password" id="key-input" class="login-input" placeholder="ACCESS KEY">
+            <button class="login-btn" onclick="validarLogin()">INICIAR SISTEMA</button>
+            <p id="login-erro" style="color: #ff4444; font-size: 0.8rem; margin-top: 15px; display: none;">Sinal Rejeitado.</p>
         </div>
     </div>
 
-    <div class="nav">
-        <span>SYNAPSE_CORE</span>
-        <span onclick="window.location.reload()" style="cursor:pointer">⋮</span>
+    <div class="top-nav">
+        <div class="logo">CORE_v4.5</div>
+        <div class="menu-options" onclick="logout()">SAIR / RESETAR</div>
     </div>
 
-    <div id="chat"></div>
+    <div class="main-stage">
+        <div class="sidebar-pc">
+            <div class="scene">
+                <div class="cube" id="cube-core">
+                    <div class="face front"></div><div class="face back"></div>
+                    <div class="face right"></div><div class="face left"></div>
+                    <div class="face top"></div><div class="face bottom"></div>
+                </div>
+            </div>
+            <div class="colors">
+                <div class="dot" style="background:#0066FF" onclick="mudarCor('#0066FF')"></div>
+                <div class="dot" style="background:#10b981" onclick="mudarCor('#10b981')"></div>
+                <div class="dot" style="background:#ef4444" onclick="mudarCor('#ef4444')"></div>
+                <div class="dot" style="background:#a855f7" onclick="mudarCor('#a855f7')"></div>
+            </div>
+        </div>
 
-    <div class="controls">
-        <input type="text" id="user-input" style="flex:1" placeholder="Prompt...">
-        <button onclick="enviar()">SEND</button>
-        <button onclick="falar()">MIC</button>
+        <div id="chat-window"></div>
+    </div>
+
+    <div class="input-area">
+        <input type="text" id="user-input" placeholder="Aguardando instrução..." onkeydown="if(event.key==='Enter') enviarTexto()">
+        <button class="btn btn-send" onclick="enviarTexto()">ENVIAR</button>
+        <button class="btn btn-mic" id="btn-mic" onclick="falarComIA()">FALAR</button>
     </div>
 
     <script>
-        function handleLogin() {
-            const key = document.getElementById('key-input').value;
-            if (key === "CORE-SKYPE-2026") {
-                document.getElementById('login-layer').style.opacity = '0';
-                setTimeout(() => { document.getElementById('login-layer').style.display = 'none'; }, 500);
+        // CONFIGURAÇÕES GERAIS E HISTÓRICO
+        let historico = [];
+        let modoEntrada = 'texto'; // 'texto' ou 'voz'
+
+        // 1. LOGIN SEGURO (Mapeando suas chaves)
+        function validarLogin() {
+            const chavesPermitidas = ["CORE-SKYPE-2026", "BETA-USER-01", "BETA-USER-02", "BETA-USER-03"];
+            const input = document.getElementById('key-input').value.trim().toUpperCase();
+            
+            if (chavesPermitidas.includes(input)) {
+                document.getElementById('login-screen').style.opacity = '0';
+                setTimeout(() => { document.getElementById('login-screen').style.display = 'none'; }, 500);
+                adicionarBalao("Sistema Desbloqueado. Aguardando comando.", true);
             } else {
-                alert("ACESSO NEGADO");
+                document.getElementById('login-erro').style.display = 'block';
             }
         }
-        // ... (resto do código de chat)
+
+        function logout() {
+            if(confirm("Deseja encerrar a sessão e resetar o terminal?")) {
+                window.location.reload();
+            }
+        }
+
+        function mudarCor(hex) {
+            document.documentElement.style.setProperty('--blue', hex);
+        }
+
+        function scrollProFinal() {
+            const chat = document.getElementById('chat-window');
+            chat.scrollTop = chat.scrollHeight;
+        }
+
+        // 2. RENDERIZAÇÃO DE BALÕES (Texto e Imagens)
+        function adicionarBalao(texto, isAi) {
+            const chat = document.getElementById('chat-window');
+            const div = document.createElement('div');
+            div.className = `msg ${isAi ? 'ai-msg' : 'user-msg'}`;
+
+            // Checa se a resposta é uma imagem do Pollinations
+            if (isAi && texto.includes("__IMAGE_URL__: ")) {
+                const url = texto.split("__IMAGE_URL__: ")[1].trim();
+                div.innerHTML = `Imagem renderizada com sucesso:<br><img src="${url}" class="image-render">`;
+            } 
+            else if (isAi && texto.includes("__IMAGE_URL__:")) { // Variação sem espaço
+                const url = texto.split("__IMAGE_URL__:")[1].trim();
+                div.innerHTML = `Imagem renderizada com sucesso:<br><img src="${url}" class="image-render">`;
+            }
+            else {
+                div.innerText = texto;
+            }
+
+            chat.appendChild(div);
+            scrollProFinal();
+        }
+
+        // 3. LÓGICA DE ENVIO PARA O BACKEND
+        async function processarEnvio(texto) {
+            if (!texto) return;
+            adicionarBalao(texto, false);
+            document.getElementById('user-input').value = "";
+            historico.push({ role: "user", content: texto });
+
+            try {
+                // Conecta com o seu server.js que já está hospedado
+                const res = await fetch('/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ mensagens: historico })
+                });
+                
+                const data = await res.json();
+                const respostaIA = data.resposta;
+                
+                adicionarBalao(respostaIA, true);
+                historico.push({ role: "assistant", content: respostaIA });
+
+                // A MÁGICA ACONTECE AQUI:
+                // Só gera voz e gira o cubo SE você mandou a mensagem por VOZ e NÃO for uma imagem.
+                if (modoEntrada === 'voz' && !respostaIA.includes("__IMAGE_URL__: ")) {
+                    reproduzirVoz(respostaIA);
+                }
+
+            } catch (e) {
+                adicionarBalao("[ERRO] Falha de comunicação com o servidor Render.", true);
+            }
+        }
+
+        // Se clicou em ENVIAR ou deu ENTER
+        function enviarTexto() {
+            const txt = document.getElementById('user-input').value.trim();
+            if(txt) {
+                modoEntrada = 'texto'; // Define que entrou por texto (IA ficará muda)
+                processarEnvio(txt);
+            }
+        }
+
+        // 4. MICROFONE, VOZ E ANIMAÇÃO DO CUBO
+        function falarComIA() {
+            const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRec) {
+                alert("Seu navegador não suporta captura de voz nativa.");
+                return;
+            }
+
+            const rec = new SpeechRec();
+            rec.lang = 'pt-BR';
+            
+            rec.onstart = () => {
+                document.getElementById('btn-mic').innerText = "OUVINDO...";
+                document.getElementById('btn-mic').style.borderColor = "#0066FF";
+            };
+            
+            rec.onresult = (e) => {
+                const capturado = e.results[0][0].transcript;
+                modoEntrada = 'voz'; // Define que entrou por voz (A IA vai responder falando)
+                processarEnvio(capturado);
+            };
+            
+            rec.onend = () => {
+                document.getElementById('btn-mic').innerText = "FALAR";
+                document.getElementById('btn-mic').style.borderColor = "#333";
+            };
+
+            rec.start();
+        }
+
+        function reproduzirVoz(texto) {
+            window.speechSynthesis.cancel(); // Limpa vozes travadas
+            const utterance = new SpeechSynthesisUtterance(texto);
+            utterance.lang = 'pt-BR';
+            utterance.rate = 1.05;
+
+            // QUANDO A IA COMEÇA A FALAR: O cubo gira!
+            utterance.onstart = () => {
+                const cubo = document.getElementById('cube-core');
+                if(cubo) cubo.classList.add('speaking');
+            };
+
+            // QUANDO A IA TERMINA DE FALAR: O cubo para!
+            utterance.onend = () => {
+                const cubo = document.getElementById('cube-core');
+                if(cubo) cubo.classList.remove('speaking');
+            };
+
+            window.speechSynthesis.speak(utterance);
+        }
     </script>
 </body>
 </html>
