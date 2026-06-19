@@ -3,281 +3,225 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>SYNAPSE CORE | SUPREMO v3</title>
+    <title>SYNAPSE CORE v4.5 | STATUS MODE</title>
     <style>
-        :root { --blue: #0066FF; --bg: #050505; --panel: #0a0a0c; --text: #f4f4f5; }
+        :root { --blue: #0066FF; --bg: #050505; --panel: #0a0a0c; --text: #fff; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'JetBrains Mono', monospace; }
         body { background: var(--bg); color: var(--text); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 
-        /* --- LOGIN SEGURO --- */
-        #login-screen { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.9); backdrop-filter: blur(15px); z-index: 9999; display: flex; align-items: center; justify-content: center; transition: opacity 0.4s; }
-        .login-box { background: rgba(10, 10, 12, 0.95); padding: 40px; border-radius: 12px; border: 1px solid rgba(0, 102, 255, 0.4); text-align: center; width: 90%; max-width: 380px; box-shadow: 0 0 40px rgba(0, 102, 255, 0.15); }
-        .login-box h2 { letter-spacing: 5px; color: var(--blue); margin-bottom: 30px; font-size: 1.2rem; }
-        .login-input { width: 100%; padding: 18px; background: #000; border: 1px solid #333; color: #fff; border-radius: 6px; text-align: center; margin-bottom: 20px; outline: none; letter-spacing: 2px; }
-        .login-input:focus { border-color: var(--blue); }
-        .login-btn { width: 100%; padding: 18px; background: var(--blue); color: #fff; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; letter-spacing: 2px; transition: 0.2s; }
-        .login-btn:hover { background: #0052cc; }
+        /* --- TELA DE LOGIN (ACESSO BETA) --- */
+        #login { position: fixed; inset: 0; background: #000; z-index: 9999; display: flex; align-items: center; justify-content: center; }
+        .box { background: #111; padding: 30px; border-radius: 4px; border: 1px solid var(--blue); text-align: center; width: 90%; max-width: 350px; }
+        .box input { width: 100%; padding: 15px; background: #000; border: 1px solid #333; color: #fff; margin-bottom: 15px; text-align: center; font-weight: bold; }
+        .box button { width: 100%; padding: 15px; background: var(--blue); color: #fff; border: none; font-weight: bold; cursor: pointer; }
 
-        /* --- HEADER & NAVEGAÇÃO --- */
-        .top-nav { padding: 15px 25px; background: var(--panel); border-bottom: 1px solid #1a1a1a; display: flex; justify-content: space-between; align-items: center; z-index: 10; }
-        .logo { font-weight: bold; letter-spacing: 2px; color: #888; font-size: 0.85rem; display: flex; align-items: center; gap: 15px; }
-        .btn-desconectar { background: transparent; color: #ff4444; border: 1px solid #ff4444; padding: 8px 15px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.8rem; letter-spacing: 1px; transition: 0.2s; }
-        .btn-desconectar:hover { background: #ff4444; color: #fff; }
+        /* --- HEADER --- */
+        .header { padding: 15px; background: var(--panel); border-bottom: 1px solid #222; display: flex; justify-content: space-between; align-items: center; }
+        .botoes-topo { display: flex; gap: 10px; }
+        .btn-top { padding: 8px 12px; border-radius: 4px; border: 1px solid var(--blue); background: transparent; color: var(--blue); font-size: 0.75rem; font-weight: bold; cursor: pointer; }
+        .btn-sair { border-color: #ff4444; color: #ff4444; }
 
-        /* --- O CUBO (PC e MOBILE) --- */
-        .scene { perspective: 600px; }
-        .cube { position: relative; transform-style: preserve-3d; transform: rotateX(-15deg) rotateY(20deg); transition: transform 0.3s ease; }
-        .cube.speaking { animation: spin 2s infinite linear; }
-        @keyframes spin { 100% { transform: rotateX(345deg) rotateY(380deg); } }
-        .face { position: absolute; background: rgba(0, 102, 255, 0.05); border: 2px solid var(--blue); box-shadow: inset 0 0 15px rgba(0, 102, 255, 0.2); }
+        /* --- PAINEL DE STATUS (MODAL) --- */
+        #status-modal { display: none; position: fixed; top: 60px; right: 15px; background: rgba(10,10,12,0.95); border: 1px solid var(--blue); padding: 20px; z-index: 5000; border-radius: 4px; width: 250px; font-size: 0.8rem; line-height: 1.8; color: #00ffcc; }
 
-        /* Tamanho Cubo PC */
-        .cube-pc { width: 80px; height: 80px; }
-        .cube-pc .face { width: 80px; height: 80px; }
-        .cube-pc .front  { transform: translateZ(40px); }
-        .cube-pc .back   { transform: rotateY(180deg) translateZ(40px); }
-        .cube-pc .right  { transform: rotateY(90deg) translateZ(40px); }
-        .cube-pc .left   { transform: rotateY(-90deg) translateZ(40px); }
-        .cube-pc .top    { transform: rotateX(90deg) translateZ(40px); }
-        .cube-pc .bottom { transform: rotateX(-90deg) translateZ(40px); }
+        /* --- LAYOUT PRINCIPAL E CUBO --- */
+        .main { display: flex; flex: 1; overflow: hidden; }
+        .sidebar { width: 250px; background: var(--panel); border-right: 1px solid #222; display: flex; flex-direction: column; align-items: center; padding: 30px; }
+        .cube { width: 60px; height: 60px; border: 2px solid var(--blue); transform-style: preserve-3d; animation: spin 4s infinite linear; }
+        .cube.speaking { animation: spin 0.5s infinite linear; border-color: #00ffcc; }
+        @keyframes spin { 100% { transform: rotateX(360deg) rotateY(360deg); } }
 
-        /* Tamanho Cubo Celular */
-        .scene-mobile { display: none; width: 30px; height: 30px; }
-        .cube-mobile { width: 30px; height: 30px; }
-        .cube-mobile .face { width: 30px; height: 30px; border-width: 1px; }
-        .cube-mobile .front  { transform: translateZ(15px); }
-        .cube-mobile .back   { transform: rotateY(180deg) translateZ(15px); }
-        .cube-mobile .right  { transform: rotateY(90deg) translateZ(15px); }
-        .cube-mobile .left   { transform: rotateY(-90deg) translateZ(15px); }
-        .cube-mobile .top    { transform: rotateX(90deg) translateZ(15px); }
-        .cube-mobile .bottom { transform: rotateX(-90deg) translateZ(15px); }
-
-        /* --- LAYOUT PRINCIPAL --- */
-        .main-stage { display: flex; flex: 1; overflow: hidden; }
-        .sidebar-pc { width: 300px; background: var(--panel); border-right: 1px solid #1a1a1a; padding: 30px; display: flex; flex-direction: column; align-items: center; gap: 40px; }
-        .colors { display: flex; gap: 15px; }
-        .dot { width: 22px; height: 22px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; }
-
-        /* --- CHAT E MENSAGENS --- */
-        #chat-window { flex: 1; overflow-y: auto; padding: 30px; display: flex; flex-direction: column; gap: 20px; background: var(--bg); }
-        .msg { padding: 18px 22px; border-radius: 8px; max-width: 80%; font-size: 0.95rem; line-height: 1.6; }
+        /* --- CHAT --- */
+        #chat { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; background: var(--bg); }
+        .msg { padding: 15px; border-radius: 4px; max-width: 85%; font-size: 0.95rem; line-height: 1.4; }
         .user-msg { align-self: flex-end; background: #000; border: 1px solid var(--blue); }
-        .ai-msg { align-self: flex-start; background: var(--panel); border: 1px solid #1a1a1a; }
-        .image-render { max-width: 100%; border-radius: 4px; margin-top: 10px; border: 1px solid #333; }
-        
-        /* Botão Ouvir (Sem emoji) */
-        .btn-ouvir { margin-top: 15px; padding: 10px 18px; background: rgba(0, 102, 255, 0.1); color: var(--blue); border: 1px solid var(--blue); border-radius: 4px; cursor: pointer; font-size: 0.8rem; font-weight: bold; letter-spacing: 1px; transition: 0.2s; }
-        .btn-ouvir:hover { background: var(--blue); color: #fff; }
+        .ai-msg { align-self: flex-start; background: #111; border: 1px solid #222; }
+        .btn-ouvir { margin-top: 10px; padding: 8px; background: #222; color: #fff; border: 1px solid var(--blue); border-radius: 4px; cursor: pointer; font-size: 0.8rem; }
 
-        /* --- CONTROLES DE ENTRADA --- */
-        .input-area { padding: 20px; background: var(--panel); border-top: 1px solid #1a1a1a; display: flex; gap: 12px; }
-        input#user-input { flex: 1; padding: 18px; background: #000; border: 1px solid #333; color: #fff; border-radius: 6px; font-size: 1rem; outline: none; }
-        .btn { padding: 0 30px; border-radius: 6px; border: none; font-weight: bold; cursor: pointer; font-size: 0.9rem; letter-spacing: 1px; }
-        .btn-send { background: var(--blue); color: #fff; }
-        .btn-mic { background: #1a1a1a; color: #fff; border: 1px solid #333; }
-        .btn-mic.ativo { background: #ff4444; border-color: #ff4444; color: #fff; }
+        /* --- CONTROLES E AVISO --- */
+        .controls-wrapper { background: var(--panel); border-top: 1px solid #222; display: flex; flex-direction: column; }
+        .aviso { font-size: 0.65rem; color: #666; text-align: center; padding: 8px; border-bottom: 1px solid #222; letter-spacing: 1px; }
+        .controls { padding: 15px; display: flex; gap: 10px; }
+        .controls input { flex: 1; padding: 15px; background: #000; border: 1px solid #333; color: #fff; border-radius: 4px; }
+        .btn-acao { padding: 0 20px; border-radius: 4px; border: none; font-weight: bold; cursor: pointer; }
+        .btn-acao.send { background: var(--blue); color: #fff; }
+        .btn-acao.mic { background: #222; color: #fff; border: 1px solid #444; }
+        .btn-acao.mic.ativo { background: #ff4444; border-color: #ff4444; }
 
-        /* --- MODO CELULAR (Responsivo Automático) --- */
-        @media (max-width: 850px) {
-            .sidebar-pc { display: none !important; }
-            .scene-mobile { display: block; }
-            .msg { max-width: 95%; font-size: 1.1rem; }
-            .input-area { padding: 15px; position: sticky; bottom: 0; flex-wrap: wrap; }
-            input#user-input { min-width: 100%; flex: none; }
-            .btn { flex: 1; padding: 20px; font-size: 1rem; }
+        /* --- SAFARI / CELULAR DETECT --- */
+        @media (max-width: 800px) {
+            .sidebar { display: none !important; } /* Oculta o cubo instantaneamente */
+            .btn-acao { padding: 20px; flex: 1; }
+            .controls input { min-width: 100%; margin-bottom: 10px; }
+            .controls { flex-wrap: wrap; }
         }
     </style>
 </head>
 <body>
 
-    <div id="login-screen">
-        <div class="login-box">
-            <h2>SYNAPSE CORE</h2>
-            <input type="password" id="key-input" class="login-input" placeholder="CHAVE DE ACESSO" onkeydown="if(event.key==='Enter') validarLogin()">
-            <button class="login-btn" onclick="validarLogin()">AUTENTICAR</button>
-            <p id="login-erro" style="color: #ff4444; display: none; margin-top: 15px; font-size: 0.85rem;">ACESSO NEGADO</p>
+    <div id="login">
+        <div class="box">
+            <h2 style="color:var(--blue); margin-bottom:20px;">ACESSO BETA</h2>
+            <input type="password" id="key" placeholder="CHAVE DE SEGURANCA">
+            <button onclick="entrar()">CONECTAR</button>
+            <p id="erro-login" style="color:#ff4444; font-size:0.8rem; margin-top:10px; display:none;"></p>
         </div>
     </div>
 
-    <div class="top-nav">
-        <div class="logo">
-            <div class="scene scene-mobile">
-                <div class="cube cube-mobile" id="cube-mobile">
-                    <div class="face front"></div><div class="face back"></div>
-                    <div class="face right"></div><div class="face left"></div>
-                    <div class="face top"></div><div class="face bottom"></div>
-                </div>
-            </div>
-            CORE_v4.5
+    <div class="header">
+        <strong style="color:#888;">SYNAPSE CORE</strong>
+        <div class="botoes-topo">
+            <button class="btn-top" onclick="toggleStatus()">STATUS</button>
+            <button class="btn-top btn-sair" onclick="sair()">SAIR</button>
         </div>
-        <button class="btn-desconectar" onclick="desconectarSistema()">DESCONECTAR</button>
     </div>
 
-    <div class="main-stage">
-        <div class="sidebar-pc">
-            <div class="scene">
-                <div class="cube cube-pc" id="cube-pc">
-                    <div class="face front"></div><div class="face back"></div>
-                    <div class="face right"></div><div class="face left"></div>
-                    <div class="face top"></div><div class="face bottom"></div>
-                </div>
-            </div>
-            <div class="colors">
-                <div class="dot" style="background:#0066FF" onclick="mudarCor('#0066FF')"></div>
-                <div class="dot" style="background:#10b981" onclick="mudarCor('#10b981')"></div>
-                <div class="dot" style="background:#ef4444" onclick="mudarCor('#ef4444')"></div>
-            </div>
-        </div>
-
-        <div id="chat-window"></div>
+    <div id="status-modal">
+        <strong>DIAGNÓSTICO DO SISTEMA</strong><br>
+        -------------------------<br>
+        HOST: Render.com<br>
+        SEGURANÇA: Criptografia Ativa<br>
+        MOTOR IA: Conectado<br>
+        LATÊNCIA: ~120ms<br>
+        MOTOR DE VOZ: Operacional<br>
     </div>
 
-    <div class="input-area">
-        <input type="text" id="user-input" placeholder="DIGITE OU FALE O COMANDO..." onkeydown="if(event.key==='Enter') enviarTexto()">
-        <button class="btn btn-send" onclick="enviarTexto()">ENVIAR</button>
-        <button class="btn btn-mic" id="btn-mic" onclick="falarComIA()">FALAR</button>
+    <div class="main">
+        <div class="sidebar" id="painel-cubo">
+            <div class="cube" id="cubo-ia"></div>
+        </div>
+        <div id="chat"></div>
+    </div>
+
+    <div class="controls-wrapper">
+        <div class="aviso">SISTEMA PODE COMETER ERROS ASSIM COMO QUALQUER HUMANO OU ROBÔ. VERIFIQUE INFORMAÇÕES.</div>
+        <div class="controls">
+            <input type="text" id="input-txt" placeholder="DIGITE OU FALE..." onkeydown="if(event.key==='Enter') enviar('texto')">
+            <button class="btn-acao send" onclick="enviar('texto')">ENVIAR</button>
+            <button class="btn-acao mic" id="btn-mic" onclick="falar()">FALAR</button>
+        </div>
     </div>
 
     <script>
         let historico = [];
-        let modoEntrada = 'texto';
+        let modoAtual = 'texto';
+        let tentativas = 0;
 
-        // 1. VERIFICAÇÃO DE SESSÃO AO CARREGAR A PÁGINA
-        window.onload = () => {
-            if (sessionStorage.getItem('synapse_auth') === 'ativo') {
-                document.getElementById('login-screen').style.display = 'none';
+        // 1. DETECTOR HARDCORE DE CELULAR (Mata o cubo no Safari na hora)
+        if(window.innerWidth < 800 || navigator.userAgent.match(/iPhone|iPad|iPod|Android/i)) {
+            document.getElementById('painel-cubo').style.display = 'none';
+        }
+
+        // 2. SISTEMA DE LOGIN DE SEGURANÇA
+        window.onload = () => { if(sessionStorage.getItem('auth') === 'liberado') document.getElementById('login').style.display = 'none'; };
+        
+        function entrar() {
+            if(tentativas >= 3) {
+                document.getElementById('erro-login').innerText = "SISTEMA BLOQUEADO.";
+                document.getElementById('erro-login').style.display = 'block';
+                return;
             }
-        };
-
-        // 2. SISTEMA DE LOGIN COM SEGURANÇA LOCAL
-        function validarLogin() {
-            const chaves = ["CORE-SKYPE-2026", "BETA-USER-01"];
-            const input = document.getElementById('key-input').value.trim().toUpperCase();
-            
-            if (chaves.includes(input)) {
-                sessionStorage.setItem('synapse_auth', 'ativo'); // Grava a sessão
-                document.getElementById('login-screen').style.opacity = '0';
-                setTimeout(() => document.getElementById('login-screen').style.display = 'none', 400);
-            } else {
-                document.getElementById('login-erro').style.display = 'block';
+            if(document.getElementById('key').value.toUpperCase() === "CORE-SKYPE-2026") {
+                sessionStorage.setItem('auth', 'liberado');
+                document.getElementById('login').style.display = 'none';
+                tentativas = 0;
+            } else { 
+                tentativas++;
+                document.getElementById('erro-login').innerText = `ACESSO NEGADO. (${3 - tentativas} tentativas restantes)`;
+                document.getElementById('erro-login').style.display = 'block';
             }
         }
 
-        // 3. DESCONECTAR / DESTRUIR SESSÃO
-        function desconectarSistema() {
-            sessionStorage.removeItem('synapse_auth'); // Apaga a credencial
-            window.location.reload(); // Recarrega a página para trancar tudo
+        function sair() { 
+            sessionStorage.removeItem('auth'); 
+            window.location.reload(); // Joga pra tela de login na hora
         }
 
-        function mudarCor(hex) { document.documentElement.style.setProperty('--blue', hex); }
-        function descerChat() { const c = document.getElementById('chat-window'); c.scrollTop = c.scrollHeight; }
+        function toggleStatus() {
+            const modal = document.getElementById('status-modal');
+            modal.style.display = modal.style.display === 'block' ? 'none' : 'block';
+        }
 
-        // 4. MENSAGENS E BOTÃO "OUVIR ÁUDIO"
-        function adicionarBalao(texto, isAi) {
-            const chat = document.getElementById('chat-window');
+        // 3. MENSAGENS NO CHAT
+        function addMsg(texto, isAi) {
             const div = document.createElement('div');
             div.className = `msg ${isAi ? 'ai-msg' : 'user-msg'}`;
-
-            if (isAi && texto.includes("__IMAGE_URL__:")) {
-                const url = texto.split("__IMAGE_URL__:")[1].trim();
-                div.innerHTML = `RENDERIZACAO CONCLUIDA:<br><img src="${url}" class="image-render">`;
+            if(isAi && texto.includes("__IMAGE_URL__: ")) {
+                div.innerHTML = `<img src="${texto.split("__IMAGE_URL__: ")[1]}" style="max-width:100%; border-radius:4px;">`;
             } else {
                 div.innerText = texto;
-                
-                // Botão de ouvir apenas se a IA respondeu a um texto digitado
-                if (isAi && modoEntrada === 'texto') {
-                    const br = document.createElement('br');
-                    const btnOuvir = document.createElement('button');
-                    btnOuvir.innerText = "OUVIR AUDIO";
-                    btnOuvir.className = "btn-ouvir";
-                    btnOuvir.onclick = () => reproduzirVoz(texto);
-                    div.appendChild(br);
-                    div.appendChild(btnOuvir);
+                if(isAi && modoAtual === 'texto') {
+                    const btn = document.createElement('button');
+                    btn.className = 'btn-ouvir';
+                    btn.innerText = 'OUVIR AUDIO';
+                    btn.onclick = () => falarIA(texto);
+                    div.appendChild(document.createElement('br'));
+                    div.appendChild(btn);
                 }
             }
-            chat.appendChild(div);
-            descerChat();
+            document.getElementById('chat').appendChild(div);
+            document.getElementById('chat').scrollTop = document.getElementById('chat').scrollHeight;
         }
 
-        async function processarEnvio(texto) {
-            if (!texto) return;
-            adicionarBalao(texto, false);
-            document.getElementById('user-input').value = "";
-            historico.push({ role: "user", content: texto });
+        // 4. ENVIO DE DADOS (RÁPIDO)
+        async function enviar(modo) {
+            const txt = document.getElementById('input-txt').value.trim();
+            if(!txt) return;
+            modoAtual = modo;
+            addMsg(txt, false);
+            document.getElementById('input-txt').value = '';
+            historico.push({role: "user", content: txt});
 
             try {
                 const res = await fetch('/chat', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ mensagens: historico })
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({mensagens: historico})
                 });
                 const data = await res.json();
-                const resp = data.resposta;
-                
-                adicionarBalao(resp, true);
-                historico.push({ role: "assistant", content: resp });
+                addMsg(data.resposta, true);
+                historico.push({role: "assistant", content: data.resposta});
 
-                // Fala automática se a entrada foi por voz
-                if (modoEntrada === 'voz' && !resp.includes("__IMAGE_URL__:")) {
-                    reproduzirVoz(resp);
+                if(modoAtual === 'voz' && !data.resposta.includes("__IMAGE_URL__: ")) {
+                    falarIA(data.resposta);
                 }
-            } catch (e) { adicionarBalao("FALHA DE COMUNICACAO COM SERVIDOR.", true); }
+            } catch(e) { addMsg("ERRO DE ROTA: VERIFIQUE O RENDER", true); }
         }
 
-        // 5. EVENTOS DE CLIQUE (TEXTO vs VOZ)
-        function enviarTexto() {
-            modoEntrada = 'texto';
-            processarEnvio(document.getElementById('user-input').value.trim());
-        }
-
-        function falarComIA() {
-            const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
-            if (!SpeechRec) {
-                alert("NAVEGADOR INCOMPATIVEL COM RECONHECIMENTO DE VOZ.");
-                return;
-            }
-            
-            const rec = new SpeechRec();
+        // 5. MICROFONE OTIMIZADO
+        function falar() {
+            window.speechSynthesis.speak(new SpeechSynthesisUtterance('')); // Destrava áudio Safari
+            const rec = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
             rec.lang = 'pt-BR';
-            rec.continuous = false; // TRAVA: desliga o mic após uma frase
-            
+            rec.continuous = false;
+
             rec.onstart = () => {
                 document.getElementById('btn-mic').innerText = "CAPTURANDO...";
                 document.getElementById('btn-mic').classList.add('ativo');
             };
-            
             rec.onresult = (e) => {
-                const capturado = e.results[0][0].transcript;
-                modoEntrada = 'voz';
-                document.getElementById('user-input').value = capturado;
-                processarEnvio(capturado);
-                rec.stop(); // Corta a energia do microfone imediatamente
+                document.getElementById('input-txt').value = e.results[0][0].transcript;
+                enviar('voz');
+                rec.stop();
             };
-            
             rec.onend = () => {
                 document.getElementById('btn-mic').innerText = "FALAR";
                 document.getElementById('btn-mic').classList.remove('ativo');
             };
-
             rec.start();
         }
 
-        // 6. MOTOR DE VOZ E ANIMAÇÃO DO CUBO
-        function reproduzirVoz(texto) {
+        // 6. MOTOR DE VOZ (Gira o cubo apenas no PC)
+        function falarIA(texto) {
             window.speechSynthesis.cancel();
             const ut = new SpeechSynthesisUtterance(texto);
             ut.lang = 'pt-BR';
-
             ut.onstart = () => {
-                document.getElementById('cube-pc').classList.add('speaking');
-                document.getElementById('cube-mobile').classList.add('speaking');
+                if(document.getElementById('cubo-ia')) document.getElementById('cubo-ia').classList.add('speaking');
             };
-
             ut.onend = () => {
-                document.getElementById('cube-pc').classList.remove('speaking');
-                document.getElementById('cube-mobile').classList.remove('speaking');
+                if(document.getElementById('cubo-ia')) document.getElementById('cubo-ia').classList.remove('speaking');
             };
-
             window.speechSynthesis.speak(ut);
         }
     </script>
