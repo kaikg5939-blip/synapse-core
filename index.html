@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SYNAPSE CORE</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root { 
+            --strong-blue: #0066FF; 
+            --cube-color: var(--strong-blue); 
+            --bg-deep: #050505; 
+            --card-deep: #0d0d11; 
+            --text-light: #f4f4f5; 
+            --border-subtle: rgba(255, 255, 255, 0.05);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        
+        body { 
+            background: var(--bg-deep); 
+            color: var(--text-light); 
+            display: flex; 
+            flex-direction: column; 
+            height: 100vh; 
+            overflow: hidden; 
+        }
+
+        #auth-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; z-index: 9999;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px;
+        }
+        .auth-container {
+            width: 100%; max-width: 420px; background: #09090b; border: 1px solid var(--border-subtle); border-radius: 12px; padding: 40px 30px; text-align: center;
+        }
+        .auth-container h2 { font-size: 1.1rem; font-family: 'JetBrains Mono', monospace; letter-spacing: 6px; margin-bottom: 10px; color: #fff; text-transform: uppercase; }
+        .auth-container p { font-size: 0.75rem; color: #52525b; font-family: 'JetBrains Mono', monospace; margin-bottom: 30px; }
+        .auth-input { width: 100%; padding: 16px; background: #000; border: 1px solid var(--border-subtle); color: #fff; border-radius: 8px; text-align: center; font-family: 'JetBrains Mono', monospace; margin-bottom: 15px; outline: none; }
+        .auth-input:focus { border-color: var(--strong-blue); }
+        .auth-btn { width: 100%; padding: 16px; background: var(--strong-blue); color: #fff; border: none; border-radius: 8px; font-weight: 700; font-size: 0.8rem; letter-spacing: 2px; cursor: pointer; text-transform: uppercase; font-family: 'JetBrains Mono', monospace; }
+        .auth-error { color: #ef4444; font-size: 0.7rem; font-family: 'JetBrains Mono', monospace; margin-top: 10px; display: none; }
+        
+        .top-nav { width: 100%; padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; background: rgba(5,5,5,0.8); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border-subtle); flex-shrink: 0; }
+        .top-nav h1 { font-size: 1rem; letter-spacing: 10px; font-weight: 900; color: #fff; text-transform: uppercase; }
+
+        .sidebar { position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background: #08080a; border-right: 1px solid var(--border-subtle); z-index: 1000; transition: 0.3s cubic-bezier(0.1, 0.9, 0.2, 1); padding: 20px; display: flex; flex-direction: column; gap: 20px; }
+        .sidebar.active { left: 0; }
+        .sidebar-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); backdrop-filter: blur(6px); z-index: 999; }
+        .sidebar-overlay.active { display: block; }
+        .new-chat-btn { width: 100%; padding: 14px; background: #000; border: 1px solid rgba(255,255,255,0.1); color: #fff; border-radius: 8px; font-weight: 700; font-size: 0.75rem; letter-spacing: 2px; cursor: pointer; text-transform: uppercase; transition: 0.2s; font-family: 'JetBrains Mono', monospace; }
+        .new-chat-btn:hover { border-color: var(--strong-blue); background: #0d0d11; }
+        
+        .history-list { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; scrollbar-width: none; }
+        .history-item-container { display: flex; align-items: center; justify-content: space-between; width: 100%; background: var(--card-deep); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 6px 12px; }
+        .history-item { flex: 1; padding: 10px 0; color: #a1a1aa; font-size: 0.8rem; text-align: left; cursor: pointer; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; background: none; border: none; }
+        .delete-chat-btn { background: transparent; border: none; color: #71717a; font-size: 0.65rem; font-weight: 700; cursor: pointer; font-family: 'JetBrains Mono', monospace; }
+        .delete-chat-btn:hover { color: #ef4444; }
+        
+        .menu-toggle { font-size: 1.2rem; cursor: pointer; color: #fff; background: none; border: none; padding: 5px 10px; }
+        
+        .header-controls { display: flex; justify-content: space-between; width: 100%; padding: 15px 25px; font-size: 0.65rem; letter-spacing: 2px; color: #52525b; font-weight: 700; text-transform: uppercase; font-family: 'JetBrains Mono', monospace; flex-shrink: 0; }
+        .control-link { cursor: pointer; }
+
+        .main-dashboard { display: flex; flex: 1; width: 100%; max-width: 1600px; margin: 0 auto; padding: 0 25px 15px 25px; gap: 30px; overflow: hidden; }
+
+        .hardware-panel { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 320px; background: #09090b; border: 1px solid var(--border-subtle); border-radius: 12px; padding: 30px; flex-shrink: 0; }
+        .cube-container { perspective: 1000px; height: 140px; display: flex; align-items: center; justify-content: center; }
+        .cube { width: 90px; height: 90px; position: relative; transform-style: preserve-3d; animation: spin 16s infinite linear; }
+        .face { position: absolute; width: 90px; height: 90px; border: 1.5px solid var(--cube-color); background: rgba(0,0,0,0.9); box-shadow: 0 0 25px rgba(0, 102, 255, 0.2); }
+        .front { transform: translateZ(45px); } .back { transform: rotateY(180deg) translateZ(45px); }
+        .right { transform: rotateY(90deg) translateZ(45px); } .left { transform: rotateY(-90deg) translateZ(45px); }
+        @keyframes spin { from { transform: rotateX(0) rotateY(0); } to { transform: rotateX(360deg) rotateY(360deg); } }
+
+        .color-picker-container { display: flex; gap: 10px; justify-content: center; margin-top: 25px; }
+        .color-dot { width: 14px; height: 14px; border-radius: 50%; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); }
+        .dot-blue { background: #0066FF; } .dot-green { background: #10b981; } .dot-red { background: #ef4444; }
+
+        .workspace-panel { display: flex; flex-direction: column; flex: 1; height: 100%; overflow: hidden; }
+        
+        #chat-window { width: 100%; flex: 1; background: #09090b; border: 1px solid var(--border-subtle); border-radius: 12px; padding: 24px; display: flex; flex-direction: column; gap: 20px; overflow-y: auto; scrollbar-width: none; }
+        #chat-window::-webkit-scrollbar { display: none; }
+        
+        /* BOX DA RESPOSTA MUDADO DE VOLTA PARA NÃO CORTAR */
+        .msg { max-width: 75%; padding: 16px 20px; border-radius: 12px; font-size: 0.95rem; line-height: 1.6; position: relative; }
+        .user-msg { align-self: flex-end; background: #000; border: 1px solid var(--cube-color); color: #fff; border-bottom-right-radius: 2px; }
+        
+        /* Padding inferior extra APENAS na resposta da inteligência artificial para caber os botões */
+        .ai-msg { align-self: flex-start; background: var(--card-deep); border: 1px solid var(--border-subtle); color: #e4e4e7; border-bottom-left-radius: 2px; padding-bottom: 45px; }
+        
+        .msg-controls { position: absolute; bottom: 8px; right: 14px; display: flex; gap: 14px; opacity: 1; z-index: 5; }
+        
+        .image-container-block { margin-top: 12px; width: 100%; display: flex; flex-direction: column; gap: 8px; }
+        .image-media { width: 100%; max-width: 500px; border-radius: 8px; border: 1px solid var(--border-subtle); display: block; height: auto; }
+        .image-actions-panel { display: flex; gap: 16px; }
+        
+        .control-btn { background: transparent; border: none; color: #71717a; font-size: 0.65rem; font-weight: 700; cursor: pointer; font-family: 'JetBrains Mono', monospace; text-decoration: none; text-transform: uppercase; }
+        .control-btn:hover { color: var(--strong-blue); }
+
+        .input-area { width: 100%; padding: 15px 0 0 0; display: flex; flex-direction: column; gap: 12px; background: transparent; flex-shrink: 0; }
+        input { width: 100%; padding: 18px; background: #000; border: 1px solid var(--border-subtle); color: white; border-radius: 8px; outline: none; text-align: center; font-size: 0.95rem; font-family: 'JetBrains Mono', monospace; }
+        
+        .btn-group { display: flex; gap: 12px; }
+        .btn { flex: 1; padding: 15px; border-radius: 8px; border: 1px solid var(--border-subtle); background: var(--card-deep); color: #fff; font-weight: 700; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 2px; }
+
+        #info-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(12px); }
+        .modal-content { background: #000; border: 1px solid var(--border-subtle); width: 100%; max-width: 550px; border-radius: 12px; display: flex; flex-direction: column; padding: 35px; }
+        .modal-content h2 { font-size: 0.9rem; font-family: 'JetBrains Mono', monospace; color: var(--strong-blue); margin-bottom: 20px; }
+        .modal-content p { font-size: 0.8rem; line-height: 1.8; color: #a1a1aa; font-family: 'JetBrains Mono', monospace; white-space: pre-line; }
+        .modal-close { margin-top: 30px; padding: 14px; background: #fff; color: #000; border: none; font-weight: 700; font-family: 'JetBrains Mono', monospace; cursor: pointer; border-radius: 6px; }
+        
+        /* MODO IMERSIVO RE-ESTRUTURADO */
+        body.immersive .top-nav { display: none !important; }
+        body.immersive .header-controls { position: fixed; top: 15px; right: 25px; width: auto; padding: 0; z-index: 999; }
+        body.immersive .header-controls .control-link:not(:first-child) { display: none !important; }
+        body.immersive .main-dashboard { padding-top: 25px; height: calc(100vh - 20px); }
+        body.immersive .hardware-panel { height: 100%; }
+
+        footer { font-size: 0.55rem; color: #27272a; text-align: center; margin-top: auto; padding: 10px 0; font-family: 'JetBrains Mono', monospace; letter-spacing: 2px; }
+
+        @media (max-width: 900px) {
+            .main-dashboard { flex-direction: column; padding: 0 15px 15px 15px; overflow-y: auto; }
+            .hardware-panel { width: 100%; height: auto; padding: 15px; flex-direction: row; }
+            .cube-container { height: 70px; } .cube { width: 50px; height: 50px; } .face { width: 50px; height: 50px; }
+            .front { transform: translateZ(25px); } .back { transform: rotateY(180deg) translateZ(25px); }
+            #chat-window { padding: 16px; min-height: 300px; }
+            .msg { max-width: 85%; }
+            body.immersive .header-controls { top: 10px; right: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="auth-screen">
+        <div class="auth-container">
+            <h2>SYNAPSE CORE</h2>
+            <p>Canal Beta Unificado</p>
+            <input type="password" id="auth-key" class="auth-input" placeholder="DIGITE SUA CHAVE ACCESS...">
+            <button class="auth-btn" onclick="validarAcesso()">Acessar Terminal</button>
+            <div id="auth-error-msg" class="auth-error">> CHAVE REJEITADA PELO SERVER.</div>
+        </div>
+    </div>
+
+    <div class="sidebar-overlay" id="overlay" onclick="toggleSidebar()"></div>
+    <div class="sidebar" id="sidebar">
+        <button class="new-chat-btn" onclick="iniciarNovoChat()">Novo Canal</button>
+        <div class="history-list" id="history-container"></div>
+    </div>
+
+    <div class="top-nav">
+        <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+        <h1>SYNAPSE CORE</h1>
+        <div style="width: 30px;"></div>
+    </div>
+
+    <div class="header-controls">
+        <span class="control-link" id="immersive-btn" onclick="toggleImersivo()">[ Modo Imersivo ]</span>
+        <span class="control-link" onclick="abrirModal()">[ Status ]</span>
+    </div>
+
+    <div class="main-dashboard">
+        <div class="hardware-panel">
+            <div class="cube-container">
+                <div id="main-cube" class="cube">
+                    <div class="face front"></div><div class="face back"></div>
+                    <div class="face right"></div><div class="face left"></div>
+                </div>
+            </div>
+            <div class="color-picker-container">
+                <div class="color-dot dot-blue" onclick="mudarCorCubo('#0066FF')"></div>
+                <div class="color-dot dot-green" onclick="mudarCorCubo('#10b981')"></div>
+                <div class="color-dot dot-red" onclick="mudarCorCubo('#ef4444')"></div>
+            </div>
+        </div>
+
+        <div class="workspace-panel">
+            <div id="chat-window"></div>
+            <div class="input-area">
+                <input type="text" id="user-input" placeholder="Aguardando instrucao..." onkeydown="if(event.key === 'Enter') enviar()">
+                <div class="btn-group">
+                    <button class="btn" onclick="enviar()">Enviar</button>
+                    <button class="btn" id="btn-falar" onclick="falar()">Falar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="info-modal">
+        <div class="modal-content">
+            <h2>> CORE_STATUS_LOG</h2>
+            <p>• CORE SYNAPSE V4.5 OPERACIONAL.
+            • ARQUITETURA: DESENVOLVIDA INDEPENDENTEMENTE E DO ZERO APENAS POR SKYPE EM JUNHO DE 2026.
+            • MOTOR DE APRENDIZADO: O CÉREBRA EVOLUI ATRAVÉS DAS INFORMAÇÕES SALVAS COM O USUÁRIO.
+            • OTIMIZAÇÃO: BASE LEVE PARA RESPOSTA ULTRA-RÁPIDA NO TERMINAL.</p>
+            <button class="modal-close" onclick="fecharModal()">Fechar Conexão</button>
+        </div>
+    </div>
+
+    <footer>SYNAPSE CORE v4.5 - BY SKYPE</footer>
+
+    <script>
+        async function validarAcesso() {
+            const input = document.getElementById("auth-key");
+            const erro = document.getElementById("auth-error-msg");
+            const chave = input.value.trim();
+            
+            try {
+                const res = await fetch('/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ chave })
+                });
+                const data = await res.json();
+                
+                if (data.autenticado) {
+                    document.getElementById("auth-screen").style.display = "none";
+                    sessionStorage.setItem("synapse_auth_session", "granted");
+                    rolarChatParaFim();
+                } else {
+                    erro.innerText = `> ${data.erro}`;
+                    erro.style.display = "block";
+                    input.value = "";
+                }
+            } catch(e) {
+                erro.innerText = "> ERRO DE CONEXÃO COM O SERVER.";
+                erro.style.display = "block";
+            }
+        }
+
+        if (sessionStorage.getItem("synapse_auth_session") === "granted") {
+            document.getElementById("auth-screen").style.display = "none";
+        }
+
+        let chatsSalvos = JSON.parse(localStorage.getItem('synapse_chats_v5')) || {};
+        let chatIdAtual = localStorage.getItem('synapse_chat_id_atual_v5') || '';
+        let historico = [];
+        let maosLivres = false;
+        
+        const chatWindow = document.getElementById('chat-window');
+        const historyContainer = document.getElementById('history-container');
+        const cube = document.getElementById('main-cube');
+
+        const corSalva = localStorage.getItem('synapse_cube_color') || '#0066FF';
+        document.documentElement.style.setProperty('--cube-color', corSalva);
+
+        function mudarCorCubo(hex) { document.documentElement.style.setProperty('--cube-color', hex); localStorage.setItem('synapse_cube_color', hex); }
+        
+        function toggleImersivo() { 
+            const isImmersive = document.body.classList.toggle('immersive'); 
+            const btn = document.getElementById('immersive-btn');
+            btn.innerText = isImmersive ? "[ Sair do Modo Imersivo ]" : "[ Modo Imersivo ]";
+            rolarChatParaFim();
+        }
+
+        function abrirModal() { document.getElementById('info-modal').style.display = 'flex'; }
+        function fecharModal() { document.getElementById('info-modal').style.display = 'none'; }
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('active'); document.getElementById('overlay').classList.toggle('active'); renderizarHistoricoLateral(); }
+
+        function rolarChatParaFim() {
+            setTimeout(() => { chatWindow.scrollTop = chatWindow.scrollHeight; }, 50);
+        }
+
+        function iniciarNovoChat() {
+            chatIdAtual = 'chat_' + Date.now();
+            historico = [];
+            localStorage.setItem('synapse_chat_id_atual_v5', chatIdAtual);
+            chatsSalvos[chatIdAtual] = { titulo: "Novo Canal", mensagens: [] };
+            salvarNoStorage();
+            chatWindow.innerHTML = '';
+            addBubble('Core Synapse ativo. Escreva ou fale para interagir.', true);
+            if(document.getElementById('sidebar').classList.contains('active')) toggleSidebar();
+        }
+
+        function excluirChatEspecifico(id, evento) {
+            evento.stopPropagation(); 
+            if(confirm("Eliminar canal permanentemente?")) {
+                delete chatsSalvos[id];
+                salvarNoStorage();
+                if(id === chatIdAtual) {
+                    const keys = Object.keys(chatsSalvos);
+                    if(keys.length > 0) { carregarChatEspecifico(keys[0]); } else { iniciarNovoChat(); }
+                } else { renderizarHistoricoLateral(); }
+            }
+        }
+
+        function carregarChatEspecifico(id) {
+            chatIdAtual = id;
+            localStorage.setItem('synapse_chat_id_atual_v5', id);
+            historico = chatsSalvos[id].mensagens;
+            chatWindow.innerHTML = '';
+            if(!historico || historico.length === 0) { addBubble("Canal limpo.", true); } 
+            else { historico.forEach(m => addBubble(m.content, m.role === 'assistant')); }
+            toggleSidebar();
+        }
+
+        function renderizarHistoricoLateral() {
+            historyContainer.innerHTML = '';
+            Object.keys(chatsSalvos).sort((a,b) => b.split('_')[1] - a.split('_')[1]).forEach(id => {
+                const container = document.createElement('div');
+                container.className = `history-item-container ${id === chatIdAtual ? 'active-container' : ''}`;
+                const item = document.createElement('button');
+                item.className = 'history-item';
+                item.innerText = chatsSalvos[id].titulo || "Canal Ativo";
+                item.onclick = () => carregarChatEspecifico(id);
+                const btnDeletar = document.createElement('button');
+                btnDeletar.className = 'delete-chat-btn';
+                btnDeletar.innerText = 'Excluir';
+                btnDeletar.onclick = (e) => excluirChatEspecifico(id, e);
+                container.appendChild(item);
+                container.appendChild(btnDeletar);
+                historyContainer.appendChild(container);
+            });
+        }
+
+        function salvarNoStorage() { localStorage.setItem('synapse_chats_v5', JSON.stringify(chatsSalvos)); }
+
+        function copiarTexto(texto) {
+            const textoLimpo = texto.replace(/__IMAGE_URL__:[^\s]+/g, "");
+            navigator.clipboard.writeText(textoLimpo);
+        }
+
+        function addBubble(texto, isAi) {
+            const div = document.createElement('div');
+            div.className = `msg ${isAi ? 'ai-msg' : 'user-msg'}`;
+            
+            if (isAi && texto.includes("__IMAGE_URL__:")) {
+                const match = texto.match(/__IMAGE_URL__:([^\s"'\n]+)/);
+                if (match) {
+                    const url = match[1];
+                    div.innerText = "Arquivo unificado renderizado:";
+                    
+                    const imgBlock = document.createElement('div');
+                    imgBlock.className = 'image-container-block';
+                    
+                    const img = document.createElement('img');
+                    img.src = url;
+                    img.className = 'image-media';
+                    img.addEventListener('load', () => rolarChatParaFim());
+                    
+                    const actionsPanel = document.createElement('div');
+                    actionsPanel.className = 'image-actions-panel';
+                    
+                    const linkVisualizar = document.createElement('a');
+                    linkVisualizar.className = 'control-btn';
+                    linkVisualizar.href = url;
+                    linkVisualizar.target = '_blank';
+                    linkVisualizar.innerText = '• Abrir';
+                    
+                    const linkDownload = document.createElement('a');
+                    linkDownload.className = 'control-btn';
+                    linkDownload.href = url;
+                    linkDownload.download = `synapse_render_${Date.now()}.png`;
+                    linkDownload.innerText = '• Baixar';
+                    
+                    actionsPanel.appendChild(linkVisualizar);
+                    actionsPanel.appendChild(linkDownload);
+                    imgBlock.appendChild(img);
+                    imgBlock.appendChild(actionsPanel);
+                    div.appendChild(imgBlock);
+                } else { div.innerText = texto; }
+            } else {
+                div.innerText = texto;
+            }
+
+            // BOTÕES INJETADOS APENAS SE FOR RESPOSTA DA IA (isAi === true)
+            if (isAi) {
+                const controls = document.createElement('div');
+                controls.className = 'msg-controls';
+
+                const btnCopiar = document.createElement('button');
+                btnCopiar.className = 'control-btn';
+                btnCopiar.innerText = 'Copiar';
+                btnCopiar.onclick = () => copiarTexto(texto);
+                controls.appendChild(btnCopiar);
+
+                if (!texto.includes("__IMAGE_URL__:")) {
+                    const btnOuvir = document.createElement('button');
+                    btnOuvir.className = 'control-btn';
+                    btnOuvir.innerText = 'Ouvir';
+                    btnOuvir.onclick = () => talkIA(texto);
+                    controls.appendChild(btnOuvir);
+                }
+                div.appendChild(controls);
+            }
+            
+            chatWindow.appendChild(div);
+            rolarChatParaFim();
+        }
+
+        async function enviar(txt) {
+            const input = document.getElementById('user-input');
+            const val = txt || input.value.trim();
+            if(!val) return;
+
+            addBubble(val, false);
+            input.value = "";
+            historico.push({ role: "user", content: val });
+            
+            if(historico.length === 1) { chatsSalvos[chatIdAtual].titulo = val.substring(0, 14) + "..."; }
+            
+            const pensandoDiv = document.createElement('div');
+            pensandoDiv.className = "msg ai-msg";
+            pensandoDiv.innerText = "Processando sinal...";
+            chatWindow.appendChild(pensandoDiv);
+            rolarChatParaFim();
+
+            try {
+                const res = await fetch('/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ mensagens: historico })
+                });
+                const data = await res.json();
+                if(chatWindow.contains(pensandoDiv)) chatWindow.removeChild(pensandoDiv);
+                
+                addBubble(data.resposta, true);
+                historico.push({ role: "assistant", content: data.resposta });
+                chatsSalvos[chatIdAtual].mensagens = historico;
+                salvarNoStorage();
+            } catch(e) {
+                if(chatWindow.contains(pensandoDiv)) chatWindow.removeChild(pensandoDiv);
+                addBubble("Falha de conexao com o Core.", true);
+            }
+        }
+
+        let rec;
+        function inicializarMicrofone() {
+            try {
+                const SpeechInstance = window.SpeechRecognition || window.webkitSpeechRecognition;
+                if (SpeechInstance) {
+                    rec = new SpeechInstance();
+                    rec.continuous = false; rec.interimResults = false; rec.lang = 'pt-BR';
+                    rec.onstart = () => { cube.classList.add('listening'); };
+                    rec.onend = () => { cube.classList.remove('listening'); };
+                    rec.onresult = (e) => {
+                        const textoCapturado = e.results[0][0].transcript;
+                        if(textoCapturado.trim().length > 0) enviar(textoCapturado);
+                    };
+                }
+            } catch(err) { console.log("Erro modulo voz."); }
+        }
+
+        function falar() { 
+            if(!rec) { inicializarMicrofone(); }
+            if(!rec) { alert("Sem suporte a microfone local."); return; }
+            window.speechSynthesis.cancel(); 
+            maosLivres = !maosLivres; 
+            const btn = document.getElementById('btn-falar'); 
+            if(maosLivres) { 
+                btn.innerText = "Captura Ativa"; 
+                try { rec.start(); } catch(e){}
+            } else { 
+                btn.innerText = "Falar"; 
+                try { rec.stop(); } catch(e){}
+            } 
+        }
+
+        function talkIA(texto) { 
+            window.speechSynthesis.cancel(); 
+            const textoLimpo = texto.replace(/__IMAGE_URL__:[^\s]+/g, "");
+            if(!textoLimpo.trim()) return;
+            const fala = new SpeechSynthesisUtterance(textoLimpo); 
+            fala.lang = 'pt-BR'; fala.rate = 1.05;
+            fala.onstart = () => cube.classList.add('speaking'); 
+            fala.onend = () => { 
+                cube.classList.remove('speaking'); 
+                if(maosLivres && rec) { setTimeout(() => { try { rec.start(); } catch(e){} }, 300); } 
+            }; 
+            window.speechSynthesis.speak(fala); 
+        }
+
+        window.onload = () => {
+            inicializarMicrofone();
+            rolarChatParaFim();
+        };
+
+        if(!chatIdAtual || !chatsSalvos[chatIdAtual]) { iniciarNovoChat(); } else {
+            historico = chatsSalvos[chatIdAtual].mensagens;
+            if(!historico || historico.length === 0) { chatWindow.innerHTML = ''; addBubble("Core ativo.", true); } 
+            else { historico.forEach(m => addBubble(m.content, m.role === 'assistant')); }
+        }
+    </script>
+</body>
+</html>
