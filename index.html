@@ -3,82 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SYNAPSE CORE v5.0</title>
+    <title>SYNAPSE_CORE_FINAL</title>
     <style>
-        :root { --blue: #0066FF; --bg: #050505; }
-        body { margin: 0; background: var(--bg); color: #fff; font-family: monospace; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+        :root { --blue: #0066FF; --bg: #000000; --text: #ffffff; }
+        body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Courier New', monospace; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 
-        /* LOGIN */
+        /* TELA DE LOGIN (BLOQUEIO TOTAL) */
         #login-screen { position: fixed; inset: 0; background: #000; z-index: 9999; display: flex; align-items: center; justify-content: center; }
-        .box { padding: 25px; border: 1px solid var(--blue); width: 85%; max-width: 320px; text-align: center; }
-        input { width: 100%; padding: 15px; background: #000; border: 1px solid #333; color: #fff; margin-bottom: 15px; text-align: center; }
-        button { width: 100%; padding: 15px; background: var(--blue); border: none; color: #fff; cursor: pointer; font-weight: bold; }
+        .login-box { padding: 30px; border: 1px solid var(--blue); width: 85%; max-width: 320px; }
+        .login-box input { width: 100%; padding: 15px; background: #000; border: 1px solid #444; color: #fff; margin-bottom: 15px; text-align: center; }
+        .login-box button { width: 100%; padding: 15px; background: var(--blue); border: none; color: #fff; cursor: pointer; font-weight: bold; }
 
-        /* HEADER */
-        .header { padding: 15px; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; }
-        .btn-top { background: transparent; border: 1px solid var(--blue); color: var(--blue); padding: 5px 10px; cursor: pointer; font-size: 0.7rem; }
+        /* HEADER E STATUS */
+        .header { padding: 15px; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; background: #050505; }
+        .btn-top { background: #000; border: 1px solid var(--blue); color: var(--blue); padding: 5px 10px; cursor: pointer; font-size: 0.7rem; }
 
-        /* CUBO (TAMANHO FIXO PARA TODO DISPOSITIVO) */
+        /* ÁREA CENTRAL E CUBO */
         .main { display: flex; flex: 1; overflow: hidden; }
-        .sidebar { width: 220px; border-right: 1px solid #333; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .cube-wrapper { width: 60px; height: 60px; perspective: 500px; }
+        .sidebar { width: 120px; border-right: 1px solid #333; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .cube { width: 60px; height: 60px; transform-style: preserve-3d; animation: spin 4s infinite linear; }
-        .cube.speaking { animation: spin 0.3s infinite linear; border: 2px solid #00ffcc; }
+        .cube.speaking { animation: spin 0.2s infinite linear; border-color: #00ffcc; }
         @keyframes spin { 100% { transform: rotateX(360deg) rotateY(360deg); } }
-        .face { position: absolute; width: 60px; height: 60px; border: 1px solid var(--blue); background: rgba(0,102,255,0.1); }
+        .face { position: absolute; width: 60px; height: 60px; border: 1px solid var(--blue); background: #000; }
 
         /* CHAT */
         #chat { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
-        .msg { padding: 15px; border: 1px solid #333; border-radius: 4px; max-width: 90%; }
-        
-        /* CONTROLES */
-        .controls { padding: 20px; border-top: 1px solid #333; display: flex; gap: 10px; }
-        .controls input { flex: 1; padding: 15px; background: #000; border: 1px solid #333; color: #fff; }
-        .btn-act { padding: 0 20px; background: var(--blue); color: #fff; border: none; cursor: pointer; }
+        .msg { padding: 15px; border: 1px solid #222; border-radius: 2px; max-width: 90%; }
+
+        /* ENTRADA FIXA */
+        .controls { padding: 20px; background: #050505; border-top: 1px solid #333; display: flex; gap: 10px; }
+        .controls input { flex: 1; padding: 15px; background: #000; border: 1px solid var(--blue); color: #fff; outline: none; }
+        .btn-act { padding: 0 20px; background: var(--blue); color: #fff; border: none; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
+
     <div id="login-screen">
         <div class="box">
-            <input type="password" id="key" placeholder="CHAVE DE ACESSO">
-            <button onclick="login()">CONECTAR</button>
+            <input type="password" id="key" placeholder="ACESSO BETA">
+            <button onclick="login()">ENTRAR</button>
         </div>
     </div>
 
     <div class="header">
-        <span>SYNAPSE v5.0</span>
-        <button class="btn-top" onclick="location.reload()">SAIR DO SISTEMA</button>
+        <span>SYNAPSE_CORE</span>
+        <button class="btn-top" onclick="location.reload()">SAIR</button>
     </div>
 
     <div class="main">
         <div class="sidebar">
-            <div class="cube-wrapper">
-                <div class="cube" id="cubo">
-                    <div class="face" style="transform:translateZ(30px)"></div>
-                    <div class="face" style="transform:rotateY(180deg) translateZ(30px)"></div>
-                    <div class="face" style="transform:rotateY(90deg) translateZ(30px)"></div>
-                    <div class="face" style="transform:rotateY(-90deg) translateZ(30px)"></div>
-                    <div class="face" style="transform:rotateX(90deg) translateZ(30px)"></div>
-                    <div class="face" style="transform:rotateX(-90deg) translateZ(30px)"></div>
-                </div>
+            <div class="cube" id="cubo">
+                <div class="face" style="transform:translateZ(30px)"></div>
+                <div class="face" style="transform:rotateY(180deg) translateZ(30px)"></div>
+                <div class="face" style="transform:rotateY(90deg) translateZ(30px)"></div>
+                <div class="face" style="transform:rotateY(-90deg) translateZ(30px)"></div>
+                <div class="face" style="transform:rotateX(90deg) translateZ(30px)"></div>
+                <div class="face" style="transform:rotateX(-90deg) translateZ(30px)"></div>
             </div>
-            <div style="font-size: 0.6rem; color: #555; margin-top: 15px;">SISTEMA OPERACIONAL</div>
         </div>
         <div id="chat"></div>
     </div>
 
     <div class="controls">
-        <input type="text" id="in" placeholder="Comando...">
-        <button class="btn-act" onclick="send()">ENVIAR</button>
-        <button class="btn-act" onclick="falar()">FALAR</button>
+        <input type="text" id="in" placeholder="DIGITE AQUI...">
+        <button class="btn-act" onclick="send()">SEND</button>
+        <button class="btn-act" onclick="falar()">MIC</button>
     </div>
 
     <script>
-        // LÓGICA CORE
         function login() { if(document.getElementById('key').value === "CORE-SKYPE-2026") document.getElementById('login-screen').style.display = 'none'; }
         
-        async function send() { /* AQUI ENTRA A CHAMADA DO SEU SERVIDOR */ }
+        // Lógica de envio
+        async function send() {
+            const input = document.getElementById('in');
+            if(!input.value) return;
+            // Adicionar msg na tela...
+            input.value = '';
+        }
 
+        // Lógica de Voz
         function falar() {
             const rec = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
             rec.lang = 'pt-BR';
