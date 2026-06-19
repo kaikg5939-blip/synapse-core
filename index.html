@@ -3,17 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>SYNAPSE CORE v7.0 | SUPREMO</title>
+    <title>SYNAPSE CORE v8.0 | SUPREMO MODO</title>
     <style>
         :root { 
-            --blue: #0088FF; 
-            --bg: #000000; 
-            --panel: rgba(10, 10, 15, 0.6); 
-            --border: rgba(0, 136, 255, 0.2); 
-            --text: #f0f0f5; 
+            --blue: #00f0ff; 
+            --bg: #030305; 
+            --panel: rgba(5, 5, 10, 0.75); 
+            --border: rgba(0, 240, 255, 0.25); 
+            --text: #ffffff; 
+            --glow: 0 0 20px rgba(0, 240, 255, 0.4);
         }
         
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', -apple-system, sans-serif; }
         
         body { 
             background: var(--bg); 
@@ -25,232 +26,266 @@
             position: relative; 
         }
 
-        /* FUNDO NEBULOSA FUTURISTA */
+        /* ESTÉTICA DE CORES DE FUNDO NEBULOSA */
         body::before {
             content: '';
             position: absolute;
             inset: 0;
             background: 
-                radial-gradient(circle at 15% 15%, rgba(0, 102, 255, 0.12) 0%, transparent 45%),
-                radial-gradient(circle at 85% 85%, rgba(0, 255, 204, 0.06) 0%, transparent 45%);
-            filter: blur(80px);
+                radial-gradient(circle at 50% 30%, rgba(0, 102, 255, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 10% 90%, rgba(0, 240, 255, 0.08) 0%, transparent 40%);
+            filter: blur(60px);
             z-index: 0;
         }
 
-        /* AUTENTICAÇÃO GLASSMORPHISM */
+        /* LOGIN GLASSMORPHISM AVANÇADO */
         #login-overlay { 
             position: fixed; 
             inset: 0; 
-            background: rgba(0, 0, 0, 0.85); 
-            backdrop-filter: blur(25px); 
+            background: rgba(0, 0, 0, 0.9); 
+            backdrop-filter: blur(30px); 
             z-index: 9999; 
             display: flex; 
             align-items: center; 
             justify-content: center; 
-            transition: opacity 0.4s; 
         }
         .login-card { 
-            background: rgba(20, 20, 25, 0.5); 
-            padding: 50px; 
-            border-radius: 4px; 
+            background: rgba(15, 15, 25, 0.6); 
+            padding: 50px 40px; 
+            border-radius: 8px; 
             border: 1px solid var(--border); 
             text-align: center; 
             width: 90%; 
-            max-width: 380px; 
-            box-shadow: 0 0 50px rgba(0, 0, 0, 0.6); 
+            max-width: 400px; 
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.8), var(--glow); 
         }
-        .login-card h3 { letter-spacing: 12px; color: var(--blue); margin-bottom: 40px; font-weight: 200; font-size: 0.9rem; text-transform: uppercase; }
+        .login-card h3 { letter-spacing: 8px; color: var(--blue); margin-bottom: 45px; font-weight: 300; font-size: 1.1rem; text-transform: uppercase; text-shadow: var(--glow); }
         .login-card input { 
             width: 100%; 
             padding: 15px; 
-            background: transparent; 
-            border: none; 
-            border-bottom: 2px solid #333; 
+            background: rgba(0, 0, 0, 0.5); 
+            border: 1px solid #222; 
+            border-radius: 4px;
             color: var(--blue); 
-            font-size: 1.2rem; 
+            font-size: 1.3rem; 
             text-align: center; 
             outline: none; 
-            transition: 0.4s; 
-            font-family: 'JetBrains Mono'; 
+            transition: 0.3s; 
+            letter-spacing: 4px;
         }
-        .login-card input:focus { border-bottom-color: var(--blue); color: #fff; }
+        .login-card input:focus { border-color: var(--blue); box-shadow: var(--glow); color: #fff; }
         .login-card button { 
-            margin-top: 40px; 
-            padding: 15px 40px; 
-            background: transparent; 
-            border: 1px solid var(--blue); 
-            color: var(--blue); 
+            margin-top: 35px; 
+            width: 100%;
+            padding: 16px; 
+            background: var(--blue); 
+            color: #000; 
             font-weight: bold; 
+            border: none;
+            border-radius: 4px;
             cursor: pointer; 
             transition: 0.3s; 
             text-transform: uppercase;
             letter-spacing: 2px;
         }
-        .login-card button:hover { background: var(--blue); color: #000; box-shadow: 0 0 15px rgba(0, 136, 255, 0.4); }
+        .login-card button:hover { background: #fff; box-shadow: 0 0 25px #fff; }
 
-        /* HEADER */
+        /* CABEÇALHO SUPREMO */
         .header { 
-            padding: 20px 30px; 
+            padding: 20px 40px; 
             background: var(--panel); 
             border-bottom: 1px solid var(--border); 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            backdrop-filter: blur(10px); 
+            backdrop-filter: blur(15px); 
             z-index: 100; 
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
         }
+        .nav-brand { font-weight: 700; letter-spacing: 3px; color: var(--blue); font-size: 0.9rem; text-shadow: var(--glow); }
         .nav-actions { display: flex; gap: 15px; }
         .btn-top { 
-            padding: 6px 14px; 
+            padding: 8px 16px; 
             border: 1px solid var(--blue); 
             background: transparent; 
             color: var(--blue); 
-            font-size: 0.7rem; 
+            font-size: 0.75rem; 
             font-weight: bold; 
             cursor: pointer; 
-            font-family: 'JetBrains Mono'; 
             text-transform: uppercase;
+            transition: 0.2s;
         }
-        .btn-sair { border-color: #ff3333; color: #ff3333; }
+        .btn-top:hover { background: var(--blue); color: #000; box-shadow: var(--glow); }
+        .btn-sair { border-color: #ff3355; color: #ff3355; }
+        .btn-sair:hover { background: #ff3355; color: #000; box-shadow: 0 0 15px #ff3355; }
 
-        /* WORKSPACE PRINCIPAL */
-        .stage { display: flex; flex: 1; overflow: hidden; padding: 20px; gap: 20px; z-index: 1; }
+        /* PALCO CENTRAL INTERATIVO */
+        .stage { display: flex; flex: 1; overflow: hidden; padding: 30px; gap: 30px; z-index: 1; position: relative; }
         
-        /* SIDEBAR (UNIFICADA COMPATÍVEL COM PC E CELULAR) */
-        .sidebar { 
-            width: 180px; 
+        /* CONTAINER DO CUBO (AGORA CENTRALIZADO E IMPONENTE) */
+        .visual-container { 
+            flex: 1;
             display: flex; 
             flex-direction: column; 
             align-items: center; 
             justify-content: center; 
-            gap: 40px; 
-            border-right: 1px solid var(--border); 
+            position: relative;
+            background: rgba(5, 5, 10, 0.4);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            backdrop-filter: blur(5px);
+        }
+
+        /* BASE DO CUBO CIBERNÉTICA */
+        .cube-base {
+            position: absolute;
+            width: 160px;
+            height: 20px;
+            background: #0a0a15;
+            border: 2px solid var(--border);
+            bottom: 30%;
+            transform: rotateX(60deg);
+            box-shadow: 0 0 30px var(--blue), inset 0 0 15px var(--blue);
+            border-radius: 50%;
         }
         
-        /* MOTOR DO CUBO 3D COESIVO */
-        .cube-scene { width: 80px; height: 80px; perspective: 500px; }
-        .cube { width: 80px; height: 80px; transform-style: preserve-3d; animation: rotateContinuous 5s infinite linear; }
-        .cube.speaking { animation: rotateContinuous 0.4s infinite linear; }
+        /* O CUBO SUPREMO */
+        .cube-scene { width: 120px; height: 120px; perspective: 600px; transform: translateY(-30px); }
+        .cube { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; animation: rotateContinuous 8s infinite linear; }
+        .cube.speaking { animation: rotateContinuous 0.6s infinite linear; }
+        .cube.speaking .face { border-color: #00ffcc; box-shadow: inset 0 0 20px rgba(0, 255, 204, 0.4); }
+        
         @keyframes rotateContinuous { 100% { transform: rotateX(360deg) rotateY(360deg); } }
+        
         .face { 
             position: absolute; 
-            width: 80px; 
-            height: 80px; 
+            width: 120px; 
+            height: 120px; 
             border: 2px solid var(--blue); 
-            background: rgba(0, 102, 255, 0.02); 
-            box-shadow: inset 0 0 12px rgba(0, 136, 255, 0.15); 
-            transition: border-color 0.3s;
+            background: rgba(0, 240, 255, 0.03); 
+            box-shadow: inset 0 0 20px rgba(0, 240, 255, 0.2); 
+            transition: all 0.3s;
         }
+        .front  { transform: rotateY(  0deg) translateZ(60px); }
+        .back   { transform: rotateY(180deg) translateZ(60px); }
+        .right  { transform: rotateY( 90deg) translateZ(60px); }
+        .left   { transform: rotateY(-90deg) translateZ(60px); }
+        .top    { transform: rotateX( 90deg) translateZ(60px); }
+        .bottom { transform: rotateX(-90deg) translateZ(60px); }
 
-        /* PALETA DE SISTEMA */
-        .palette { display: flex; gap: 12px; }
-        .dot { width: 20px; height: 20px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: 0.3s; }
-        .dot:hover { transform: scale(1.2); border-color: #fff; }
+        /* SELETOR DE TEMAS INJETADO NA LATERAL DA TELA */
+        .theme-panel { position: absolute; left: 20px; top: 20px; display: flex; flex-direction: column; gap: 15px; background: rgba(0,0,0,0.5); padding: 12px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); }
+        .dot { width: 20px; height: 20px; border-radius: 50%; cursor: pointer; transition: 0.2s; }
+        .dot:hover { transform: scale(1.2); }
 
-        /* PAINEL DE CONVERSA */
-        #chat-flow { flex: 1; overflow-y: auto; padding: 10px 20px; display: flex; flex-direction: column; gap: 15px; }
-        .message { padding: 16px; border-radius: 4px; border: 1px solid var(--border); max-width: 85%; line-height: 1.5; font-size: 0.95rem; backdrop-filter: blur(5px); }
-        .user-msg { align-self: flex-end; background: rgba(0, 102, 255, 0.04); border-color: var(--blue); color: var(--blue); }
-        .ai-msg { align-self: flex-start; background: rgba(15, 15, 20, 0.4); border-color: var(--border); }
+        /* PAINEL DE CONVERSA LATERAL FLUIDO */
+        #chat-flow { width: 450px; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 20px; background: var(--panel); border: 1px solid var(--border); border-radius: 8px; backdrop-filter: blur(15px); }
+        .message { padding: 18px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05); max-width: 90%; line-height: 1.6; font-size: 0.95rem; }
+        .user-msg { align-self: flex-end; background: rgba(0, 240, 255, 0.05); border-color: var(--blue); color: var(--blue); font-weight: bold; }
+        .ai-msg { align-self: flex-start; background: rgba(20, 20, 30, 0.6); border-color: rgba(250,250,250,0.1); }
         
         .btn-ouvir { 
-            margin-top: 12px; 
-            padding: 6px 12px; 
-            background: transparent; 
-            color: var(--blue); 
-            border: 1px solid var(--blue); 
-            border-radius: 2px; 
-            cursor: pointer; 
-            font-size: 0.75rem; 
-            font-family: 'JetBrains Mono';
-            text-transform: uppercase;
+            margin-top: 12px; padding: 8px 16px; background: transparent; color: var(--blue); border: 1px solid var(--blue); cursor: pointer; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; transition: 0.2s;
         }
+        .btn-ouvir:hover { background: var(--blue); color: #000; }
 
-        /* CONTROLES TÁTICOS (RODAPÉ) */
+        /* DIGITAL COMMAND BAR (RODAPÉ PREMIUM UNIFICADO) */
         .dock { 
-            padding: 20px 30px; 
+            padding: 30px 40px; 
             background: var(--panel); 
             border-top: 1px solid var(--border); 
             display: flex; 
             flex-direction: column; 
-            gap: 15px; 
-            backdrop-filter: blur(10px); 
+            gap: 20px; 
+            backdrop-filter: blur(15px); 
             z-index: 100; 
+            box-shadow: 0 -10px 40px rgba(0,0,0,0.5);
         }
-        .disclaimer { font-size: 0.6rem; color: #444; text-align: center; letter-spacing: 1px; text-transform: uppercase; }
-        .console-row { display: flex; gap: 15px; flex-wrap: wrap; }
+        .disclaimer { font-size: 0.65rem; color: #555; text-align: center; letter-spacing: 1.5px; text-transform: uppercase; font-weight: bold; }
+        .console-row { display: flex; gap: 20px; align-items: center; }
+        
+        .input-wrapper { flex: 1; position: relative; background: #000; border: 1px solid #222; border-radius: 4px; padding-left: 20px; transition: 0.3s; }
+        .input-wrapper::before { content: 'COMANDO:'; position: absolute; left: 20px; top: 18px; font-size: 0.85rem; color: #555; font-weight: bold; letter-spacing: 1px; }
+        .input-wrapper:focus-within { border-color: var(--blue); box-shadow: var(--glow); }
+        
         .console-input { 
-            flex: 1; 
-            padding: 16px; 
-            background: rgba(0, 0, 0, 0.7); 
-            border: 1px solid #252525; 
+            width: 100%;
+            padding: 18px 20px 18px 90px; 
+            background: transparent;
+            border: none;
             color: #fff; 
             outline: none; 
-            font-size: 0.95rem; 
-            font-family: 'JetBrains Mono'; 
-            transition: 0.3s; 
-            min-width: 280px;
+            font-size: 1rem; 
+            font-weight: 500;
         }
-        .console-input:focus { border-color: var(--blue); box-shadow: 0 0 10px rgba(0, 136, 255, 0.15); }
         
         .btn-core { 
-            padding: 0 35px; 
+            height: 58px;
+            padding: 0 40px; 
             border: none; 
+            border-radius: 4px;
             font-weight: bold; 
             cursor: pointer; 
-            font-family: 'JetBrains Mono'; 
-            transition: 0.2s; 
-            font-size: 0.85rem;
+            transition: 0.3s; 
+            font-size: 0.9rem;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
         }
-        .btn-send { background: var(--blue); color: #000; }
-        .btn-mic { background: rgba(15, 15, 20, 0.7); color: #fff; border: 1px solid #333; }
-        .btn-mic.active { background: #ff3333; border-color: #ff3333; color: #fff; }
+        .btn-send { background: var(--blue); color: #000; box-shadow: var(--glow); }
+        .btn-send:hover { background: #fff; box-shadow: 0 0 25px #fff; }
+        
+        .btn-mic { background: rgba(20, 20, 30, 0.8); color: #fff; border: 1px solid #333; display: flex; align-items: center; gap: 10px; }
+        .btn-mic:hover { border-color: var(--blue); color: var(--blue); }
+        .btn-mic.active { background: #ff3355; border-color: #ff3355; color: #fff; box-shadow: 0 0 20px rgba(255,51,85,0.4); }
 
-        /* AJUSTE DINÂMICO PARA SMARTPHONES (MANTÉM O CUBO BONITO) */
-        @media (max-width: 768px) {
-            .stage { padding: 10px; gap: 10px; }
-            .sidebar { width: 65px; padding: 10px 0; gap: 25px; }
-            .cube-scene { width: 45px; height: 45px; }
-            .cube { width: 45px; height: 45px; }
-            .face { width: 45px; height: 45px; }
-            .front  { transform: rotateY(  0deg) translateZ(22.5px); }
-            .back   { transform: rotateY(180deg) translateZ(22.5px); }
-            .right  { transform: rotateY( 90deg) translateZ(22.5px); }
-            .left   { transform: rotateY(-90deg) translateZ(22.5px); }
-            .top    { transform: rotateX( 90deg) translateZ(22.5px); }
-            .bottom { transform: rotateX(-90deg) translateZ(22.5px); }
-            .palette { flex-direction: column; }
-            .dock { padding: 15px; }
-            .console-row { gap: 10px; }
-            .console-input { min-width: 100%; }
-            .btn-core { flex: 1; padding: 18px; font-size: 0.95rem; }
+        /* DESIGN DINÂMICO PARA TELEFONE (RESPONSIVIDADE SUPREMA) */
+        @media (max-width: 950px) {
+            .stage { flex-direction: column; padding: 15px; gap: 15px; }
+            .visual-container { min-height: 280px; flex: none; }
+            #chat-flow { width: 100%; flex: 1; min-height: 200px; }
+            .cube-scene { width: 80px; height: 80px; }
+            .face { width: 80px; height: 80px; }
+            .front  { transform: rotateY(  0deg) translateZ(40px); }
+            .back   { transform: rotateY(180deg) translateZ(40px); }
+            .right  { transform: rotateY( 90deg) translateZ(40px); }
+            .left   { transform: rotateY(-90deg) translateZ(40px); }
+            .top    { transform: rotateX( 90deg) translateZ(40px); }
+            .bottom { transform: rotateX(-90deg) translateZ(40px); }
+            .cube-base { width: 110px; bottom: 20%; }
+            .theme-panel { left: auto; right: 20px; top: 20px; flex-direction: row; }
+            .dock { padding: 20px 15px; }
+            .console-row { flex-wrap: wrap; gap: 10px; }
+            .input-wrapper { min-width: 100%; }
+            .btn-core { flex: 1; height: 55px; }
         }
     </style>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;400;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
 </head>
 <body>
 
     <div id="login-overlay">
         <div class="login-card">
             <h3>SYNAPSE CORE</h3>
-            <input type="password" id="access-key" placeholder="CHAVE DE ACESSO" onkeydown="if(event.key==='Enter') autenticar()">
-            <button onclick="autenticar()">CONECTAR</button>
-            <p id="error-alert" style="color:#ff3333; font-size:0.75rem; margin-top:15px; display:none; font-family:'JetBrains Mono';">SINAL REJEITADO</p>
+            <input type="password" id="access-key" placeholder="CHAVE" onkeydown="if(event.key==='Enter') autenticar()">
+            <button onclick="autenticar()">INICIAR SISTEMA</button>
+            <p id="error-alert" style="color:#ff3355; font-size:0.75rem; margin-top:15px; display:none;">SINAL REJEITADO</p>
         </div>
     </div>
 
     <div class="header">
-        <strong style="color:#666; font-family:'JetBrains Mono'; letter-spacing: 2px;">CORE_v7.0</strong>
+        <div class="nav-brand">SYNAPSE_CORE_SUPREMO v8.0</div>
         <div class="nav-actions">
-            <button class="btn-top" onclick="alert('LATENCIA: 105ms\nHOST: RENDER_MAIN_SERVER\nMEMORIA: ATIVA')">STATUS</button>
+            <button class="btn-top" onclick="alert('STATUS: OPERACIONAL\nLATENCIA: 105ms\nHOST: RENDER_SERVER_MAIN')">STATUS</button>
             <button class="btn-top btn-sair" onclick="desconectar()">SAIR</button>
         </div>
     </div>
 
     <div class="stage">
-        <div class="sidebar">
+        <div class="visual-container">
+            <div class="theme-panel">
+                <div class="dot" style="background:#00f0ff;" onclick="alterarTema('#00f0ff')"></div>
+                <div class="dot" style="background:#00ffcc;" onclick="alterarTema('#00ffcc')"></div>
+                <div class="dot" style="background:#ff0055;" onclick="alterarTema('#ff0055')"></div>
+            </div>
             <div class="cube-scene">
                 <div class="cube" id="sys-cube">
                     <div class="face front"></div><div class="face back"></div>
@@ -258,19 +293,18 @@
                     <div class="face top"></div><div class="face bottom"></div>
                 </div>
             </div>
-            <div class="palette">
-                <div class="dot" style="background:#0088FF;" onclick="alterarTema('#0088FF')"></div>
-                <div class="dot" style="background:#00FFCC;" onclick="alterarTema('#00FFCC')"></div>
-                <div class="dot" style="background:#FF0077;" onclick="alterarTema('#FF0077')"></div>
-            </div>
+            <div class="cube-base"></div>
         </div>
+
         <div id="chat-flow"></div>
     </div>
 
     <div class="dock">
         <div class="disclaimer">O sistema pode cometer erros assim como qualquer humano ou robô. Verifique as informações.</div>
         <div class="console-row">
-            <input type="text" id="console-in" placeholder="DIGITE SEU COMANDO..." onkeydown="if(event.key==='Enter') enviarMensagem('texto')">
+            <div class="input-wrapper">
+                <input type="text" id="console-in" class="console-input" placeholder="DIGITE SEU COMANDO AQUI..." onkeydown="if(event.key==='Enter') enviarMensagem('texto')">
+            </div>
             <button class="btn-core btn-send" onclick="enviarMensagem('texto')">ENVIAR</button>
             <button class="btn-core btn-mic" id="btn-mic" onclick="capturarVoz()">FALAR</button>
         </div>
@@ -280,9 +314,8 @@
         let historico = [];
         let modoAtual = 'texto';
 
-        // GESTÃO DE SESSÃO E LOGIN
         window.onload = () => {
-            if (sessionStorage.getItem('syn_auth_v7') === 'valid') {
+            if (sessionStorage.getItem('syn_auth_v8') === 'valid') {
                 document.getElementById('login-overlay').style.display = 'none';
             }
         };
@@ -290,7 +323,7 @@
         function autenticar() {
             const key = document.getElementById('access-key').value.trim().toUpperCase();
             if (key === "CORE-SKYPE-2026") {
-                sessionStorage.setItem('syn_auth_v7', 'valid');
+                sessionStorage.setItem('syn_auth_v8', 'valid');
                 document.getElementById('login-overlay').style.opacity = '0';
                 setTimeout(() => document.getElementById('login-overlay').style.display = 'none', 400);
             } else {
@@ -299,15 +332,12 @@
         }
 
         function desconectar() {
-            sessionStorage.removeItem('syn_auth_v7');
+            sessionStorage.removeItem('syn_auth_v8');
             window.location.reload();
         }
 
-        function alterarTema(hex) {
-            document.documentElement.style.setProperty('--blue', hex);
-        }
+        function alterarTema(hex) { document.documentElement.style.setProperty('--blue', hex); }
 
-        // FLUXO DE CONVERSAÇÃO COM MEMÓRIA INTEGRADA
         function renderBalao(texto, isAi) {
             const painel = document.getElementById('chat-flow');
             const div = document.createElement('div');
@@ -317,7 +347,7 @@
             if (isAi && modoAtual === 'texto') {
                 const btnOuvir = document.createElement('button');
                 btnOuvir.className = 'btn-ouvir';
-                btnOuvir.innerText = 'OUVIR';
+                btnOuvir.innerText = 'OUVIR AUDIO';
                 btnOuvir.onclick = () => executarVoz(texto);
                 div.appendChild(document.createElement('br'));
                 div.appendChild(btnOuvir);
@@ -335,8 +365,6 @@
             modoAtual = modo;
             renderBalao(prompt, false);
             input.value = '';
-            
-            // Alimenta o histórico que vai para a API no Render
             historico.push({ role: "user", content: prompt });
 
             try {
@@ -345,71 +373,54 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ mensagens: historico })
                 });
-                
                 const dados = await respostaServidor.json();
                 const respostaIA = dados.resposta;
 
                 renderBalao(respostaIA, true);
                 historico.push({ role: "assistant", content: respostaIA });
 
-                if (modoAtual === 'voz') {
-                    executarVoz(respostaIA);
-                }
+                if (modoAtual === 'voz') { executarVoz(respostaIA); }
             } catch (error) {
-                renderBalao("FALHA DE SINCRONIZACAO COM O SERVIDOR DO RENDER.", true);
+                renderBalao("FALHA DE SINCRONIZACAO COM O SERVIDOR.", true);
             }
         }
 
-        // CONTROLE DO MICROFONE (TRAVA SECANTE + COMPATIBILIDADE SAFARI)
         function capturarVoz() {
-            window.speechSynthesis.speak(new SpeechSynthesisUtterance('')); // Destrava motor iOS
-
+            window.speechSynthesis.speak(new SpeechSynthesisUtterance(''));
             const SpeechAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
-            if (!SpeechAPI) {
-                alert("MOTOR DE CAPTURA INDISPONÍVEL NESTE NAVEGADOR.");
-                return;
-            }
+            if (!SpeechAPI) return;
 
             const rec = new SpeechAPI();
             rec.lang = 'pt-BR';
-            rec.continuous = false; // Trava: encerra ao terminar a frase
+            rec.continuous = false;
 
             rec.onstart = () => {
                 document.getElementById('btn-mic').innerText = "OUVINDO...";
                 document.getElementById('btn-mic').classList.add('active');
             };
-
             rec.onresult = (e) => {
                 const capturado = e.results[0][0].transcript;
                 document.getElementById('console-in').value = capturado;
                 enviarMensagem('voz');
-                rec.stop(); // Desliga a energia do mic imediatamente
+                rec.stop();
             };
-
             rec.onend = () => {
                 document.getElementById('btn-mic').innerText = "FALAR";
                 document.getElementById('btn-mic').classList.remove('active');
             };
-
             rec.start();
         }
 
-        // SÍNTESE DE ÁUDIO + ANIMAÇÃO DO CUBO
-        function executarVoz(texto) {
+        function ejecutarVoz(texto) {
             window.speechSynthesis.cancel();
             const fala = new SpeechSynthesisUtterance(texto);
             fala.lang = 'pt-BR';
-
-            fala.onstart = () => {
-                document.getElementById('sys-cube').classList.add('speaking');
-            };
-
-            fala.onend = () => {
-                document.getElementById('sys-cube').classList.remove('speaking');
-            };
-
+            fala.onstart = () => document.getElementById('sys-cube').classList.add('speaking');
+            fala.onend = () => document.getElementById('sys-cube').classList.remove('speaking');
             window.speechSynthesis.speak(fala);
         }
     </script>
+</body>
+</html>
 </body>
 </html>
