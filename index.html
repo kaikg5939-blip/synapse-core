@@ -9,22 +9,27 @@
             --blue: #0044FF; 
             --bg: #000000; 
             --panel: rgba(5, 5, 5, 0.85); 
-            --border: rgba(0, 68, 255, 0.15); 
             --text: #ffffff; 
             --glow: 0 2px 12px rgba(0, 68, 255, 0.2);
         }
         
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
         
+        /* REMOVE TOTALMENTE AS BARRAS DE ROLAGEM BRANCAS FEIAS */
+        ::-webkit-scrollbar { width: 0px; height: 0px; display: none; }
+        
         body { 
             background: var(--bg); 
             color: var(--text); 
-            height: 100vh; 
+            height: 100vh;
+            height: 100dvh;
             display: flex; 
             flex-direction: column; 
             overflow: hidden; 
             position: relative; 
             font-weight: 300;
+            -webkit-text-size-adjust: 100%;
+            scrollbar-width: none;
         }
 
         body::before {
@@ -38,7 +43,7 @@
 
         /* LOGIN CLASSIC MODERN */
         #login-overlay { position: fixed; inset: 0; background: #000000; backdrop-filter: blur(35px); z-index: 9999; display: flex; align-items: center; justify-content: center; transition: opacity 0.4s; }
-        .login-card { background: rgba(10, 10, 12, 0.6); padding: 50px 40px; border-radius: 12px; border: 1px solid var(--border); text-align: center; width: 90%; max-width: 380px; }
+        .login-card { background: rgba(10, 10, 12, 0.6); padding: 50px 40px; border-radius: 12px; border: 1px solid var(--blue); text-align: center; width: 90%; max-width: 380px; box-shadow: var(--glow); }
         .login-card h3 { letter-spacing: 10px; color: var(--blue); margin-bottom: 40px; font-weight: 200; font-size: 0.95rem; text-transform: uppercase; }
         .login-card input { width: 100%; padding: 14px; background: rgba(0, 0, 0, 0.8); border: 1px solid #151515; border-radius: 12px; color: var(--blue); font-size: 1.1rem; text-align: center; outline: none; letter-spacing: 4px; transition: 0.3s; }
         .login-card input:focus { border-color: var(--blue); }
@@ -46,17 +51,17 @@
         .login-card button:hover { background: var(--blue); color: #fff; box-shadow: var(--glow); }
 
         /* HEADER INTERFACE */
-        .header { padding: 18px 35px; background: var(--panel); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(20px); z-index: 100; }
+        .header { padding: 18px 35px; background: var(--panel); border-bottom: 1px solid var(--blue); display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(20px); z-index: 100; }
         .nav-brand { font-weight: 400; letter-spacing: 4px; color: var(--blue); font-size: 0.85rem; text-transform: uppercase; }
         .nav-actions { display: flex; gap: 12px; }
         
         .btn-top { padding: 8px 18px; border: 1px solid #1a1a1a; background: rgba(10, 10, 10, 0.5); color: #888; font-size: 0.7rem; font-weight: 500; border-radius: 12px; cursor: pointer; text-transform: uppercase; letter-spacing: 1.5px; transition: 0.3s; }
         .btn-top:hover { border-color: var(--blue); color: var(--blue); box-shadow: var(--glow); }
         .btn-sair { border-color: #1a1a1a; color: #888; }
-        .btn-sair:hover { border-color: #ff3355; color: #ff3355; }
+        .btn-sair:hover { border-color: #ff3355; color: #ff3355; box-shadow: 0 0 10px rgba(255,51,85,0.2); }
 
         /* GAVETA DE STATUS NATIVA */
-        #status-drawer { display: none; position: absolute; top: 80px; left: 35px; background: rgba(5, 5, 8, 0.98); border: 1px solid var(--border); border-radius: 12px; padding: 25px; width: 310px; z-index: 500; font-size: 0.8rem; line-height: 1.8; letter-spacing: 0.5px; box-shadow: var(--glow); }
+        #status-drawer { display: none; position: absolute; top: 80px; left: 35px; background: rgba(5, 5, 8, 0.98); border: 1px solid var(--blue); border-radius: 12px; padding: 25px; width: 310px; z-index: 500; font-size: 0.8rem; line-height: 1.8; letter-spacing: 0.5px; box-shadow: var(--glow); }
         #status-drawer p { margin-bottom: 6px; color: #777; text-transform: uppercase; }
         #status-drawer strong { color: var(--blue); font-weight: 500; }
 
@@ -64,22 +69,22 @@
         .stage { display: flex; flex: 1; overflow: hidden; padding: 20px; gap: 20px; z-index: 1; position: relative; }
         
         /* HISTÓRICO LATERAL ESQUERDO COMPACTO */
-        #history-sidebar { display: none; width: 220px; background: rgba(5, 5, 5, 0.4); border-right: 1px solid var(--border); padding-right: 20px; flex-direction: column; gap: 20px; z-index: 200; }
+        #history-sidebar { display: none; width: 220px; background: rgba(5, 5, 5, 0.4); border-right: 1px solid var(--blue); padding-right: 20px; flex-direction: column; gap: 20px; z-index: 200; }
         .btn-new-chat { width: 100%; padding: 12px; background: transparent; border: 1px solid #1a1a1a; color: #888; font-weight: bold; border-radius: 12px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; font-size: 0.75rem; transition: 0.3s; }
         .btn-new-chat:hover { border-color: var(--blue); color: var(--blue); }
-        .history-list { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
+        .history-list { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; scrollbar-width: none; }
+        .history-list::-webkit-scrollbar { display: none; }
         .history-item { padding: 12px 14px; background: rgba(10, 10, 12, 0.3); border-radius: 12px; display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; border: 1px solid transparent; cursor: pointer; transition: 0.2s; letter-spacing: 0.5px; }
-        .history-item:hover { border-color: #1a1a1a; }
-        .history-item.active-chat { border-color: var(--blue); color: var(--blue); background: rgba(0, 68, 255, 0.02); }
+        .history-item:hover { border-color: var(--blue); }
+        .history-item.active-chat { border-color: var(--blue); color: var(--blue); background: rgba(0, 68, 255, 0.02); box-shadow: var(--glow); }
         
-        /* BOTÃO LIMPAR CONECTADO DINAMICAMENTE COM A COR DO CUBO */
         .btn-del-chat { background: transparent; border: none; color: rgba(255, 255, 255, 0.4); font-size: 0.65rem; font-weight: bold; cursor: pointer; letter-spacing: 1px; transition: 0.2s; text-transform: uppercase; }
         .history-item:hover .btn-del-chat { color: var(--blue); text-shadow: var(--glow); }
 
         /* CONSOLE CENTRAL DO CUBO */
-        .visual-console { width: 200px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: transparent; border-right: 1px solid var(--border); padding-right: 20px; position: relative; }
+        .visual-console { width: 200px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: transparent; border-right: 1px solid var(--blue); padding-right: 20px; position: relative; }
         
-        /* O CUBO SUPREMO RECALIBRADO (GIRO SUAVE E ELEGANTE) */
+        /* O CUBO SUPREMO RECALIBRADO */
         .cube-scene { width: 70px; height: 70px; perspective: 400px; }
         .cube { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; animation: rotateMecha 14s infinite linear; }
         .cube.speaking { animation: rotateMecha 0.8s infinite linear; }
@@ -95,24 +100,26 @@
         .top    { transform: rotateX( 90deg) translateZ(35px); }
         .bottom { transform: rotateX(-90deg) translateZ(35px); }
 
-        /* SELETOR DE CORES PREMIUM COM OPÇÃO BRANCO CLEAN */
+        /* SELETOR DE CORES PREMIUM */
         .theme-switcher { position: absolute; bottom: 10px; display: flex; gap: 10px; background: rgba(10,10,12,0.6); padding: 8px 12px; border-radius: 20px; border: 1px solid #111; }
         .color-selector { width: 12px; height: 12px; border-radius: 50%; cursor: pointer; transition: 0.2s; }
         .color-selector:hover { transform: scale(1.3); }
 
-        /* PAINEL DE CONVERSA */
-        #terminal-log { flex: 1; overflow-y: auto; padding: 10px 20px; display: flex; flex-direction: column; gap: 20px; }
-        .log-entry { padding: 16px; background: rgba(8, 8, 10, 0.5); border-radius: 12px; border: 1px solid #111; line-height: 1.6; font-size: 0.9rem; max-width: 80%; color: #ccc; }
-        .user-entry { align-self: flex-end; border-color: rgba(0, 68, 255, 0.2); color: var(--blue); font-weight: 400; }
-        .ai-entry { align-self: flex-start; }
-        .img-container { max-width: 100%; border-radius: 8px; border: 1px solid var(--blue); margin-top: 12px; display: block; box-shadow: var(--glow); }
+        /* PAINEL DE CONVERSA TOTALMENTE LIMPO (SEM BORDAS SECUNDÁRIAS) */
+        #terminal-log { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 10px 20px; display: flex; flex-direction: column; gap: 20px; scrollbar-width: none; }
+        #terminal-log::-webkit-scrollbar { display: none; }
+        .log-entry { padding: 14px 0; background: transparent; border: none; line-height: 1.6; font-size: 0.95rem; max-width: 100%; color: #ffffff; }
+        .user-entry { align-self: flex-end; color: var(--blue); font-weight: 400; text-align: right; width: 100%; }
+        .ai-entry { align-self: flex-start; width: 100%; }
+        .img-container { max-width: 100%; max-height: 380px; border-radius: 8px; border: none; margin-top: 8px; display: block; background: transparent; }
 
-        .action-bar { display: flex; gap: 12px; margin-top: 12px; border-top: 1px solid #111; padding-top: 10px; }
-        .btn-action-msg { background: transparent; border: none; color: #555; font-size: 0.65rem; font-weight: bold; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: 0.2s; }
+        .action-bar { display: flex; gap: 12px; margin-top: 8px; padding-top: 4px; }
+        .btn-action-msg { background: transparent; border: none; color: #444; font-size: 0.65rem; font-weight: bold; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: 0.2s; }
         .btn-action-msg:hover { color: var(--blue); }
+        .btn-action-msg.playing-audio { color: #ff3355 !important; }
 
         /* DIGITAL COMMAND BAR */
-        .command-bar { padding: 20px 35px; background: var(--panel); border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 12px; backdrop-filter: blur(20px); z-index: 100; }
+        .command-bar { padding: 20px 35px; background: var(--panel); border-top: 1px solid var(--blue); display: flex; flex-direction: column; gap: 12px; backdrop-filter: blur(20px); z-index: 100; }
         .input-row { display: flex; gap: 15px; align-items: center; }
         .field-container { flex: 1; position: relative; background: rgba(5, 5, 5, 0.8); border: 1px solid #151515; border-radius: 12px; transition: 0.3s; }
         .field-container::before { content: 'DIRETRIZ:'; position: absolute; left: 18px; top: 16px; font-size: 0.75rem; color: #444; font-weight: bold; letter-spacing: 1px; }
@@ -123,12 +130,13 @@
         .btn-core:hover { border-color: var(--blue); color: var(--blue); }
         .btn-execute { background: transparent; }
         .btn-execute:hover { background: rgba(0, 68, 255, 0.05); }
-        .btn-voice.active { background: #2a0810; border-color: #ff3355; color: #ff3355; box-shadow: 0 0 10px rgba(255,51,85,0.2); }
+        .btn-voice.mic-listening { background: #081a10; border-color: #00ff66; color: #00ff66; }
+        .btn-voice.tts-speaking { background: #2a0810; border-color: #ff3355; color: #ff3355; }
 
-        /* IPHONE / SMARTPHONE CONFIGURATION (RECONSTRUÇÃO ANTICORTE) */
+        /* CONFIGURAÇÃO RESPONSIVA IPHONE */
         @media (max-width: 850px) {
-            .stage { flex-direction: column-reverse; padding: 10px; gap: 10px; }
-            .visual-console { width: 100%; height: 90px; border-right: none; border-top: 1px solid var(--border); padding-right: 0; padding-top: 10px; flex-direction: row; justify-content: center; }
+            .stage { flex-direction: column-reverse; padding: 10px; gap: 10px; height: calc(100% - 140px); }
+            .visual-console { width: 100%; height: 80px; border-right: none; border-top: 1px solid var(--blue); padding-right: 0; padding-top: 10px; flex-direction: row; justify-content: center; }
             .cube-scene { width: 44px; height: 44px; }
             .face { width: 44px; height: 44px; }
             .front  { transform: rotateY(  0deg) translateZ(22px); }
@@ -137,15 +145,15 @@
             .left   { transform: rotateY(-90deg) translateZ(22px); }
             .top    { transform: rotateX( 90deg) translateZ(22px); }
             .bottom { transform: rotateX(-90deg) translateZ(22px); }
-            #terminal-log { width: 100%; flex: 1; padding: 5px 10px; }
+            #terminal-log { width: 100%; flex: 1; padding: 5px 10px; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+            #terminal-log::-webkit-scrollbar { display: none; }
             .theme-switcher { position: relative; bottom: auto; margin-left: 20px; }
-            .command-bar { padding: 15px 10px; }
+            .command-bar { padding: 15px 10px; border-top: 1px solid var(--blue); }
             .input-row { flex-wrap: wrap; gap: 10px; }
             .field-container { min-width: 100%; }
             .btn-core { flex: 1; height: 48px; }
             
-            /* Correção Crítica iPhone: O histórico agora desliza de forma limpa por cima sem quebrar a rolagem do chat de trás */
-            #history-sidebar { position: fixed; left: 0; top: 73px; bottom: 0; width: 240px; background: rgba(0,0,0,0.98); padding: 20px 15px; border-right: 1px solid var(--border); border-left: none; border-radius: 0; box-shadow: 15px 0 30px rgba(0,0,0,0.9); }
+            #history-sidebar { position: fixed; left: 0; top: 73px; bottom: 0; width: 240px; background: rgba(0,0,0,0.98); padding: 20px 15px; border-right: 1px solid var(--blue); border-left: none; border-radius: 0; box-shadow: 15px 0 30px rgba(0,0,0,0.9); }
         }
     </style>
 </head>
@@ -208,7 +216,7 @@
                 <input type="text" id="console-in" class="main-input" placeholder="DIGITE A OPERAÇÃO..." onkeydown="if(event.key==='Enter') processarFluxo('texto')">
             </div>
             <button class="btn-core btn-execute" onclick="processarFluxo('texto')">ENVIAR</button>
-            <button class="btn-core btn-voice" id="btn-mic" onclick="ouvirAudio()">FALAR</button>
+            <button class="btn-core btn-voice" id="btn-mic" onclick="alternarMicrofoneOuParar()">FALAR</button>
         </div>
     </div>
 
@@ -216,6 +224,9 @@
         let chats = JSON.parse(localStorage.getItem('syn_v10_chats')) || {};
         let chatAtivo = localStorage.getItem('syn_v10_ativo') || null;
         let gatilhoEntrada = 'texto';
+        let statusVozAtiva = false; 
+        let ttsAtual = null;
+        let botaoOuvirAtivoGlobal = null;
 
         window.onload = () => {
             if (sessionStorage.getItem('syn_auth_v10') === 'valid') {
@@ -241,6 +252,7 @@
         function toggleStatus() { const d = document.getElementById('status-drawer'); d.style.display = d.style.display === 'block' ? 'none' : 'block'; }
         function toggleHistory() { const s = document.getElementById('history-sidebar'); s.style.display = s.style.display === 'flex' ? 'none' : 'flex'; }
 
+        /* BASE DO HISTÓRICO TOTALMENTE ISOLADA POR PARÁGRAFOS/CHAT */
         function novoChat() {
             const id = 'chat_' + Date.now();
             chats[id] = { titulo: "SINAL OPERACIONAL", memoria: [] };
@@ -253,9 +265,12 @@
             chatAtivo = id;
             localStorage.setItem('syn_v10_ativo', id);
             document.getElementById('terminal-log').innerHTML = '';
+            
+            // Renderiza apenas a memória isolada deste assunto específico
             chats[id].memoria.forEach(msg => {
-                if(msg.content.startsWith('http')) {
-                    adicionarBalaoTela(msg.content, msg.role === 'assistant', true);
+                if(msg.content.includes('http') || msg.content.includes('__IMAGE_URL__')) {
+                    let cleanUrl = msg.content.replace('__IMAGE_URL__:', '').trim();
+                    adicionarBalaoTela(cleanUrl, msg.role === 'assistant', true);
                 } else {
                     adicionarBalaoTela(msg.content, msg.role === 'assistant', false);
                 }
@@ -285,29 +300,32 @@
             Object.keys(chats).forEach(id => {
                 const item = document.createElement('div');
                 item.className = `history-item ${id === chatAtivo ? 'active-chat' : ''}`;
+                item.style.borderColor = id === chatAtivo ? 'var(--blue)' : 'transparent';
                 item.onclick = () => carregarChat(id);
                 item.innerHTML = `<span>${chats[id].titulo}</span><button class="btn-del-chat" onclick="excluirChat('${id}', event)">LIMPAR</button>`;
                 container.appendChild(item);
             });
         }
 
+        /* INJEÇÃO SOLTA SEM BORDAS E LINHAS BRANCAS */
         function adicionarBalaoTela(texto, isAi, isImage = false) {
             const painel = document.getElementById('terminal-log');
             const div = document.createElement('div');
             div.className = `log-entry ${isAi ? 'ai-entry' : 'user-entry'}`;
             
-            if (isImage) {
+            if (isImage || texto.includes('__IMAGE_URL__') || texto.startsWith('http')) {
+                let urlLimpa = texto.replace('__IMAGE_URL__:', '').trim();
                 const img = document.createElement('img');
                 img.className = 'img-container';
-                img.src = texto;
+                img.src = urlLimpa;
+                img.onload = () => { painel.scrollTop = painel.scrollHeight; };
                 img.onerror = () => { div.innerText = "FALHA NO SISTEMA: TENTE NOVAMENTE MAIS TARDE"; };
-                div.innerText = "IMAGEM RENDERIZADA:";
                 div.appendChild(img);
             } else {
                 div.innerText = texto;
             }
             
-            if (isAi && !isImage && gatilhoEntrada === 'texto') {
+            if (isAi && !isImage && !texto.includes('__IMAGE_URL__') && gatilhoEntrada === 'texto') {
                 const actions = document.createElement('div');
                 actions.className = 'action-bar';
                 
@@ -319,7 +337,7 @@
                 const btnOuvir = document.createElement('button');
                 btnOuvir.className = 'btn-action-msg';
                 btnOuvir.innerText = 'OUVIR';
-                btnOuvir.onclick = () => vocalizar(texto);
+                btnOuvir.onclick = function() { alternarOuvirMensagem(texto, this); };
 
                 actions.appendChild(btnCopiar);
                 actions.appendChild(btnOuvir);
@@ -342,22 +360,30 @@
                 chats[chatAtivo].titulo = prompt.substring(0, 14).toUpperCase();
             }
 
+            // Geração nativa local de imagens sem títulos ou bordas extras
             if (prompt.toLowerCase().startsWith("gerar imagem") || prompt.toLowerCase().startsWith("criar imagem")) {
                 adicionarBalaoTela(prompt, false);
-                adicionarBalaoTela("CARREGANDO IMAGEM...", true, false);
+                
+                const painel = document.getElementById('terminal-log');
+                const loadingDiv = document.createElement('div');
+                loadingDiv.className = "log-entry ai-entry";
+                loadingDiv.id = "loading-img-sinal";
+                loadingDiv.innerText = "CARREGANDO IMAGEM...";
+                painel.appendChild(loadingDiv);
+                painel.scrollTop = painel.scrollHeight;
                 
                 const query = prompt.replace(/(gerar imagem|criar imagem)/i, "").trim();
                 const endpoint = `https://image.pollinations.ai/prompt/${encodeURIComponent(query)}?width=512&height=512&nologo=true`;
                 
                 setTimeout(() => {
-                    const logs = document.getElementById('terminal-log');
-                    if (logs.lastChild) logs.removeChild(logs.lastChild);
+                    const target = document.getElementById("loading-img-sinal");
+                    if (target) target.remove();
                     
                     adicionarBalaoTela(endpoint, true, true);
                     chats[chatAtivo].memoria.push({ role: "user", content: prompt });
                     chats[chatAtivo].memoria.push({ role: "assistant", content: endpoint });
                     salvarDados();
-                }, 1500);
+                }, 1800);
                 return;
             }
 
@@ -374,18 +400,30 @@
                 const corpo = await conexao.json();
                 const resposta = corpo.resposta;
 
-                adicionarBalaoTela(resposta, true);
-                chats[chatAtivo].memoria.push({ role: "assistant", content: resposta });
+                if (resposta.includes('__IMAGE_URL__')) {
+                    let urlLimpa = resposta.replace('__IMAGE_URL__:', '').trim();
+                    adicionarBalaoTela(urlLimpa, true, true);
+                    chats[chatAtivo].memoria.push({ role: "assistant", content: resposta });
+                } else {
+                    adicionarBalaoTela(resposta, true, false);
+                    chats[chatAtivo].memoria.push({ role: "assistant", content: resposta });
+                }
                 salvarDados();
 
-                if (gatilhoEntrada === 'voz') vocalizar(resposta);
+                if (gatilhoEntrada === 'voz' && !resposta.includes('__IMAGE_URL__')) vocalizarSistema(resposta, true);
             } catch (err) {
                 adicionarBalaoTela("FALHA NO SISTEMA: TENTE NOVAMENTE MAIS TARDE", true);
             }
         }
 
+        /* MECÂNICA DE AUDIO */
+        function alternarMicrofoneOuParar() {
+            if (statusVozAtiva) { pararAudioGeral(); return; }
+            ouvirAudio();
+        }
+
         function ouvirAudio() {
-            window.speechSynthesis.speak(new SpeechSynthesisUtterance(''));
+            window.speechSynthesis.cancel();
             const SpeechEngine = window.SpeechRecognition || window.webkitSpeechRecognition;
             if (!SpeechEngine) return;
 
@@ -394,28 +432,65 @@
             captura.continuous = false;
 
             captura.onstart = () => {
-                document.getElementById('btn-mic').innerText = "OUVINDO...";
-                document.getElementById('btn-mic').classList.add('active');
+                const btn = document.getElementById('btn-mic');
+                btn.innerText = "OUVINDO...";
+                btn.className = "btn-core btn-voice mic-listening";
             };
             captura.onresult = (e) => {
                 document.getElementById('console-in').value = e.results[0][0].transcript;
                 processarFluxo('voz');
                 captura.stop();
             };
-            captura.onend = () => {
-                document.getElementById('btn-mic').innerText = "FALAR";
-                document.getElementById('btn-mic').classList.remove('active');
-            };
+            captura.onend = () => { if (!statusVozAtiva) restaurarBotaoFalarPadrao(); };
             captura.start();
         }
 
-        function vocalizar(texto) {
+        function alternarOuvirMensagem(texto, botaoElemento) {
+            if (ttsAtual && botaoOuvirAtivoGlobal === botaoElemento) { pararAudioGeral(); return; }
+            if (ttsAtual) pararAudioGeral();
+            
+            botaoOuvirAtivoGlobal = botaoElemento;
+            botaoOuvirAtivoGlobal.innerText = "PARAR";
+            botaoOuvirAtivoGlobal.classList.add('playing-audio');
+            vocalizarSistema(texto, false);
+        }
+
+        function vocalizarSistema(texto, disparadoPorVozPrincipal) {
             window.speechSynthesis.cancel();
-            const tts = new SpeechSynthesisUtterance(texto);
-            tts.lang = 'pt-BR';
-            tts.onstart = () => document.getElementById('sys-cube').classList.add('speaking');
-            tts.onend = () => document.getElementById('sys-cube').classList.remove('speaking');
-            window.speechSynthesis.speak(tts);
+            ttsAtual = new SpeechSynthesisUtterance(texto);
+            ttsAtual.lang = 'pt-BR';
+            
+            ttsAtual.onstart = () => {
+                statusVozAtiva = true;
+                document.getElementById('sys-cube').classList.add('speaking');
+                if (disparadoPorVozPrincipal) {
+                    const btnMic = document.getElementById('btn-mic');
+                    btnMic.innerText = "PARAR";
+                    btnMic.className = "btn-core btn-voice tts-speaking";
+                }
+            };
+            ttsAtual.onend = () => finalizarCicloAudio();
+            ttsAtual.onerror = () => finalizarCicloAudio();
+            window.speechSynthesis.speak(ttsAtual);
+        }
+
+        function pararAudioGeral() { window.speechSynthesis.cancel(); finalizarCicloAudio(); }
+
+        function finalizarCicloAudio() {
+            statusVozAtiva = false; ttsAtual = null;
+            document.getElementById('sys-cube').classList.remove('speaking');
+            restaurarBotaoFalarPadrao();
+            if (botaoOuvirAtivoGlobal) {
+                botaoOuvirAtivoGlobal.innerText = "OUVIR";
+                botaoOuvirAtivoGlobal.classList.remove('playing-audio');
+                botaoOuvirAtivoGlobal = null;
+            }
+        }
+
+        function restaurarBotaoFalarPadrao() {
+            const btnMic = document.getElementById('btn-mic');
+            btnMic.innerText = "FALAR";
+            btnMic.className = "btn-core btn-voice";
         }
     </script>
 </body>
