@@ -100,16 +100,16 @@
         .color-selector { width: 12px; height: 12px; border-radius: 50%; cursor: pointer; transition: 0.2s; }
         .color-selector:hover { transform: scale(1.3); }
 
-        /* PAINEL DE CONVERSA */
+        /* PAINEL DE CONVERSA - LETRAS EM BRANCO PADRÃO */
         #terminal-log { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 10px 20px; display: flex; flex-direction: column; gap: 20px; }
-        .log-entry { padding: 16px; background: rgba(8, 8, 10, 0.5); border-radius: 12px; border: 1px solid #111; line-height: 1.6; font-size: 0.9rem; max-width: 80%; color: #ccc; }
-        .user-entry { align-self: flex-end; border: 1px solid var(--blue); color: var(--blue); font-weight: 400; box-shadow: var(--glow); }
+        .log-entry { padding: 16px; background: rgba(8, 8, 10, 0.5); border-radius: 12px; border: 1px solid #111; line-height: 1.6; font-size: 0.9rem; max-width: 80%; color: #ffffff; } /* Letras brancas alteradas aqui */
+        .user-entry { align-self: flex-end; border: 1px solid var(--blue); color: #ffffff; font-weight: 400; box-shadow: var(--glow); }
         .ai-entry { align-self: flex-start; border: 1px solid transparent; transition: border-color 0.3s; }
         .ai-entry.image-box { border-color: var(--blue); box-shadow: var(--glow); }
         .img-container { max-width: 100%; border-radius: 8px; border: 1px solid var(--blue); margin-top: 12px; display: block; box-shadow: var(--glow); background: #050505; }
 
         .action-bar { display: flex; gap: 12px; margin-top: 12px; border-top: 1px solid #111; padding-top: 10px; }
-        .btn-action-msg { background: transparent; border: none; color: #555; font-size: 0.65rem; font-weight: bold; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: 0.2s; }
+        .btn-action-msg { background: transparent; border: none; color: #666; font-size: 0.65rem; font-weight: bold; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: 0.2s; }
         .btn-action-msg:hover { color: var(--blue); }
         .btn-action-msg.playing-audio { color: #ff3355 !important; text-shadow: 0 0 5px rgba(255,51,85,0.3); }
 
@@ -242,12 +242,7 @@
         }
 
         function fecharSessao() { sessionStorage.removeItem('syn_auth_v10'); window.location.reload(); }
-        
-        function mudarTema(hex) { 
-            document.documentElement.style.setProperty('--blue', hex); 
-            renderizarListaChats(); 
-        }
-        
+        function mudarTema(hex) { document.documentElement.style.setProperty('--blue', hex); renderizarListaChats(); }
         function toggleStatus() { const d = document.getElementById('status-drawer'); d.style.display = d.style.display === 'block' ? 'none' : 'block'; }
         function toggleHistory() { const s = document.getElementById('history-sidebar'); s.style.display = s.style.display === 'flex' ? 'none' : 'flex'; }
 
@@ -264,8 +259,9 @@
             localStorage.setItem('syn_v10_ativo', id);
             document.getElementById('terminal-log').innerHTML = '';
             chats[id].memoria.forEach(msg => {
-                if(msg.content.startsWith('http')) {
-                    adicionarBalaoTela(msg.content, msg.role === 'assistant', true);
+                if(msg.content.includes('http') || msg.content.includes('__IMAGE_URL__')) {
+                    let cleanUrl = msg.content.replace('__IMAGE_URL__:', '').trim();
+                    adicionarBalaoTela(cleanUrl, msg.role === 'assistant', true);
                 } else {
                     adicionarBalaoTela(msg.content, msg.role === 'assistant', false);
                 }
@@ -307,12 +303,14 @@
             const div = document.createElement('div');
             div.className = `log-entry ${isAi ? 'ai-entry' : 'user-entry'}`;
             
-            if (isImage) {
+            // Tratamento tático para as duas rotas (Injeção via prompt ou retorno bruto do backend)
+            if (isImage || texto.includes('__IMAGE_URL__') || texto.startsWith('http')) {
+                let urlLimpa = texto.replace('__IMAGE_URL__:', '').trim();
                 div.classList.add('image-box');
                 div.innerText = "IMAGEM RENDERIZADA:";
                 const img = document.createElement('img');
                 img.className = 'img-container';
-                img.src = texto;
+                img.src = urlLimpa;
                 img.onload = () => { painel.scrollTop = painel.scrollHeight; };
                 img.onerror = () => { div.innerText = "FALHA NO SISTEMA: TENTE NOVAMENTE MAIS TARDE"; };
                 div.appendChild(img);
@@ -320,7 +318,7 @@
                 div.innerText = texto;
             }
             
-            if (isAi && !isImage && gatilhoEntrada === 'texto') {
+            if (isAi && !isImage && !texto.includes('__IMAGE_URL__') && gatilhoEntrada === 'texto') {
                 const actions = document.createElement('div');
                 actions.className = 'action-bar';
                 
@@ -355,6 +353,7 @@
                 chats[chatAtivo].titulo = prompt.substring(0, 14).toUpperCase();
             }
 
+            // Geração interceptada por comando local
             if (prompt.toLowerCase().startsWith("gerar imagem") || prompt.toLowerCase().startsWith("criar imagem")) {
                 adicionarBalaoTela(prompt, false);
                 
@@ -394,22 +393,26 @@
                 const corpo = await conexao.json();
                 const resposta = corpo.resposta;
 
-                adicionarBalaoTela(resposta, true);
-                chats[chatAtivo].memoria.push({ role: "assistant", content: resposta });
+                // Captura se o backend enviou a imagem no padrão do print
+                if (resposta.includes('__IMAGE_URL__')) {
+                    let urlLimpa = resposta.replace('__IMAGE_URL__:', '').trim();
+                    adicionarBalaoTela(urlLimpa, true, true);
+                    chats[chatAtivo].memoria.push({ role: "assistant", content: resposta });
+                } else {
+                    adicionarBalaoTela(resposta, true, false);
+                    chats[chatAtivo].memoria.push({ role: "assistant", content: resposta });
+                }
                 salvarDados();
 
-                if (gatilhoEntrada === 'voz') vocalizarSistema(resposta, true);
+                if (gatilhoEntrada === 'voz' && !resposta.includes('__IMAGE_URL__')) vocalizarSistema(resposta, true);
             } catch (err) {
                 adicionarBalaoTela("FALHA NO SISTEMA: TENTE NOVAMENTE MAIS TARDE", true);
             }
         }
 
-        /* MECÂNICA DE AUDIO SUPERIOR */
+        /* MECÂNICA DE AUDIO */
         function alternarMicrofoneOuParar() {
-            if (statusVozAtiva) {
-                pararAudioGeral();
-                return;
-            }
+            if (statusVozAtiva) { pararAudioGeral(); return; }
             ouvirAudio();
         }
 
@@ -432,23 +435,13 @@
                 processarFluxo('voz');
                 captura.stop();
             };
-            captura.onend = () => {
-                if (!statusVozAtiva) {
-                    restaurarBotaoFalarPadrao();
-                }
-            };
+            captura.onend = () => { if (!statusVozAtiva) restaurarBotaoFalarPadrao(); };
             captura.start();
         }
 
         function alternarOuvirMensagem(texto, botaoElemento) {
-            if (ttsAtual && botaoOuvirAtivoGlobal === botaoElemento) {
-                pararAudioGeral();
-                return;
-            }
-            
-            if (ttsAtual) {
-                pararAudioGeral();
-            }
+            if (ttsAtual && botaoOuvirAtivoGlobal === botaoElemento) { pararAudioGeral(); return; }
+            if (ttsAtual) pararAudioGeral();
             
             botaoOuvirAtivoGlobal = botaoElemento;
             botaoOuvirAtivoGlobal.innerText = "PARAR";
@@ -458,44 +451,29 @@
 
         function vocalizarSistema(texto, disparadoPorVozPrincipal) {
             window.speechSynthesis.cancel();
-            
             ttsAtual = new SpeechSynthesisUtterance(texto);
             ttsAtual.lang = 'pt-BR';
             
             ttsAtual.onstart = () => {
                 statusVozAtiva = true;
                 document.getElementById('sys-cube').classList.add('speaking');
-                
                 if (disparadoPorVozPrincipal) {
                     const btnMic = document.getElementById('btn-mic');
                     btnMic.innerText = "PARAR";
                     btnMic.className = "btn-core btn-voice tts-speaking";
                 }
             };
-            
-            ttsAtual.onend = () => {
-                finalizarCicloAudio();
-            };
-
-            ttsAtual.onerror = () => {
-                finalizarCicloAudio();
-            };
-
+            ttsAtual.onend = () => finalizarCicloAudio();
+            ttsAtual.onerror = () => finalizarCicloAudio();
             window.speechSynthesis.speak(ttsAtual);
         }
 
-        function pararAudioGeral() {
-            window.speechSynthesis.cancel();
-            finalizarCicloAudio();
-        }
+        function pararAudioGeral() { window.speechSynthesis.cancel(); finalizarCicloAudio(); }
 
         function finalizarCicloAudio() {
-            statusVozAtiva = false;
-            ttsAtual = null;
+            statusVozAtiva = false; ttsAtual = null;
             document.getElementById('sys-cube').classList.remove('speaking');
-            
             restaurarBotaoFalarPadrao();
-
             if (botaoOuvirAtivoGlobal) {
                 botaoOuvirAtivoGlobal.innerText = "OUVIR";
                 botaoOuvirAtivoGlobal.classList.remove('playing-audio');
@@ -510,5 +488,4 @@
         }
     </script>
 </body>
-</html>
 </html>
