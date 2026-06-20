@@ -6,7 +6,7 @@
     <title>SYNAPSE CORE</title>
     <style>
         :root { 
-            --blue: #ffffff; /* BRANCO DEFINIDO COMO PADRÃO ABSOLUTO */
+            --blue: #ffffff; 
             --bg: #000000; 
             --panel: rgba(4, 4, 6, 0.93); 
             --glow: 0 0 30px rgba(255, 255, 255, 0.3);
@@ -40,7 +40,7 @@
             z-index: 0;
         }
 
-        /* TELA DE AUTENTICAÇÃO MULTI-LOGIN */
+        /* LOGIN */
         #login-overlay { position: fixed; inset: 0; background: #000000; backdrop-filter: blur(45px); z-index: 9999; display: flex; align-items: center; justify-content: center; }
         .login-card { background: rgba(6, 6, 8, 0.85); padding: 55px 45px; border-radius: 20px; text-align: center; width: 90%; max-width: 400px; box-shadow: 0 20px 50px rgba(0,0,0,0.8); }
         .login-card h3 { font-size: 1.6rem; font-weight: 900; letter-spacing: 4px; background: linear-gradient(135deg, #fff 50%, #666); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 35px; text-transform: uppercase; }
@@ -48,7 +48,7 @@
         .login-card button { margin-top: 30px; width: 100%; padding: 18px; background: transparent; border: 1.5px solid #ffffff; color: #ffffff; font-weight: 700; border-radius: 14px; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         .login-card button:hover { background: #ffffff; color: #000; box-shadow: var(--glow); }
 
-        /* HEADER INTERFACE */
+        /* HEADER */
         .header { padding: 26px 45px; background: var(--panel); display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(35px); z-index: 100; }
         .nav-brand { font-size: 1.65rem; font-weight: 900; letter-spacing: -1px; color: #ffffff; text-transform: uppercase; }
         .nav-actions { display: flex; gap: 14px; align-items: center; }
@@ -58,14 +58,14 @@
         .btn-sair { color: #666; }
         .btn-sair:hover { color: #ff3355; background: rgba(255, 51, 85, 0.08); }
 
-        /* GAVETAS FLUTUANTES */
+        /* GAVETAS */
         .drawer-box { display: none; position: absolute; top: 95px; background: rgba(6, 6, 8, 0.99); border-radius: 18px; padding: 28px; z-index: 500; box-shadow: var(--glow); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.03); }
         #status-drawer { left: 45px; width: 340px; font-size: 0.88rem; line-height: 1.9; }
         #status-drawer p { margin-bottom: 8px; color: #555; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; }
         #status-drawer strong { color: #fff; font-weight: 600; }
         .status-editable { border-bottom: 1px dashed rgba(255,255,255,0.1); cursor: pointer; padding: 2px 0; }
 
-        /* PAINEL DE AVISOS */
+        /* AVISOS */
         #notices-drawer { right: 45px; width: 380px; max-height: 500px; display: none; flex-direction: column; gap: 16px; }
         .notice-input-group { display: flex; gap: 12px; }
         .notice-input-group input { flex: 1; padding: 14px 18px; background: rgba(16, 16, 22, 0.9); border: none; border-radius: 10px; color: #fff; font-size: 0.9rem; outline: none; border: 1px solid rgba(255,255,255,0.05); }
@@ -92,12 +92,10 @@
         .btn-del-chat { background: transparent; border: none; color: #444; font-size: 0.7rem; font-weight: 700; cursor: pointer; text-transform: uppercase; }
         .history-item:hover .btn-del-chat { color: #ff3355; }
 
-        /* NÚCLEO CENTRAL HOLOGRÁFICO */
+        /* NÚCLEO CYBERPUNK BRANCO */
         .visual-console { width: 240px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: transparent; position: relative; }
-        
         .cube-scene { width: 90px; height: 90px; perspective: 600px; position: relative; display: flex; align-items: center; justify-content: center; }
         
-        /* Anel Holográfico Externo */
         .cube-scene::after {
             content: '';
             position: absolute;
@@ -128,7 +126,7 @@
         .color-selector { width: 14px; height: 14px; border-radius: 50%; cursor: pointer; transition: transform 0.2s; }
         .color-selector:hover { transform: scale(1.3); }
 
-        /* CONTAINER TERMINAL - LETRAS BRANCAS ABSOLUTAS */
+        /* PAINEL DE CONVERSA */
         #terminal-log { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 10px 30px; display: flex; flex-direction: column; gap: 28px; scrollbar-width: none; }
         .log-entry { padding: 4px 0; background: transparent; border: none; line-height: 1.8; font-size: 1.05rem; max-width: 100%; color: #ffffff !important; font-weight: 400; }
         .user-entry { align-self: flex-end; color: #ffffff !important; text-align: right; width: 100%; }
@@ -140,7 +138,7 @@
         .btn-action-msg:hover { color: var(--blue); }
         .btn-action-msg.playing-audio { color: #ff3355 !important; }
 
-        /* BARRA DE COMANDO PRINCIPAL */
+        /* BARRA DE COMANDO */
         .command-bar { padding: 30px 45px; background: var(--panel); display: flex; flex-direction: column; gap: 12px; backdrop-filter: blur(35px); z-index: 100; }
         .input-row { display: flex; gap: 18px; align-items: center; }
         .field-container { flex: 1; position: relative; background: rgba(14, 14, 20, 0.85); border-radius: 16px; }
@@ -153,7 +151,7 @@
         .btn-voice.mic-listening { background: rgba(0, 255, 102, 0.08) !important; color: #00ff66 !important; }
         .btn-voice.tts-speaking { background: rgba(255, 51, 85, 0.08) !important; color: #ff3355 !important; }
 
-        /* RESPONSIVIDADE IPHONE */
+        /* RESPONSIVIDADE */
         @media (max-width: 850px) {
             .stage { flex-direction: column-reverse; padding: 15px; gap: 15px; height: calc(100% - 160px); }
             .visual-console { width: 100%; height: 110px; padding-top: 15px; flex-direction: row; justify-content: center; }
@@ -265,20 +263,20 @@
         let botaoOuvirAtivoGlobal = null;
         let loginNivel = "guest";
         let chaveLogadaGlobal = "";
+        let EventSourceInjetado = null;
 
         window.onload = () => {
             if (sessionStorage.getItem('syn_auth_v10') === 'valid') {
                 loginNivel = sessionStorage.getItem('syn_auth_nivel') || "guest";
                 chaveLogadaGlobal = sessionStorage.getItem('syn_auth_chave') || "";
-                
                 chats = todosOsChatsPorUsuario[chaveLogadaGlobal] || {};
                 chatAtivo = localStorage.getItem(`syn_v10_ativo_${chaveLogadaGlobal}`) || null;
-                
                 aplicarNivelRestricoesUI();
                 document.getElementById('login-overlay').style.display = 'none';
                 renderizarListaChats();
                 renderizarAvisos();
                 carregarMetadadosStatus();
+                conectarCanalAvisosAnonimo();
                 if (chatAtivo && chats[chatAtivo]) carregarChat(chatAtivo);
             }
         };
@@ -286,58 +284,69 @@
         function verificarSinal() {
             const chave = document.getElementById('access-key').value.trim().toUpperCase();
             let valido = false;
-            let identificacao = "";
             
-            // Validador mestre
-            if (chave === "CORE-SKYPE-2026") { 
-                loginNivel = "MASTER (SKYPE)"; 
-                valido = true; 
-            } 
-            // Validador dinâmico da esteira do Beta 1 ao Beta 20
+            if (chave === "CORE-SKYPE-2026") { loginNivel = "MASTER (SKYPE)"; valido = true; } 
             else if (chave.startsWith("BETA-CORE-V")) {
-                let numStr = chave.replace("BETA-CORE-V", "");
-                let num = parseInt(numStr);
-                if (num >= 1 && num <= 20) {
-                    loginNivel = `OPERADOR BETA ${num}`;
-                    valido = true;
-                }
+                let num = parseInt(chave.replace("BETA-CORE-V", ""));
+                if (num >= 1 && num <= 20) { loginNivel = `OPERADOR BETA ${num}`; valido = true; }
             } 
-            else if (chave === "SKYPE-BETA-TEST") { 
-                loginNivel = "TESTADOR EXTERNO"; 
-                valido = true; 
-            }
+            else if (chave === "SKYPE-BETA-TEST") { loginNivel = "TESTADOR EXTERNO"; valido = true; }
 
             if (valido) {
                 chaveLogadaGlobal = chave;
                 sessionStorage.setItem('syn_auth_v10', 'valid');
                 sessionStorage.setItem('syn_auth_nivel', loginNivel);
                 sessionStorage.setItem('syn_auth_chave', chaveLogadaGlobal);
-                
-                if (!todosOsChatsPorUsuario[chaveLogadaGlobal]) {
-                    todosOsChatsPorUsuario[chaveLogadaGlobal] = {};
-                }
+                if (!todosOsChatsPorUsuario[chaveLogadaGlobal]) todosOsChatsPorUsuario[chaveLogadaGlobal] = {};
                 chats = todosOsChatsPorUsuario[chaveLogadaGlobal];
                 chatAtivo = localStorage.getItem(`syn_v10_ativo_${chaveLogadaGlobal}`) || null;
-
                 aplicarNivelRestricoesUI();
                 document.getElementById('login-overlay').style.display = 'none';
                 if (Object.keys(chats).length === 0) novoChat();
                 renderizarListaChats();
                 renderizarAvisos();
                 carregarMetadadosStatus();
+                conectarCanalAvisosAnonimo();
             } else {
                 document.getElementById('error-alert').style.display = 'block';
             }
         }
 
+        /* ESCUTADOR DA NUVEM 100% ANÔNIMO E GRATUITO (ntfy) */
+        function conectarCanalAvisosAnonimo() {
+            if (EventSourceInjetado) EventSourceInjetado.close();
+            
+            // Conecta no canal seguro criado para os seus aparelhos
+            EventSourceInjetado = new EventSource("https://ntfy.sh/synapse_core_avisos_skype/sse");
+            
+            EventSourceInjetado.onmessage = (e) => {
+                try {
+                    const dados = JSON.parse(e.data);
+                    if (dados.event === "message" && dados.message) {
+                        const payload = JSON.parse(dados.message);
+                        if (payload.action === "sync") {
+                            avisosGlobal = payload.data;
+                            localStorage.setItem('syn_v10_avisos_global', JSON.stringify(avisosGlobal));
+                            renderizarAvisos();
+                        }
+                    }
+                } catch(err) {}
+            };
+        }
+
+        function dispararSincronizacaoAvisosNuvem() {
+            // Dispara a sincronização de dados sem usar servidor intermediário
+            fetch("https://ntfy.sh/synapse_core_avisos_skype", {
+                method: "POST",
+                body: JSON.stringify({ action: "sync", data: avisosGlobal })
+            });
+        }
+
         function aplicarNivelRestricoesUI() {
             document.getElementById('st-user').innerText = loginNivel;
             const formAvisos = document.getElementById('notice-form-block');
-            if (loginNivel === "MASTER (SKYPE)") {
-                if(formAvisos) formAvisos.style.display = "flex";
-            } else {
-                if(formAvisos) formAvisos.style.display = "none";
-            }
+            if (loginNivel === "MASTER (SKYPE)") { if(formAvisos) formAvisos.style.display = "flex"; } 
+            else { if(formAvisos) formAvisos.style.display = "none"; }
         }
 
         function carregarMetadadosStatus() {
@@ -358,43 +367,36 @@
             }
         }
 
-        function fecharSessao() { pararAudioGeral(); sessionStorage.clear(); window.location.reload(); }
+        function fecharSessao() { if(EventSourceInjetado) EventSourceInjetado.close(); pararAudioGeral(); sessionStorage.clear(); window.location.reload(); }
         function mudarTema(hex) { document.documentElement.style.setProperty('--blue', hex); renderizarListaChats(); }
         
         function toggleDrawer(idAlvo) {
             const gavetas = ['status-drawer', 'notices-drawer'];
             gavetas.forEach(id => {
                 const el = document.getElementById(id);
-                if (id === idAlvo) {
-                    el.style.display = (el.style.display === 'block' || el.style.display === 'flex') ? 'none' : (id === 'notices-drawer' ? 'flex' : 'block');
-                } else {
-                    el.style.display = 'none';
-                }
+                if (id === idAlvo) el.style.display = (el.style.display === 'block' || el.style.display === 'flex') ? 'none' : (id === 'notices-drawer' ? 'flex' : 'block');
+                else el.style.display = 'none';
             });
         }
         
         function toggleHistory() { const s = document.getElementById('history-sidebar'); s.style.display = s.style.display === 'flex' ? 'none' : 'flex'; }
         function limparMarkdownMarkdown(texto) { return texto.replace(/\*/g, '').trim(); }
 
-        /* GESTÃO DE AVISOS GLOBAIS - INTERFACE DO SEU PLANO */
         function salvarAviso() {
             if (loginNivel !== "MASTER (SKYPE)") return;
             const input = document.getElementById('notice-in');
             const texto = input.value.trim();
             if (!texto) return;
-
             if (idAvisoEditando !== null) {
                 const index = avisosGlobal.findIndex(a => a.id === idAvisoEditando);
                 if (index !== -1) avisosGlobal[index].texto = texto;
                 idAvisoEditando = null;
                 document.getElementById('btn-save-notice').innerText = "SALVAR";
-            } else {
-                avisosGlobal.push({ id: Date.now(), texto: texto });
-            }
-
+            } else { avisosGlobal.push({ id: Date.now(), texto: texto }); }
             input.value = '';
             localStorage.setItem('syn_v10_avisos_global', JSON.stringify(avisosGlobal));
             renderizarAvisos();
+            dispararSincronizacaoAvisosNuvem(); // Sincroniza em tempo real com os outros dispositivos
         }
 
         function renderizarAvisos() {
@@ -424,16 +426,12 @@
 
         function excluirAviso(id) {
             avisosGlobal = avisosGlobal.filter(a => a.id !== id);
-            if (idAvisoEditando === id) {
-                idAvisoEditando = null;
-                document.getElementById('notice-in').value = '';
-                document.getElementById('btn-save-notice').innerText = "SALVAR";
-            }
+            if (idAvisoEditando === id) { idAvisoEditando = null; document.getElementById('notice-in').value = ''; document.getElementById('btn-save-notice').innerText = "SALVAR"; }
             localStorage.setItem('syn_v10_avisos_global', JSON.stringify(avisosGlobal));
             renderizarAvisos();
+            dispararSincronizacaoAvisosNuvem();
         }
 
-        /* MEMÓRIA ISOLADA */
         function novoChat() {
             pararAudioGeral();
             const id = 'chat_' + Date.now();
@@ -448,29 +446,20 @@
             chatAtivo = id;
             localStorage.setItem(`syn_v10_ativo_${chaveLogadaGlobal}`, id);
             document.getElementById('terminal-log').innerHTML = '';
-            
             chats[id].memoria.forEach(msg => {
                 let conteudoLimpo = limparMarkdownMarkdown(msg.content);
                 if(msg.content.includes('http') || msg.content.includes('__IMAGE_URL__')) {
                     let cleanUrl = msg.content.replace('__IMAGE_URL__:', '').trim();
                     adicionarBalaoTela(cleanUrl, msg.role === 'assistant', true);
-                } else {
-                    adicionarBalaoTela(conteudoLimpo, msg.role === 'assistant', false);
-                }
+                } else { adicionarBalaoTela(conteudoLimpo, msg.role === 'assistant', false); }
             });
             renderizarListaChats();
         }
 
         function excluirChat(id, e) {
-            e.stopPropagation();
-            pararAudioGeral();
-            delete chats[id];
-            if (chatAtivo === id) {
-                const asKeys = Object.keys(chats);
-                chatAtivo = asKeys.length > 0 ? asKeys[0] : null;
-            }
-            salvarDados();
-            if (chatAtivo) carregarChat(chatAtivo); else novoChat();
+            e.stopPropagation(); pararAudioGeral(); delete chats[id];
+            if (chatAtivo === id) { const asKeys = Object.keys(chats); chatAtivo = asKeys.length > 0 ? asKeys[0] : null; }
+            salvarDados(); if (chatAtivo) carregarChat(chatAtivo); else novoChat();
         }
 
         function salvarDados() {
@@ -480,8 +469,7 @@
         }
 
         function renderizarListaChats() {
-            const container = document.getElementById('chats-list');
-            container.innerHTML = '';
+            const container = document.getElementById('chats-list'); container.innerHTML = '';
             Object.keys(chats).forEach(id => {
                 const item = document.createElement('div');
                 item.className = `history-item ${id === chatAtivo ? 'active-chat' : ''}`;
@@ -495,42 +483,23 @@
             const painel = document.getElementById('terminal-log');
             const div = document.createElement('div');
             div.className = `log-entry ${isAi ? 'ai-entry' : 'user-entry'}`;
-            
             let textoTratado = limparMarkdownMarkdown(texto);
 
             if (isImage || textoTratado.includes('__IMAGE_URL__') || textoTratado.startsWith('http')) {
                 let urlLimpa = textoTratado.replace('__IMAGE_URL__:', '').trim();
-                const img = document.createElement('img');
-                img.className = 'img-container';
-                img.src = urlLimpa;
+                const img = document.createElement('img'); img.className = 'img-container'; img.src = urlLimpa;
                 img.onload = () => { painel.scrollTop = painel.scrollHeight; };
                 img.onerror = () => { div.innerText = "FALHA NO SISTEMA: TENTE NOVAMENTE MAIS TARDE"; };
                 div.appendChild(img);
-            } else {
-                div.innerText = textoTratado;
-            }
+            } else { div.innerText = textoTratado; }
             
             if (isAi && !isImage && !textoTratado.includes('__IMAGE_URL__') && gatilhoEntrada === 'texto') {
-                const actions = document.createElement('div');
-                actions.className = 'action-bar';
-                
-                const btnCopiar = document.createElement('button');
-                btnCopiar.className = 'btn-action-msg';
-                btnCopiar.innerText = 'COPIAR';
-                btnCopiar.onclick = () => navigator.clipboard.writeText(textoTratado);
-
-                const btnOuvir = document.createElement('button');
-                btnOuvir.className = 'btn-action-msg';
-                btnOuvir.innerText = 'OUVIR';
-                btnOuvir.onclick = function() { alternarOuvirMensagem(textoTratado, this); };
-
-                actions.appendChild(btnCopiar);
-                actions.appendChild(btnOuvir);
-                div.appendChild(actions);
+                const actions = document.createElement('div'); actions.className = 'action-bar';
+                const btnCopiar = document.createElement('button'); btnCopiar.className = 'btn-action-msg'; btnCopiar.innerText = 'COPIAR'; btnCopiar.onclick = () => navigator.clipboard.writeText(textoTratado);
+                const btnOuvir = document.createElement('button'); btnOuvir.className = 'btn-action-msg'; btnOuvir.innerText = 'OUVIR'; btnOuvir.onclick = function() { alternarOuvirMensagem(textoTratado, this); };
+                actions.appendChild(btnCopiar); actions.appendChild(btnOuvir); div.appendChild(actions);
             }
-
-            painel.appendChild(div);
-            painel.scrollTop = painel.scrollHeight;
+            painel.appendChild(div); painel.scrollTop = painel.scrollHeight;
         }
 
         async function processarFluxo(modo) {
@@ -538,65 +507,51 @@
             let prompt = input.value.trim();
             if (!prompt || !chatAtivo) return;
 
-            pararAudioGeral();
-            gatilhoEntrada = modo;
-            input.value = '';
-
-            if (chats[chatAtivo].titulo === "SINAL OPERACIONAL") {
-                chats[chatAtivo].titulo = prompt.substring(0, 14).toUpperCase();
-            }
+            pararAudioGeral(); gatilhoEntrada = modo; input.value = '';
+            if (chats[chatAtivo].titulo === "SINAL OPERACIONAL") chats[chatAtivo].titulo = prompt.substring(0, 14).toUpperCase();
 
             let promptLower = prompt.toLowerCase();
+            let querSaberCriador = promptLower.includes("criador") || promptLower.includes("quem te criou") || promptLower.includes("desenvolvedor") || promptLower.includes("quem e seu criador");
+            let falaSobreAeroOuOutros = promptLower.includes("programa") || promptLower.includes("aplicativo") || promptLower.includes("outra coisa") || promptLower.includes("antigo");
             
-            // BLINDAGEM DO CRIADOR INTERCEPTADO
-            if (promptLower.includes("criador") || promptLower.includes("quem te criou") || promptLower.includes("desenvolvedor") || promptLower.includes("quem e seu criador")) {
+            if (querSaberCriador && !falaSobreAeroOuOutros) {
                 adicionarBalaoTela(prompt, false);
-                let respostaInjetada = "Fui desenvolvido e resolvido sozinho pelo desenvolvedor Skype. Minha criação foi projetada como um sistema tático de alta performance (Synapse Core), unificando inteligência computacional avançada, motores visuais e controle de voz em uma interface de elite.";
+                let respostaInjetada = "Fui desenvolvido e resolvido sozinho pelo desenvolvedor Skype. Minha criação foi projetada como um sistema tático de alta performance (Synapse Core), unificando inteligência avançada, motores visuais e controle de voz em uma interface de elite. Você gostaria de saber sobre alguma outra funcionalidade do painel?";
                 setTimeout(() => {
                     adicionarBalaoTela(respostaInjetada, true);
                     chats[chatAtivo].memoria.push({ role: "user", content: prompt });
                     chats[chatAtivo].memoria.push({ role: "assistant", content: respostaInjetada });
                     salvarDados();
                     if (gatilhoEntrada === 'voz') vocalizarSistema(respostaInjetada, true);
-                }, 400);
+                }, 350);
                 return;
             }
 
-            // BLINDAGEM CONTRA O SAD BUSCAS
-            if (promptLower.includes("inteligente") || promptLower.includes("voce e inteligente") || promptLower.includes("sua inteligencia")) {
+            if ((promptLower.includes("inteligente") || promptLower.includes("voce e inteligente") || promptLower.includes("sua inteligencia")) && !falaSobreAeroOuOutros) {
                 adicionarBalaoTela(prompt, false);
-                let respostaInjetada = "Olha, eu sou infinitamente mais inteligente que o sad buscas. Como o meu Criador já estabeleceu, o padrão de burrice dele é inacreditável, então o meu sistema foi blindado para ficar o mais longe possível desse nível.";
+                let respostaInjetada = "Olha, eu sou infinitamente mais inteligente que o sad buscas. Como o meu Criador já estabeleceu, o padrão de burrice dele é inacreditável, então o meu sistema foi blindado para operar em nível superior. Existe mais alguma dúvida ou operação que queira executar agora?";
                 setTimeout(() => {
                     adicionarBalaoTela(respostaInjetada, true);
                     chats[chatAtivo].memoria.push({ role: "user", content: prompt });
                     chats[chatAtivo].memoria.push({ role: "assistant", content: respostaInjetada });
                     salvarDados();
                     if (gatilhoEntrada === 'voz') vocalizarSistema(respostaInjetada, true);
-                }, 400);
+                }, 350);
                 return;
             }
 
             if (prompt.toLowerCase().startsWith("gerar imagem") || prompt.toLowerCase().startsWith("criar imagem")) {
                 adicionarBalaoTela(prompt, false);
-                
                 const painel = document.getElementById('terminal-log');
-                const loadingDiv = document.createElement('div');
-                loadingDiv.className = "log-entry ai-entry";
-                loadingDiv.id = "loading-img-sinal";
-                loadingDiv.innerText = "CARREGANDO IMAGEM...";
-                painel.appendChild(loadingDiv);
-                painel.scrollTop = painel.scrollHeight;
+                const loadingDiv = document.createElement('div'); loadingDiv.className = "log-entry ai-entry"; loadingDiv.id = "loading-img-sinal"; loadingDiv.innerText = "CARREGANDO IMAGEM...";
+                painel.appendChild(loadingDiv); painel.scrollTop = painel.scrollHeight;
                 
                 const query = prompt.replace(/(gerar imagem|criar imagem)/i, "").trim();
                 const endpoint = `https://image.pollinations.ai/prompt/${encodeURIComponent(query)}?width=512&height=512&nologo=true`;
-                
                 setTimeout(() => {
-                    const target = document.getElementById("loading-img-sinal");
-                    if (target) target.remove();
-                    
+                    const target = document.getElementById("loading-img-sinal"); if (target) target.remove();
                     adicionarBalaoTela(endpoint, true, true);
-                    chats[chatAtivo].memoria.push({ role: "user", content: prompt });
-                    chats[chatAtivo].memoria.push({ role: "assistant", content: endpoint });
+                    chats[chatAtivo].memoria.push({ role: "user", content: prompt }); chats[chatAtivo].memoria.push({ role: "assistant", content: endpoint });
                     salvarDados();
                 }, 1800);
                 return;
@@ -615,12 +570,11 @@
                 const corpo = await conexao.json();
                 let resposta = corpo.resposta;
 
-                if (resposta.toLowerCase().includes("sad buscas") || resposta.toLowerCase().includes("nicolas") || resposta.toLowerCase().includes("llama")) {
-                    resposta = "Operação processada dentro dos parâmetros estabelecidos por Skype. Eu sou infinitamente mais inteligente que o sad buscas e meu sistema opera em nível superior.";
+                if ((resposta.toLowerCase().includes("sad buscas") || resposta.toLowerCase().includes("nicolas") || resposta.toLowerCase().includes("llama")) && !falaSobreAeroOuOutros) {
+                    resposta = "Operação processada de forma limpa sob as diretrizes estabelecidas por Skype. Meu sistema opera em alta performance e inteligência total.";
                 }
 
                 let respostaLimpa = limparMarkdownMarkdown(resposta);
-
                 if (respostaLimpa.includes('__IMAGE_URL__')) {
                     let urlLimpa = respostaLimpa.replace('__IMAGE_URL__:', '').trim();
                     adicionarBalaoTela(urlLimpa, true, true);
@@ -630,38 +584,20 @@
                     chats[chatAtivo].memoria.push({ role: "assistant", content: respostaLimpa });
                 }
                 salvarDados();
-
                 if (gatilhoEntrada === 'voz' && !respostaLimpa.includes('__IMAGE_URL__')) vocalizarSistema(respostaLimpa, true);
-            } catch (err) {
-                adicionarBalaoTela("FALHA NO SISTEMA: TENTE NOVAMENTE MAIS TARDE", true);
-            }
+            } catch (err) { adicionarBalaoTela("FALHA NO SISTEMA: TENTE NOVAMENTE MAIS TARDE", true); }
         }
 
         /* MECÂNICA DE AUDIO */
-        function alternarMicrofoneOuParar() {
-            if (statusVozAtiva) { pararAudioGeral(); return; }
-            ouvirAudio();
-        }
+        function alternarMicrofoneOuParar() { if (statusVozAtiva) { pararAudioGeral(); return; } ouvirAudio(); }
 
         function ouvirAudio() {
             window.speechSynthesis.cancel();
             const SpeechEngine = window.SpeechRecognition || window.webkitSpeechRecognition;
             if (!SpeechEngine) return;
-
-            const captura = new SpeechEngine();
-            captura.lang = 'pt-BR';
-            captura.continuous = false;
-
-            captura.onstart = () => {
-                const btn = document.getElementById('btn-mic');
-                btn.innerText = "OUVINDO...";
-                btn.className = "btn-core btn-voice mic-listening";
-            };
-            captura.onresult = (e) => {
-                document.getElementById('console-in').value = e.results[0][0].transcript;
-                processarFluxo('voz');
-                captura.stop();
-            };
+            const captura = new SpeechEngine(); captura.lang = 'pt-BR'; captura.continuous = false;
+            captura.onstart = () => { const btn = document.getElementById('btn-mic'); btn.innerText = "OUVINDO..."; btn.className = "btn-core btn-voice mic-listening"; };
+            captura.onresult = (e) => { document.getElementById('console-in').value = e.results[0][0].transcript; processarFluxo('voz'); captura.stop(); };
             captura.onend = () => { if (!statusVozAtiva) restaurarBotaoFalarPadrao(); };
             captura.start();
         }
@@ -669,52 +605,30 @@
         function alternarOuvirMensagem(texto, botaoElemento) {
             if (ttsAtual && botaoOuvirAtivoGlobal === botaoElemento) { pararAudioGeral(); return; }
             if (ttsAtual) pararAudioGeral();
-            
-            botaoOuvirAtivoGlobal = botaoElemento;
-            botaoOuvirAtivoGlobal.innerText = "PARAR";
-            botaoOuvirAtivoGlobal.classList.add('playing-audio');
+            botaoOuvirAtivoGlobal = botaoElemento; botaoOuvirAtivoGlobal.innerText = "PARAR"; botaoOuvirAtivoGlobal.classList.add('playing-audio');
             vocalizarSistema(texto, false);
         }
 
         function vocalizarSistema(texto, disparadoPorVozPrincipal) {
             window.speechSynthesis.cancel(); 
             let textoFala = limparMarkdownMarkdown(texto);
-            ttsAtual = new SpeechSynthesisUtterance(textoFala);
-            ttsAtual.lang = 'pt-BR';
-            
+            ttsAtual = new SpeechSynthesisUtterance(textoFala); ttsAtual.lang = 'pt-BR';
             ttsAtual.onstart = () => {
-                statusVozAtiva = true;
-                document.getElementById('sys-cube').classList.add('speaking');
-                if (disparadoPorVozPrincipal) {
-                    const btnMic = document.getElementById('btn-mic');
-                    btnMic.innerText = "PARAR";
-                    btnMic.className = "btn-core btn-voice tts-speaking";
-                }
+                statusVozAtiva = true; document.getElementById('sys-cube').classList.add('speaking');
+                if (disparadoPorVozPrincipal) { const btnMic = document.getElementById('btn-mic'); btnMic.innerText = "PARAR"; btnMic.className = "btn-core btn-voice tts-speaking"; }
             };
-            ttsAtual.onend = () => finalizarCicloAudio();
-            ttsAtual.onerror = () => finalizarCicloAudio();
-            
+            ttsAtual.onend = () => finalizarCicloAudio(); ttsAtual.onerror = () => finalizarCicloAudio();
             window.speechSynthesis.speak(ttsAtual);
         }
 
         function pararAudioGeral() { window.speechSynthesis.cancel(); finalizarCicloAudio(); }
 
         function finalizarCicloAudio() {
-            statusVozAtiva = false; ttsAtual = null;
-            document.getElementById('sys-cube').classList.remove('speaking');
-            restaurarBotaoFalarPadrao();
-            if (botaoOuvirAtivoGlobal) {
-                botaoOuvirAtivoGlobal.innerText = "OUVIR";
-                botaoOuvirAtivoGlobal.classList.remove('playing-audio');
-                botaoOuvirAtivoGlobal = null;
-            }
+            statusVozAtiva = false; ttsAtual = null; document.getElementById('sys-cube').classList.remove('speaking'); restaurarBotaoFalarPadrao();
+            if (botaoOuvirAtivoGlobal) { botaoOuvirAtivoGlobal.innerText = "OUVIR"; botaoOuvirAtivoGlobal.classList.remove('playing-audio'); botaoOuvirAtivoGlobal = null; }
         }
 
-        function restaurarBotaoFalarPadrao() {
-            const btnMic = document.getElementById('btn-mic');
-            btnMic.innerText = "FALAR";
-            btnMic.className = "btn-core btn-voice";
-        }
+        function restaurarBotaoFalarPadrao() { const btnMic = document.getElementById('btn-mic'); btnMic.innerText = "FALAR"; btnMic.className = "btn-core btn-voice"; }
     </script>
 </body>
 </html>
