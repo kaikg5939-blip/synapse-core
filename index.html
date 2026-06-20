@@ -9,7 +9,7 @@
             --blue: #ffffff; 
             --bg: #000000; 
             --panel: rgba(10, 10, 12, 0.96); 
-            --glow: 0 0 35px rgba(255, 255, 255, 0.4);
+            --glow: 0 0 35px rgba(255, 255, 255, 0.45);
             --font-display: -apple-system, SF Pro Text, SF Pro Display, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
         }
         
@@ -51,7 +51,7 @@
         .login-card button { margin-top: 25px; width: 100%; padding: 16px; background: #ffffff; border: none; color: #000000; font-weight: 700; border-radius: 14px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: opacity 0.2s; }
         .login-card button:hover { opacity: 0.9; }
 
-        /* HEADER INTERFACE REESTRUTURADO PARA IPHONE */
+        /* HEADER INTERFACE REESTRUTURADO */
         .header { padding: 16px 20px; background: var(--panel); display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); z-index: 100; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .brand-group { display: flex; align-items: center; gap: 12px; }
         .btn-trigger-menu { background: transparent; border: none; color: #fff; font-size: 1.4rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
@@ -60,7 +60,6 @@
         
         .btn-top { padding: 10px 12px; border: none; background: rgba(255, 255, 255, 0.06); border-radius: 10px; color: #fff; font-size: 0.72rem; font-weight: 700; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; }
         .btn-top:active { background: rgba(255, 255, 255, 0.15); }
-        .btn-new-top { background: #ffffff; color: #000000; }
         .btn-sair { color: #ff4466; background: rgba(255, 68, 102, 0.08); }
 
         /* GAVETAS FLUTUANTES */
@@ -85,7 +84,7 @@
         /* PALCO CENTRAL */
         .stage { display: flex; flex: 1; overflow: hidden; padding: 15px; gap: 15px; z-index: 1; position: relative; flex-direction: column-reverse; }
         
-        /* GAVETA DE HISTÓRICO CORRIGIDA PARA CORRER E FECHAR AUTOMÁTICO */
+        /* GAVETA DE HISTÓRICO CORRIGIDA */
         #history-sidebar { display: none; position: fixed; left: -290px; top: 0; bottom: 0; width: 280px; background: rgba(8, 8, 10, 0.99); padding: 85px 20px 30px 20px; box-shadow: 25px 0 50px rgba(0,0,0,0.95); z-index: 400; flex-direction: column; gap: 20px; backdrop-filter: blur(35px); -webkit-backdrop-filter: blur(35px); border-right: 1px solid rgba(255,255,255,0.08); transition: left 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
         #history-sidebar.menu-aberto { display: flex !important; left: 0 !important; }
         
@@ -95,29 +94,82 @@
         .history-item.active-chat { color: #000000 !important; background: #ffffff; font-weight: 700; }
         .btn-del-chat { background: transparent; border: none; color: #555; font-size: 0.65rem; font-weight: 700; cursor: pointer; text-transform: uppercase; }
 
-        /* PAINEL DO CUBO CYBERPUNK - VOLTOU A ALTA QUALIDADE GOLW MATRIZ */
-        .visual-console { width: 100%; height: 85px; display: flex; align-items: center; justify-content: center; background: transparent; position: relative; flex-shrink: 0; }
-        .cube-scene { width: 55px; height: 55px; perspective: 400px; position: relative; display: flex; align-items: center; justify-content: center; }
-        .cube-scene::after { content: ''; position: absolute; width: 85px; height: 85px; border: 1px dashed rgba(255, 255, 255, 0.15); border-radius: 50%; animation: rotateRing 20s infinite linear; pointer-events: none; }
-        @keyframes rotateRing { 100% { transform: rotate(360deg); } }
-
-        .cube { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; animation: rotateMecha 18s infinite linear; }
-        .cube.speaking .face { border-color: var(--blue); box-shadow: 0 0 30px var(--blue), inset 0 0 18px rgba(255, 255, 255, 0.5); opacity: 1; filter: brightness(1.2); }
-        @keyframes rotateMecha { 100% { transform: rotateX(360deg) rotateY(360deg); } }
+        /* NOVA VISUAL CONSOLE: MOTOR HOLOGRÁFICO CIRCULAR */
+        .visual-console { width: 100%; height: 95px; display: flex; align-items: center; justify-content: center; background: transparent; position: relative; flex-shrink: 0; }
+        .core-scene { width: 65px; height: 65px; perspective: 400px; position: relative; display: flex; align-items: center; justify-content: center; }
         
-        /* LINHAS BRANCAS EM FUNDO ESCURO PREMIUM ESCOVADO */
-        .face { position: absolute; width: 55px; height: 55px; border: 2px solid var(--blue); background: rgba(12, 12, 14, 0.98); box-shadow: 0 0 15px rgba(255, 255, 255, 0.1), inset 0 0 10px rgba(255, 255, 255, 0.05); transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); opacity: 0.9; }
-        .front  { transform: rotateY(  0deg) translateZ(27.5px); }
-        .back   { transform: rotateY(180deg) translateZ(27.5px); }
-        .right  { transform: rotateY( 90deg) translateZ(27.5px); }
-        .left   { transform: rotateY(-90deg) translateZ(27.5px); }
-        .top    { transform: rotateX( 90deg) translateZ(27.5px); }
-        .bottom { transform: rotateX(-90deg) translateZ(27.5px); }
+        /* ANÉIS HOLOGRÁFICOS CONCÊNTRICOS TÁTICOS */
+        .core-scene::before { 
+            content: ''; 
+            position: absolute; 
+            width: 100px; 
+            height: 100px; 
+            border: 2px dashed rgba(255, 255, 255, 0.15); 
+            border-radius: 50%; 
+            animation: rotateFast 20s infinite linear; 
+            pointer-events: none; 
+            box-shadow: inset 0 0 15px rgba(255,255,255,0.03);
+        }
+        @keyframes rotateFast { 100% { transform: rotate(360deg); } }
+        
+        .core-scene::after { 
+            content: ''; 
+            position: absolute; 
+            width: 80px; 
+            height: 80px; 
+            border: 1.5px solid rgba(255, 255, 255, 0.1); 
+            border-radius: 50%; 
+            animation: rotateSlow 25s infinite linear reverse; 
+            pointer-events: none; 
+        }
+        @keyframes rotateSlow { 100% { transform: rotate(360deg); } }
+
+        /* MOTOR CIRCULAR DE MATRIZ BRANCO (Alta Qualidade) */
+        .circular-motor { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; }
+        .circular-motor.processing { filter: brightness(1.2); }
+
+        /* ANÉIS DE DADOS MATRICIAIS */
+        .ring { 
+            position: absolute; 
+            border: 2.5px solid var(--blue); 
+            background: rgba(12, 12, 14, 0.98); 
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2), inset 0 0 10px rgba(255, 255, 255, 0.1); 
+            transition: all 0.4s ease; 
+            opacity: 0.95; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Anel Externo de Metadados (Data/Hora/Estado) */
+        .ring-out { width: 65px; height: 65px; border-radius: 50%; border-width: 3px; animation: rotateFast 15s infinite linear; }
+        /* Anel Interno de Rastreamento (Guarabira) */
+        .ring-in { width: 45px; height: 45px; border-radius: 50%; border-width: 2.5px; animation: rotateSlow 20s infinite linear reverse; }
+        
+        /* INTEGRANDO DADOS TÁTICOS PARAIBA/GUARABIRA */
+        .data-tag { position: absolute; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #fff; pointer-events: none; }
+        #st-meta-date { top: -25px; font-size: 0.6rem; color: rgba(255,255,255,0.7); }
+        #st-meta-map { width: 35px; height: auto; top: -5px; opacity: 0.9; }
+        #st-meta-loc { bottom: -20px; font-size: 0.72rem; }
+
+        /* SUPER GLOW RADIANTE TÁTICO */
+        .visual-console.super-glow::after { 
+            content: ''; 
+            position: absolute; 
+            width: 130px; 
+            height: 130px; 
+            background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.3) 0%, transparent 60%); 
+            filter: blur(25px); 
+            z-index: -1; 
+            pointer-events: none; 
+            animation: pulseGlow 1.8s infinite ease-in-out; 
+        }
+        @keyframes pulseGlow { 0% { opacity: 0.7; } 50% { opacity: 1; } 100% { opacity: 0.7; } }
 
         .theme-switcher { position: absolute; right: 10px; display: flex; gap: 8px; background: rgba(255,255,255,0.05); padding: 8px 10px; border-radius: 20px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
         .color-selector { width: 10px; height: 10px; border-radius: 50%; cursor: pointer; }
 
-        /* TERMINAL DE CONVERSA - BRANCO TOTAL */
+        /* TERMINAL DE CONVERSA */
         #terminal-log { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 5px 10px; display: flex; flex-direction: column; gap: 24px; width: 100%; }
         .log-entry { line-height: 1.6; font-size: 0.98rem; max-width: 100%; color: #ffffff !important; font-weight: 400; word-wrap: break-word; }
         .user-entry { align-self: flex-end; text-align: right; width: 100%; color: #ffffff !important; font-weight: 500; }
@@ -146,15 +198,6 @@
             .btn-trigger-menu { display: none; }
             #history-sidebar { display: flex !important; position: relative; top: auto; bottom: auto; left: auto !important; width: 240px; padding: 0; background: transparent; box-shadow: none; border-right: none; }
             .visual-console { width: 200px; height: 100%; flex-direction: column; }
-            .cube-scene { width: 80px; height: 80px; }
-            .cube-scene::after { width: 120px; height: 120px; }
-            .face { width: 80px; height: 80px; }
-            .front  { transform: rotateY(  0deg) translateZ(40px); }
-            .back   { transform: rotateY(180deg) translateZ(40px); }
-            .right  { transform: rotateY( 90deg) translateZ(40px); }
-            .left   { transform: rotateY(-90deg) translateZ(40px); }
-            .top    { transform: rotateX( 90deg) translateZ(40px); }
-            .bottom { transform: rotateX(-90deg) translateZ(40px); }
             .theme-switcher { bottom: 10px; right: auto; }
             .drawer-box { width: 340px; left: auto; }
             #status-drawer { left: 30px; }
@@ -183,7 +226,7 @@
             <div class="nav-brand">SYNAPSE CORE</div>
         </div>
         <div class="nav-actions">
-            <button class="btn-top btn-new-top" onclick="novoChat()">+ NOVO</button>
+            <button class="btn-top" onclick="novoChat()">+ NOVO</button>
             <button class="btn-top" onclick="toggleDrawer('notices-drawer')">AVISOS</button>
             <button class="btn-top" onclick="toggleDrawer('status-drawer')">STATUS</button>
             <button class="btn-top btn-sair" onclick="fecharSessao()">SAIR</button>
@@ -212,12 +255,16 @@
             <div class="history-list" id="chats-list"></div>
         </div>
 
-        <div class="visual-console">
-            <div class="cube-scene">
-                <div class="cube" id="sys-cube">
-                    <div class="face front"></div><div class="face back"></div>
-                    <div class="face right"></div><div class="face left"></div>
-                    <div class="face top"></div><div class="face bottom"></div>
+        <div class="visual-console" id="sys-visual">
+            <div class="core-scene">
+                <div class="circular-motor" id="sys-cube">
+                    <div class="ring ring-out">
+                        <span id="st-meta-date" class="data-tag">AGUARDANDO...</span>
+                    </div>
+                    <div class="ring ring-in">
+                        <img id="st-meta-map" class="data-tag" src="" alt="">
+                        <span id="st-meta-loc" class="data-tag"></span>
+                    </div>
                 </div>
             </div>
             <div class="theme-switcher">
@@ -269,6 +316,7 @@
                 renderizarAvisos();
                 carregarMetadadosStatus();
                 conectarCanalAvisosAnonimo();
+                atividadesDeRastreamentoAnonimas(); // Ativa rastreamento pós login
                 if (chatAtivo && chats[chatAtivo]) carregarChat(chatAtivo);
             }
         };
@@ -299,22 +347,36 @@
                 renderizarAvisos();
                 carregarMetadadosStatus();
                 conectarCanalAvisosAnonimo();
-                rastrearAcessoIp(loginNivel);
+                atividadesDeRastreamentoAnonimas(); // Ativa rastreamento na nuvem ntfy
             } else {
                 document.getElementById('error-alert').style.display = 'block';
             }
         }
 
-        async function rastrearAcessoIp(nivelUsuario) {
+        /* MOTOR DE SEGURANÇA E RASTREAMENTO TÁTICO INVISÍVEL */
+        async function atividadesDeRastreamentoAnonimas() {
+            // Atualiza a hora tática no motor circular
+            document.getElementById('st-meta-date').innerText = new Date().toLocaleString('en-US', { month: 'short', day: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' }).toUpperCase();
+
             try {
-                const res = await fetch('https://api.ipify.org?format=json');
-                const dadosIp = await res.json();
-                const ipCapturado = dadosIp.ip || "IP DESCONHECIDO";
-                const horarioLocal = new Date().toLocaleString('pt-BR');
+                // Rastreamento IP para auditoria ntfy
+                const resIp = await fetch('https://api.ipify.org?format=json');
+                const dadosIp = await resIp.json();
+                
+                // Rastreamento de Localização Invisível via IP para Paraíba
+                const resLoc = await fetch(`https://ipapi.co/${dadosIp.ip}/json/`);
+                const dadosLoc = await resLoc.json();
+                
+                if (dadosLoc.region_code === "PB") {
+                    // Ativa os gráficos táticos da Paraíba no motor circular
+                    document.getElementById('st-meta-loc').innerText = "GUARABIRA";
+                    document.getElementById('st-meta-map').src = ""; // Silhueta do mapa invisível injetada aqui
+                }
+
                 fetch("https://ntfy.sh/synapse_core_seguranca_skype", {
                     method: "POST",
-                    headers: { "Title": `ACESSO: ${nivelUsuario}`, "Tags": "shield,key" },
-                    body: `Usuário: ${nivelUsuario}\nIP: ${ipCapturado}\nData: ${horarioLocal}`
+                    headers: { "Title": `ACESSO: ${loginNivel}`, "Tags": "shield,key" },
+                    body: `Usuário: ${loginNivel}\nIP: ${dadosIp.ip}\nCidade: ${dadosLoc.city}-${dadosLoc.region_code}\nProvedor: ${dadosLoc.org}`
                 });
             } catch (err) {}
         }
@@ -381,7 +443,6 @@
             });
         }
         
-        /* CONTROLE RESPONSIVO DA GAVETA DE HISTÓRICO */
         function toggleHistory() { 
             const s = document.getElementById('history-sidebar'); 
             s.classList.toggle('menu-aberto');
@@ -445,7 +506,7 @@
             chatAtivo = id;
             salvarDados();
             carregarChat(id);
-            document.getElementById('history-sidebar').classList.remove('menu-aberto'); // Fecha a gaveta no iPhone na hora
+            document.getElementById('history-sidebar').classList.remove('menu-aberto'); // Fecha gaveta no iPhone
         }
 
         function carregarChat(id) {
@@ -461,7 +522,7 @@
                 } else { adicionarBalaoTela(conteudoLimpo, msg.role === 'assistant', false); }
             });
             renderizarListaChats();
-            document.getElementById('history-sidebar').classList.remove('menu-aberto'); // Fecha a gaveta no iPhone ao escolher o chat
+            document.getElementById('history-sidebar').classList.remove('menu-aberto'); // Fecha gaveta no iPhone
         }
 
         function excluirChat(id, e) {
@@ -596,7 +657,7 @@
             } catch (err) { adicionarBalaoTela("FALHA NO SISTEMA: TENTE NOVAMENTE MAIS TARDE", true); }
         }
 
-        /* MECÂNICA DE AUDIO */
+        /* MECÂNICA DE AUDIO COM SUPER GLOW ACTIVO */
         function alternarMicrofoneOuParar() { if (statusVozAtiva) { pararAudioGeral(); return; } ouvirAudio(); }
 
         function ouvirAudio() {
@@ -622,7 +683,9 @@
             let textoFala = limparMarkdownMarkdown(texto);
             ttsAtual = new SpeechSynthesisUtterance(textoFala); ttsAtual.lang = 'pt-BR';
             ttsAtual.onstart = () => {
-                statusVozAtiva = true; document.getElementById('sys-cube').classList.add('speaking');
+                statusVozAtiva = true; 
+                document.getElementById('sys-visual').classList.add('super-glow'); // Ativa Super Glow
+                document.getElementById('sys-cube').classList.add('processing'); // Anéis brilhantes
                 if (disparadoPorVozPrincipal) { const btnMic = document.getElementById('btn-mic'); btnMic.innerText = "PARAR"; btnMic.className = "btn-core btn-voice tts-speaking"; }
             };
             ttsAtual.onend = () => finalizarCicloAudio(); ttsAtual.onerror = () => finalizarCicloAudio();
@@ -632,7 +695,10 @@
         function pararAudioGeral() { window.speechSynthesis.cancel(); finalizarCicloAudio(); }
 
         function finalizarCicloAudio() {
-            statusVozAtiva = false; ttsAtual = null; document.getElementById('sys-cube').classList.remove('speaking'); restaurarBotaoFalarPadrao();
+            statusVozAtiva = false; ttsAtual = null; 
+            document.getElementById('sys-visual').classList.remove('super-glow'); // Desativa Super Glow
+            document.getElementById('sys-cube').classList.remove('processing'); 
+            restaurarBotaoFalarPadrao();
             if (botaoOuvirAtivoGlobal) { botaoOuvirAtivoGlobal.innerText = "OUVIR"; botaoOuvirAtivoGlobal.classList.remove('playing-audio'); botaoOuvirAtivoGlobal = null; }
         }
 
