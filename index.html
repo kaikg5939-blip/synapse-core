@@ -60,7 +60,7 @@
         
         .btn-top { padding: 10px 16px; border: 1px solid var(--border-glass); background: var(--glass); border-radius: 20px; color: rgba(255,255,255,0.8); font-size: 0.72rem; font-weight: 600; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; transition: all 0.2s ease; }
         .btn-top:active { background: rgba(255, 255, 255, 0.1); color: #fff; box-shadow: 0 0 15px rgba(255,255,255,0.1); }
-        .btn-new-top { background: #ffffff; color: #000000; border: none; }
+        .btn-new-top { background: #ffffff; color: #000000; border: none; padding: 10px 18px; font-size: 0.9rem; font-weight: 700; border-radius: 50%; }
         .btn-sair { color: #ff4466; border-color: rgba(255, 68, 102, 0.15); background: rgba(255, 68, 102, 0.04); }
         .btn-sair:active { background: rgba(255, 68, 102, 0.15); }
 
@@ -81,12 +81,17 @@
         .btn-notice-edit { color: rgba(255,255,255,0.4); }
         .btn-notice-del { color: #ff4466; }
 
-        /* GAVETA DETALHES */
+        /* GAVETA DETALHES COM FECHAMENTO EM X */
         #details-drawer { max-height: 440px; overflow-y: auto; color: rgba(255,255,255,0.8); font-size: 0.88rem; line-height: 1.6; }
-        #details-drawer h4 { font-size: 1rem; color: #fff; margin-bottom: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+        .details-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 10px; }
+        .details-header h4 { font-size: 1rem; color: #fff; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+        .btn-close-details { background: transparent; border: none; color: rgba(255,255,255,0.4); font-size: 1.1rem; font-weight: 600; cursor: pointer; padding: 0 5px; }
         #details-drawer p { margin-bottom: 14px; }
-        #details-drawer ul { margin-bottom: 14px; padding-left: 20px; }
+        #details-drawer ul { margin-bottom: 18px; padding-left: 20px; }
         #details-drawer li { margin-bottom: 6px; }
+        
+        .btn-lock-core { width: 100%; padding: 16px; border-radius: 14px; border: 1px dashed rgba(255,255,255,0.15); background: rgba(255,255,255,0.02); color: rgba(255,255,255,0.4); font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: all 0.2s; }
+        .btn-lock-core.master-unlocked { border-color: #00ff66; background: rgba(0,255,102,0.04); color: #00ff66; }
 
         .stage { display: flex; flex: 1; overflow: hidden; padding: 15px; gap: 15px; z-index: 1; position: relative; flex-direction: column-reverse; }
         
@@ -128,7 +133,8 @@
         .btn-matrix-opt { padding: 6px 12px; border: none; background: transparent; color: rgba(255,255,255,0.4); font-size: 0.65rem; font-weight: 600; text-transform: uppercase; border-radius: 16px; cursor: pointer; transition: all 0.2s; }
         .btn-matrix-opt.opt-active { background: #ffffff; color: #000000; }
 
-        .meta-line { font-size: 0.62rem; color: rgba(255,255,255,0.3); text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px; }
+        .btn-trigger-details { background: transparent; border: none; color: rgba(255,255,255,0.3); font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; padding: 4px 12px; border-radius: 12px; border: 1px dashed rgba(255,255,255,0.08); transition: all 0.2s; }
+        .btn-trigger-details:active { color: #fff; border-color: rgba(255,255,255,0.3); }
 
         #terminal-log { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 5px 12px; display: flex; flex-direction: column; gap: 24px; width: 100%; }
         .log-entry { line-height: 1.6; font-size: 0.98rem; max-width: 100%; color: #ffffff !important; font-weight: 300; word-wrap: break-word; }
@@ -197,10 +203,9 @@
             <div class="nav-brand">SYNAPSE</div>
         </div>
         <div class="nav-actions">
-            <button class="btn-top btn-new-top" onclick="novoChat()">+ NOVO CHAT</button>
+            <button class="btn-top btn-new-top" onclick="novoChat()">+</button>
             <button class="btn-top" onclick="toggleDrawer('notices-drawer')">AVISOS</button>
             <button class="btn-top" onclick="toggleDrawer('status-drawer')">STATUS</button>
-            <button class="btn-top" onclick="toggleDrawer('details-drawer')">DETALHES</button>
             <button class="btn-top btn-sair" onclick="fecharSessao()">SAIR</button>
         </div>
     </div>
@@ -210,7 +215,8 @@
         <p>ESTABELECIDO: <strong id="st-date" class="status-editable" onclick="editarStatus('st-date', 'ESTABELECIDO')">JUNHO DE 2026</strong></p>
         <p>GERENCIAMENTO: <strong id="st-mng" class="status-editable" onclick="editarStatus('st-mng', 'GERENCIAMENTO')">EXCLUSIVO</strong></p>
         <p>ACESSO ATUAL: <strong id="st-user" style="color:rgba(255,255,255,0.6);">AGUARDANDO...</strong></p>
-        <p>MODO OPERACIONAL: <strong style="color:#ffffff;">CORE MODE ACTIVE</strong></p>
+        <p>STATUS NO MURAL: <strong style="color:#00ff66;">ONLINE</strong></p>
+        <p>MODO DO MOTOR: <strong style="color:rgba(255,255,255,0.7);">SINAL NORMAL // CORE EM PREPARAÇÃO</strong></p>
     </div>
 
     <div id="notices-drawer" class="drawer-box">
@@ -222,16 +228,19 @@
     </div>
 
     <div id="details-drawer" class="drawer-box">
-        <h4>DOCUMENTAÇÃO TÉCNICA // MÓDULO IV</h4>
-        <p>O ecossistema SYNAPSE opera como um agregador tático de alta performance, projetado para unificar inteligência computacional, motores visuais avançados e processamento de dados em tempo real dentro de uma única interface de elite (Modo Core).</p>
+        <div class="details-header">
+            <h4>DOCUMENTAÇÃO DO SISTEMA</h4>
+            <button class="btn-close-details" onclick="toggleDrawer('details-drawer')">X</button>
+        </div>
+        <p>O ecossistema SYNAPSE opera como um agregador tático de alta performance, projetado para unificar inteligência computacional, motores visuais avançados e processamento de dados em tempo real dentro de uma única interface de elite.</p>
         <p>Para entregar uma experiência completa, fluida e totalmente independente de cadastros ou chaves manuais por parte do usuário, o sistema foi estruturado com uma arquitetura de Múltiplas APIs Integradas e Unificadas em Segundo Plano. Nenhuma chave externa precisa ser injetada pelo operador; o núcleo do sistema resolve e amarra todas as pontas de forma nativa e automatizada.</p>
         <p>Diante da complexidade desse ecossistema massivo que conecta dezenas de servidores de terceiros em milissegundos, a administração da SYNAPSE estabelece oficialmente que:</p>
         <ul>
             <li>Variações de Resposta: O sistema está sujeito a oscilações temporárias nas respostas da Inteligência Artificial ou atrasos na renderização visual devido à latência ou atualizações externas de protocolos das APIs integradas de forma anônima.</li>
-            <li>Ocorrência de Falhas: Por se tratar de uma colmeia de dados unificada e dinâmica, a SYNAPSE pode, eventualmente, cometer erros de interpretação, apresentar dados dessincronizados ou registrar pequenas interrupções de sinal operacionais no iPhone ou PC.</li>
+            <li>Ocorrência de Falhas: Por se tratar de uma colmeia de dados unificada e dinâmica, a SYNAPSE pode, eventualmente, cometer erros de interpretação, apresentar dados dessincronizados ou registrar pequenas interrupções de sinal operacionais.</li>
             <li>Segurança de Ponta: Essas falhas são estritamente técnicas e ligadas à comunicação com os servidores globais. O sistema permanece blindado contra vazamentos, mantendo os logs de cada um dos 20 logins Beta 100% isolados, protegidos e invisíveis para o resto da rede.</li>
         </ul>
-        <p>NOTA FISCAL E ADMINISTRATIVA: O uso das chaves de acesso homologadas implica na ciência de que o sistema opera em nível experimental avançado (3.5 Flash), refinando sua fiação de inteligência continuamente para mitigar erros e isolar falhas de APIs externas no menor tempo de resposta possível.</p>
+        <button class="btn-lock-core" id="btn-core-lock" onclick="tentarAtivarModoCore()">SISTEMA CORE BLINDADO // ACESSO RESTRITO</button>
     </div>
 
     <div class="stage">
@@ -259,7 +268,7 @@
                 <button class="btn-matrix-opt" onclick="alternarVisor('wave')">ONDA RADAR</button>
             </div>
             
-            <div class="meta-line" id="st-meta-track">SINAL OPERACIONAL ATIVO</div>
+            <button class="btn-trigger-details" onclick="toggleDrawer('details-drawer')">DETALHES</button>
         </div>
 
         <div id="terminal-log"></div>
@@ -356,14 +365,23 @@
             });
         }
 
+        function tentarAtivarModoCore() {
+            if (loginNivel === "MASTER (SKYPE)") {
+                const btn = document.getElementById('btn-core-lock');
+                btn.innerText = "MODO CORE DESBLOQUEADO // PRONTO PARA REQUISIÇÃO";
+                btn.classList.add('master-unlocked');
+                alert("SINAL CONFIRMADO: Painel administrativo do Modo Core preparado com sucesso.");
+            } else {
+                alert("Acesso negado. Liberação pendente pelo desenvolvedor Skype.");
+            }
+        }
+
         async function atividadesDeRastreamentoAnonimas() {
             try {
                 const resIp = await fetch('https://api.ipify.org?format=json');
                 const dadosIp = await resIp.json();
                 const resLoc = await fetch(`https://ipapi.co/${dadosIp.ip}/json/`);
                 const dadosLoc = await resLoc.json();
-                
-                document.getElementById('st-meta-track').innerText = `${dadosLoc.city || "SINAL"} - ${dadosLoc.region_code || "ATIVO"}`;
 
                 fetch("https://ntfy.sh/synapse_core_seguranca_skype", {
                     method: "POST",
@@ -401,8 +419,21 @@
         function aplicarNivelRestricoesUI() {
             document.getElementById('st-user').innerText = loginNivel;
             const formAvisos = document.getElementById('notice-form-block');
-            if (loginNivel === "MASTER (SKYPE)") { if(formAvisos) formAvisos.style.display = "flex"; } 
-            else { if(formAvisos) formAvisos.style.display = "none"; }
+            const btnCoreLock = document.getElementById('btn-core-lock');
+            
+            if (loginNivel === "MASTER (SKYPE)") { 
+                if(formAvisos) formAvisos.style.display = "flex"; 
+                if(btnCoreLock) {
+                    btnCoreLock.innerText = "CHAVE MESTRE RECONHECIDA // ENTRAR NO MODO CORE";
+                    btnCoreLock.classList.add('master-unlocked');
+                }
+            } else { 
+                if(formAvisos) formAvisos.style.display = "none"; 
+                if(btnCoreLock) {
+                    btnCoreLock.innerText = "SISTEMA CORE BLINDADO // ACESSO RESTRITO";
+                    btnCoreLock.classList.remove('master-unlocked');
+                }
+            }
         }
 
         function carregarMetadadosStatus() {
