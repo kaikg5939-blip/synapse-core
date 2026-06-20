@@ -8,9 +8,11 @@
         :root { 
             --blue: #ffffff; 
             --bg: #000000; 
-            --panel: rgba(10, 10, 12, 0.96); 
-            --glow: 0 0 35px rgba(255, 255, 255, 0.45);
-            --font-display: -apple-system, SF Pro Text, SF Pro Display, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
+            --panel: rgba(10, 10, 14, 0.75); 
+            --glass: rgba(255, 255, 255, 0.04);
+            --border-glass: rgba(255, 255, 255, 0.08);
+            --glow: 0 0 30px rgba(255, 255, 255, 0.35);
+            --font-display: "SF Pro Display", "-apple-system", BlinkMacSystemFont, sans-serif;
         }
         
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font-display); letter-spacing: -0.01em; -webkit-tap-highlight-color: transparent; }
@@ -26,7 +28,7 @@
             flex-direction: column; 
             overflow: hidden; 
             position: relative; 
-            font-weight: 400;
+            font-weight: 300;
             -webkit-text-size-adjust: 100%;
             scrollbar-width: none;
             padding-top: env(safe-area-inset-top);
@@ -37,175 +39,152 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: radial-gradient(circle at 50% 25%, rgba(255, 255, 255, 0.03) 0%, transparent 65%);
-            filter: blur(50px);
+            background: radial-gradient(circle at 50% 20%, rgba(255, 255, 255, 0.03) 0%, transparent 60%);
+            filter: blur(40px);
             z-index: 0;
             pointer-events: none;
         }
 
-        /* LOGIN OVERLAY */
-        #login-overlay { position: fixed; inset: 0; background: #000000; backdrop-filter: blur(45px); -webkit-backdrop-filter: blur(45px); z-index: 9999; display: flex; align-items: center; justify-content: center; }
-        .login-card { background: rgba(15, 15, 20, 0.85); padding: 45px 35px; border-radius: 20px; text-align: center; width: 88%; max-width: 380px; box-shadow: 0 20px 50px rgba(0,0,0,0.8); border: 1px solid rgba(255,255,255,0.05); }
-        .login-card h3 { font-size: 1.4rem; font-weight: 800; letter-spacing: 3px; margin-bottom: 30px; text-transform: uppercase; color: #fff; }
-        .login-card input { width: 100%; padding: 16px; background: rgba(0, 0, 0, 0.7); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; color: #ffffff; font-size: 1.1rem; text-align: center; outline: none; letter-spacing: 5px; font-weight: 700; }
-        .login-card button { margin-top: 25px; width: 100%; padding: 16px; background: #ffffff; border: none; color: #000000; font-weight: 700; border-radius: 14px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: opacity 0.2s; }
-        .login-card button:hover { opacity: 0.9; }
+        /* AUTENTICAÇÃO GLASSMORPHISM */
+        #login-overlay { position: fixed; inset: 0; background: #000000; backdrop-filter: blur(50px); -webkit-backdrop-filter: blur(50px); z-index: 9999; display: flex; align-items: center; justify-content: center; }
+        .login-card { background: rgba(10, 10, 12, 0.6); padding: 50px 35px; border-radius: 24px; text-align: center; width: 88%; max-width: 380px; box-shadow: 0 30px 60px rgba(0,0,0,0.8); border: 1px solid var(--border-glass); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+        .login-card h3 { font-size: 1.3rem; font-weight: 600; letter-spacing: 5px; margin-bottom: 35px; text-transform: uppercase; color: #fff; opacity: 0.9; }
+        .login-card input { width: 100%; padding: 18px; background: rgba(255,255,255,0.03); border: 1px solid var(--border-glass); border-radius: 16px; color: #ffffff; font-size: 1.1rem; text-align: center; outline: none; letter-spacing: 6px; font-weight: 600; transition: border-color 0.2s; }
+        .login-card input:focus { border-color: rgba(255,255,255,0.3); }
+        .login-card button { margin-top: 25px; width: 100%; padding: 18px; background: #ffffff; border: none; color: #000000; font-weight: 600; border-radius: 16px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; font-size: 0.85rem; }
 
-        /* HEADER INTERFACE REESTRUTURADO */
-        .header { padding: 16px 20px; background: var(--panel); display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); z-index: 100; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .brand-group { display: flex; align-items: center; gap: 12px; }
-        .btn-trigger-menu { background: transparent; border: none; color: #fff; font-size: 1.4rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-        .nav-brand { font-size: 1.25rem; font-weight: 900; letter-spacing: -0.5px; color: #ffffff; text-transform: uppercase; }
-        .nav-actions { display: flex; gap: 6px; align-items: center; }
+        /* HEADER PREMIUM ULTRA-MINIMALISTA */
+        .header { padding: 18px 24px; background: var(--panel); display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); z-index: 100; border-bottom: 1px solid var(--border-glass); }
+        .brand-group { display: flex; align-items: center; gap: 14px; }
+        .btn-trigger-menu { background: transparent; border: none; color: #fff; font-size: 1.3rem; cursor: pointer; display: flex; align-items: center; justify-content: center; opacity: 0.8; }
+        .nav-brand { font-size: 1.15rem; font-weight: 600; letter-spacing: 2px; color: #ffffff; text-transform: uppercase; opacity: 0.9; }
+        .nav-actions { display: flex; gap: 8px; align-items: center; }
         
-        .btn-top { padding: 10px 12px; border: none; background: rgba(255, 255, 255, 0.06); border-radius: 10px; color: #fff; font-size: 0.72rem; font-weight: 700; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; }
-        .btn-top:active { background: rgba(255, 255, 255, 0.15); }
-        .btn-sair { color: #ff4466; background: rgba(255, 68, 102, 0.08); }
+        .btn-top { padding: 10px 16px; border: 1px solid var(--border-glass); background: var(--glass); border-radius: 20px; color: rgba(255,255,255,0.8); font-size: 0.72rem; font-weight: 600; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; transition: all 0.2s ease; }
+        .btn-top:active { background: rgba(255, 255, 255, 0.1); color: #fff; box-shadow: 0 0 15px rgba(255,255,255,0.1); }
+        .btn-new-top { background: #ffffff; color: #000000; border: none; }
+        .btn-sair { color: #ff4466; border-color: rgba(255, 68, 102, 0.15); background: rgba(255, 68, 102, 0.04); }
+        .btn-sair:active { background: rgba(255, 68, 102, 0.15); }
 
-        /* GAVETAS FLUTUANTES */
-        .drawer-box { display: none; position: absolute; top: 75px; background: rgba(10, 10, 12, 0.99); border-radius: 18px; padding: 22px; z-index: 500; box-shadow: var(--glow); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); border: 1px solid rgba(255,255,255,0.08); width: calc(100% - 40px); left: 20px; right: 20px; }
-        #status-drawer p { margin-bottom: 8px; color: #666; text-transform: uppercase; font-weight: 700; font-size: 0.72rem; letter-spacing: 0.5px; }
-        #status-drawer strong { color: #fff; font-weight: 600; font-size: 0.85rem; }
-        .status-editable { border-bottom: 1px dashed rgba(255,255,255,0.2); cursor: pointer; }
+        /* GAVETAS ESTILO GLASS COMPLETO */
+        .drawer-box { display: none; position: absolute; top: 80px; background: rgba(10, 10, 14, 0.95); border-radius: 24px; padding: 24px; z-index: 500; box-shadow: var(--glow); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); border: 1px solid var(--border-glass); width: calc(100% - 40px); left: 20px; right: 20px; }
+        #status-drawer p { margin-bottom: 12px; color: rgba(255,255,255,0.4); text-transform: uppercase; font-weight: 600; font-size: 0.7rem; letter-spacing: 0.5px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.03); padding-bottom: 6px; }
+        #status-drawer strong { color: #fff; font-weight: 400; font-size: 0.85rem; }
+        .status-editable { color: rgba(255,255,255,0.8) !important; cursor: pointer; }
 
-        /* AVISOS */
-        #notices-drawer { max-height: 400px; flex-direction: column; gap: 14px; }
+        /* GAVETA DE AVISOS MODERNIZADOS (ESTILO BARRINHA DE NOTIFICAÇÃO) */
+        #notices-drawer { max-height: 420px; flex-direction: column; gap: 16px; }
         .notice-input-group { display: flex; gap: 10px; width: 100%; }
-        .notice-input-group input { flex: 1; padding: 12px 16px; background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; color: #fff; font-size: 0.85rem; outline: none; }
-        .btn-add-notice { padding: 12px 16px; background: #ffffff; border: none; border-radius: 10px; color: #000; font-size: 0.8rem; font-weight: 700; cursor: pointer; text-transform: uppercase; }
+        .notice-input-group input { flex: 1; padding: 14px 18px; background: rgba(0, 0, 0, 0.4); border: 1px solid var(--border-glass); border-radius: 14px; color: #fff; font-size: 0.88rem; outline: none; }
+        .notice-input-group input:focus { border-color: rgba(255,255,255,0.2); }
         .notices-list { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
-        .notice-item { background: rgba(255, 255, 255, 0.03); padding: 14px; border-radius: 12px; display: flex; flex-direction: column; gap: 8px; border-left: 3px solid #fff; }
-        .notice-text { font-size: 0.85rem; color: #e1e1e1; line-height: 1.4; word-break: break-word; }
-        .notice-actions { display: flex; gap: 12px; justify-content: flex-end; }
-        .btn-notice-op { background: transparent; border: none; font-size: 0.65rem; font-weight: 700; cursor: pointer; text-transform: uppercase; }
-        .btn-notice-edit { color: #888; }
+        .notice-item { background: var(--glass); padding: 16px; border-radius: 16px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border-glass); }
+        .notice-text { font-size: 0.88rem; color: rgba(255,255,255,0.9); line-height: 1.4; word-break: break-word; flex: 1; padding-right: 15px; }
+        .notice-actions { display: flex; gap: 14px; }
+        .btn-notice-op { background: transparent; border: none; font-size: 0.65rem; font-weight: 600; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; }
+        .btn-notice-edit { color: rgba(255,255,255,0.4); }
         .btn-notice-del { color: #ff4466; }
 
         /* PALCO CENTRAL */
         .stage { display: flex; flex: 1; overflow: hidden; padding: 15px; gap: 15px; z-index: 1; position: relative; flex-direction: column-reverse; }
         
-        /* GAVETA DE HISTÓRICO CORRIGIDA */
-        #history-sidebar { display: none; position: fixed; left: -290px; top: 0; bottom: 0; width: 280px; background: rgba(8, 8, 10, 0.99); padding: 85px 20px 30px 20px; box-shadow: 25px 0 50px rgba(0,0,0,0.95); z-index: 400; flex-direction: column; gap: 20px; backdrop-filter: blur(35px); -webkit-backdrop-filter: blur(35px); border-right: 1px solid rgba(255,255,255,0.08); transition: left 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+        /* GAVETA DE HISTÓRICO INTEGRADA */
+        #history-sidebar { display: none; position: fixed; left: -290px; top: 0; bottom: 0; width: 280px; background: rgba(8, 8, 10, 0.97); padding: 90px 20px 30px 20px; box-shadow: 25px 0 50px rgba(0,0,0,0.95); z-index: 400; flex-direction: column; gap: 20px; backdrop-filter: blur(35px); -webkit-backdrop-filter: blur(35px); border-right: 1px solid var(--border-glass); transition: left 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
         #history-sidebar.menu-aberto { display: flex !important; left: 0 !important; }
-        
-        .btn-sidebar-new { width: 100%; padding: 14px; background: #ffffff; border: none; color: #000; font-weight: 700; border-radius: 12px; cursor: pointer; text-transform: uppercase; font-size: 0.8rem; }
+        .btn-sidebar-new { width: 100%; padding: 14px; background: #ffffff; border: none; color: #000; font-weight: 600; border-radius: 14px; cursor: pointer; text-transform: uppercase; font-size: 0.8rem; }
         .history-list { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; scrollbar-width: none; }
-        .history-item { padding: 14px; background: rgba(255, 255, 255, 0.03); border-radius: 12px; display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; font-weight: 600; cursor: pointer; color: #ffffff; border: 1px solid rgba(255,255,255,0.02); }
-        .history-item.active-chat { color: #000000 !important; background: #ffffff; font-weight: 700; }
-        .btn-del-chat { background: transparent; border: none; color: #555; font-size: 0.65rem; font-weight: 700; cursor: pointer; text-transform: uppercase; }
+        .history-item { padding: 14px 18px; background: var(--glass); border-radius: 14px; display: flex; justify-content: space-between; align-items: center; font-size: 0.82rem; font-weight: 400; cursor: pointer; color: rgba(255,255,255,0.7); border: 1px solid transparent; }
+        .history-item.active-chat { color: #000000 !important; background: #ffffff; font-weight: 600; border-color: #fff; }
+        .btn-del-chat { background: transparent; border: none; color: rgba(255,255,255,0.3); font-size: 0.65rem; font-weight: 600; cursor: pointer; text-transform: uppercase; }
+        .history-item.active-chat .btn-del-chat { color: rgba(0,0,0,0.4); }
 
-        /* NOVA VISUAL CONSOLE: MOTOR HOLOGRÁFICO CIRCULAR */
-        .visual-console { width: 100%; height: 95px; display: flex; align-items: center; justify-content: center; background: transparent; position: relative; flex-shrink: 0; }
-        .core-scene { width: 65px; height: 65px; perspective: 400px; position: relative; display: flex; align-items: center; justify-content: center; }
+        /* PAINEL DE CONTROLE VISUAL MUTÁVEL */
+        .visual-console { width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; background: transparent; position: relative; flex-shrink: 0; padding: 15px 0; gap: 14px; }
+        .matrix-viewport { width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; position: relative; }
         
-        /* ANÉIS HOLOGRÁFICOS CONCÊNTRICOS TÁTICOS */
-        .core-scene::before { 
-            content: ''; 
-            position: absolute; 
-            width: 100px; 
-            height: 100px; 
-            border: 2px dashed rgba(255, 255, 255, 0.15); 
-            border-radius: 50%; 
-            animation: rotateFast 20s infinite linear; 
-            pointer-events: none; 
-            box-shadow: inset 0 0 15px rgba(255,255,255,0.03);
-        }
-        @keyframes rotateFast { 100% { transform: rotate(360deg); } }
-        
-        .core-scene::after { 
-            content: ''; 
-            position: absolute; 
-            width: 80px; 
-            height: 80px; 
-            border: 1.5px solid rgba(255, 255, 255, 0.1); 
-            border-radius: 50%; 
-            animation: rotateSlow 25s infinite linear reverse; 
-            pointer-events: none; 
-        }
-        @keyframes rotateSlow { 100% { transform: rotate(360deg); } }
+        /* ELEMENTO 1: CUBO CYBERPUNK 3D (Alta Qualidade) */
+        .cube-matrix { width: 45px; height: 45px; position: absolute; transform-style: preserve-3d; animation: rotateMecha 18s infinite linear; display: none; }
+        .face-node { position: absolute; width: 45px; height: 45px; border: 1.5px solid var(--blue); background: rgba(5, 5, 5, 0.9); box-shadow: inset 0 0 10px rgba(255,255,255,0.05); }
+        .f-front  { transform: rotateY(  0deg) translateZ(22.5px); }
+        .f-back   { transform: rotateY(180deg) translateZ(22.5px); }
+        .f-right  { transform: rotateY( 90deg) translateZ(22.5px); }
+        .f-left   { transform: rotateY(-90deg) translateZ(22.5px); }
+        .f-top    { transform: rotateX( 90deg) translateZ(22.5px); }
+        .f-bottom { transform: rotateX(-90deg) translateZ(22.5px); }
+        @keyframes rotateMecha { 100% { transform: rotateX(360deg) rotateY(360deg); } }
 
-        /* MOTOR CIRCULAR DE MATRIZ BRANCO (Alta Qualidade) */
-        .circular-motor { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; }
-        .circular-motor.processing { filter: brightness(1.2); }
+        /* ELEMENTO 2: MOTOR HOLOGRÁFICO CIRCULAR */
+        .circular-matrix { width: 55px; height: 55px; position: absolute; border: 2px solid var(--blue); border-radius: 50%; box-shadow: var(--glow), inset 0 0 15px rgba(255,255,255,0.1); display: none; align-items: center; justify-content: center; }
+        .circular-matrix::after { content: ''; position: absolute; width: 35px; height: 35px; border: 1.5px dashed rgba(255,255,255,0.3); border-radius: 50%; animation: rotRev 8s infinite linear reverse; }
+        @keyframes rotRev { 100% { transform: rotate(360deg); } }
 
-        /* ANÉIS DE DADOS MATRICIAIS */
-        .ring { 
-            position: absolute; 
-            border: 2.5px solid var(--blue); 
-            background: rgba(12, 12, 14, 0.98); 
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2), inset 0 0 10px rgba(255, 255, 255, 0.1); 
-            transition: all 0.4s ease; 
-            opacity: 0.95; 
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        /* Anel Externo de Metadados (Data/Hora/Estado) */
-        .ring-out { width: 65px; height: 65px; border-radius: 50%; border-width: 3px; animation: rotateFast 15s infinite linear; }
-        /* Anel Interno de Rastreamento (Guarabira) */
-        .ring-in { width: 45px; height: 45px; border-radius: 50%; border-width: 2.5px; animation: rotateSlow 20s infinite linear reverse; }
-        
-        /* INTEGRANDO DADOS TÁTICOS PARAIBA/GUARABIRA */
-        .data-tag { position: absolute; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #fff; pointer-events: none; }
-        #st-meta-date { top: -25px; font-size: 0.6rem; color: rgba(255,255,255,0.7); }
-        #st-meta-map { width: 35px; height: auto; top: -5px; opacity: 0.9; }
-        #st-meta-loc { bottom: -20px; font-size: 0.72rem; }
+        /* ELEMENTO 3: ONDA DE FREQUÊNCIA RADAR */
+        .wave-matrix { width: 50px; height: 50px; position: absolute; display: none; align-items: center; justify-content: center; }
+        .wave-ring { position: absolute; width: 100%; height: 100%; border: 1.5px solid var(--blue); border-radius: 50%; animation: pulseRadar 2s infinite cubic-bezier(0.16, 1, 0.3, 1); opacity: 0; }
+        .w2 { animation-delay: 0.6s; } .w3 { animation-delay: 1.2s; }
+        @keyframes pulseRadar { 0% { transform: scale(0.2); opacity: 1; } 100% { transform: scale(1.2); opacity: 0; } }
 
-        /* SUPER GLOW RADIANTE TÁTICO */
-        .visual-console.super-glow::after { 
-            content: ''; 
-            position: absolute; 
-            width: 130px; 
-            height: 130px; 
-            background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.3) 0%, transparent 60%); 
-            filter: blur(25px); 
-            z-index: -1; 
-            pointer-events: none; 
-            animation: pulseGlow 1.8s infinite ease-in-out; 
-        }
-        @keyframes pulseGlow { 0% { opacity: 0.7; } 50% { opacity: 1; } 100% { opacity: 0.7; } }
+        /* ESTADO ATIVO DO MONITOR CHANGER */
+        .visor-ativo { display: flex !important; }
+        .cube-matrix.visor-ativo { display: block !important; }
 
-        .theme-switcher { position: absolute; right: 10px; display: flex; gap: 8px; background: rgba(255,255,255,0.05); padding: 8px 10px; border-radius: 20px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
-        .color-selector { width: 10px; height: 10px; border-radius: 50%; cursor: pointer; }
+        /* SELETOR DE MATRIZ (MODERNO PILL) */
+        .matrix-changer { display: flex; gap: 6px; background: rgba(255,255,255,0.03); padding: 4px; border-radius: 20px; border: 1px solid var(--border-glass); }
+        .btn-matrix-opt { padding: 6px 12px; border: none; background: transparent; color: rgba(255,255,255,0.4); font-size: 0.65rem; font-weight: 600; text-transform: uppercase; border-radius: 16px; cursor: pointer; transition: all 0.2s; }
+        .btn-matrix-opt.opt-active { background: #ffffff; color: #000000; }
 
-        /* TERMINAL DE CONVERSA */
-        #terminal-log { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 5px 10px; display: flex; flex-direction: column; gap: 24px; width: 100%; }
-        .log-entry { line-height: 1.6; font-size: 0.98rem; max-width: 100%; color: #ffffff !important; font-weight: 400; word-wrap: break-word; }
-        .user-entry { align-self: flex-end; text-align: right; width: 100%; color: #ffffff !important; font-weight: 500; }
+        /* METADADOS TÁTICOS FLUTUANTES COMPACTOS */
+        .meta-line { font-size: 0.62rem; color: rgba(255,255,255,0.3); text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px; }
+
+        /* TERMINAL DE CONVERSA - TEXTO LIMPO */
+        #terminal-log { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 5px 12px; display: flex; flex-direction: column; gap: 24px; width: 100%; }
+        .log-entry { line-height: 1.6; font-size: 0.98rem; max-width: 100%; color: #ffffff !important; font-weight: 300; word-wrap: break-word; }
+        .user-entry { align-self: flex-end; text-align: right; width: 100%; color: rgba(255,255,255,0.9) !important; font-weight: 400; }
         .ai-entry { align-self: flex-start; width: 100%; color: #ffffff !important; }
-        .img-container { max-width: 100%; max-height: 300px; border-radius: 14px; margin-top: 10px; display: block; }
+        .img-container { max-width: 100%; max-height: 300px; border-radius: 16px; margin-top: 10px; display: block; border: 1px solid var(--border-glass); }
 
         .action-bar { display: flex; gap: 14px; margin-top: 8px; }
-        .btn-action-msg { background: transparent; border: none; color: #555; font-size: 0.7rem; font-weight: 700; cursor: pointer; text-transform: uppercase; }
+        .btn-action-msg { background: transparent; border: none; color: rgba(255,255,255,0.3); font-size: 0.65rem; font-weight: 600; cursor: pointer; text-transform: uppercase; }
         .btn-action-msg.playing-audio { color: #ff4466 !important; }
 
-        /* COMMAND BAR ADAPTADO */
-        .command-bar { padding: 12px 15px; background: var(--panel); display: flex; flex-direction: column; gap: 10px; border-top: 1px solid rgba(255,255,255,0.04); z-index: 100; }
+        /* BARRA DE COMANDO ESTILO CONTROLE DO IOS */
+        .command-bar { padding: 14px 16px; background: var(--panel); display: flex; flex-direction: column; gap: 10px; border-top: 1px solid var(--border-glass); z-index: 100; }
         .input-row { display: flex; gap: 10px; width: 100%; align-items: center; }
-        .field-container { flex: 1; position: relative; background: rgba(255, 255, 255, 0.04); border-radius: 14px; border: 1px solid rgba(255,255,255,0.02); }
-        .field-container::before { content: 'IN:'; position: absolute; left: 16px; top: 15px; font-size: 0.75rem; color: #666; font-weight: 800; }
-        .main-input { width: 100%; padding: 14px 14px 14px 45px; background: transparent; border: none; color: #fff; outline: none; font-size: 0.95rem; }
+        .field-container { flex: 1; position: relative; background: rgba(255,255,255,0.03); border-radius: 16px; border: 1px solid var(--border-glass); }
+        .field-container::before { content: 'SINAL'; position: absolute; left: 16px; top: 15px; font-size: 0.7rem; color: rgba(255,255,255,0.2); font-weight: 600; letter-spacing: 0.5px; }
+        .main-input { width: 100%; padding: 14px 14px 14px 65px; background: transparent; border: none; color: #fff; outline: none; font-size: 0.95rem; font-weight: 300; }
         
-        .btn-core { height: 48px; padding: 0 16px; border: none; background: rgba(255, 255, 255, 0.06); color: #fff; border-radius: 14px; font-weight: 700; cursor: pointer; font-size: 0.75rem; text-transform: uppercase; }
-        .btn-core:active { background: rgba(255,255,255,0.15); }
-        .btn-voice.mic-listening { background: rgba(0, 255, 102, 0.1) !important; color: #00ff66 !important; }
-        .btn-voice.tts-speaking { background: rgba(255, 68, 102, 0.1) !important; color: #ff4466 !important; }
+        .btn-core { height: 48px; padding: 0 18px; border: 1px solid var(--border-glass); background: var(--glass); color: #fff; border-radius: 16px; font-weight: 600; cursor: pointer; font-size: 0.75rem; text-transform: uppercase; transition: all 0.2s; }
+        .btn-core:active { background: #ffffff; color: #000000; border-color: #fff; }
+        .btn-voice.mic-listening { background: rgba(0, 255, 102, 0.1) !important; color: #00ff66 !important; border-color: rgba(0,255,102,0.3); }
+        .btn-voice.tts-speaking { background: rgba(255, 68, 102, 0.1) !important; color: #ff4466 !important; border-color: rgba(255,68,102,0.3); }
 
-        /* LAYOUT DESKTOP */
+        /* RESPONSIVIDADE DESKTOP */
         @media (min-width: 851px) {
             .stage { flex-direction: row; padding: 30px; gap: 30px; }
             .btn-trigger-menu { display: none; }
             #history-sidebar { display: flex !important; position: relative; top: auto; bottom: auto; left: auto !important; width: 240px; padding: 0; background: transparent; box-shadow: none; border-right: none; }
-            .visual-console { width: 200px; height: 100%; flex-direction: column; }
-            .theme-switcher { bottom: 10px; right: auto; }
-            .drawer-box { width: 340px; left: auto; }
+            .visual-console { width: 220px; height: 100%; justify-content: flex-start; padding-top: 40px; gap: 20px; }
+            .matrix-viewport { width: 100px; height: 100px; }
+            .cube-matrix { width: 70px; height: 70px; }
+            .face-node { width: 70px; height: 70px; }
+            .f-front  { transform: rotateY(  0deg) translateZ(35px); }
+            .f-back   { transform: rotateY(180deg) translateZ(35px); }
+            .f-right  { transform: rotateY( 90deg) translateZ(35px); }
+            .f-left   { transform: rotateY(-90deg) translateZ(35px); }
+            .f-top    { transform: rotateX( 90deg) translateZ(35px); }
+            .f-bottom { transform: rotateX(-90deg) translateZ(35px); }
+            .circular-matrix { width: 90px; height: 90px; }
+            .wave-matrix { width: 85px; height: 85px; }
+            .matrix-changer { flex-direction: column; width: 100%; padding: 6px; border-radius: 16px; }
+            .btn-matrix-opt { width: 100%; padding: 8px; text-align: left; }
+            .drawer-box { width: 360px; left: auto; }
             #status-drawer { left: 30px; }
             #notices-drawer { right: 30px; }
             .command-bar { padding: 25px 45px; }
             .field-container::before { left: 22px; top: 18px; }
-            .main-input { padding: 16px 16px 16px 80px; }
-            .btn-core { height: 52px; padding: 0 28px; }
+            .main-input { padding: 16px 16px 16px 85px; }
+            .btn-core { height: 52px; padding: 0 26px; }
         }
     </style>
 </head>
@@ -216,7 +195,7 @@
             <h3>SYNAPSE CORE</h3>
             <input type="password" id="access-key" placeholder="CHAVE" onkeydown="if(event.key==='Enter') verificarSinal()">
             <button onclick="verificarSinal()">AUTENTICAR</button>
-            <p id="error-alert" style="color:#ff4466; font-size:0.75rem; margin-top:15px; display:none; letter-spacing:1px; font-weight:700;">CHAVE INVÁLIDA</p>
+            <p id="error-alert" style="color:#ff4466; font-size:0.75rem; margin-top:15px; display:none; letter-spacing:1px; font-weight:600;">CHAVE INVÁLIDA</p>
         </div>
     </div>
 
@@ -226,7 +205,7 @@
             <div class="nav-brand">SYNAPSE CORE</div>
         </div>
         <div class="nav-actions">
-            <button class="btn-top" onclick="novoChat()">+ NOVO</button>
+            <button class="btn-top btn-new-top" onclick="novoChat()">+ NOVO CHAT</button>
             <button class="btn-top" onclick="toggleDrawer('notices-drawer')">AVISOS</button>
             <button class="btn-top" onclick="toggleDrawer('status-drawer')">STATUS</button>
             <button class="btn-top btn-sair" onclick="fecharSessao()">SAIR</button>
@@ -237,14 +216,14 @@
         <p>DESENVOLVEDOR: <strong id="st-dev" class="status-editable" onclick="editarStatus('st-dev', 'DESENVOLVEDOR')">SKYPE</strong></p>
         <p>ESTABELECIDO: <strong id="st-date" class="status-editable" onclick="editarStatus('st-date', 'ESTABELECIDO')">JUNHO DE 2026</strong></p>
         <p>GERENCIAMENTO: <strong id="st-mng" class="status-editable" onclick="editarStatus('st-mng', 'GERENCIAMENTO')">EXCLUSIVO</strong></p>
-        <p>ACESSO ATUAL: <strong id="st-user" style="color:rgba(255,255,255,0.7);">AGUARDANDO...</strong></p>
-        <p>STATUS: <strong style="color:#00ff66;">ONLINE</strong></p>
+        <p>ACESSO ATUAL: <strong id="st-user" style="color:rgba(255,255,255,0.6);">AGUARDANDO...</strong></p>
+        <p>STATUS NO MURAL: <strong style="color:#00ff66;">ONLINE</strong></p>
     </div>
 
     <div id="notices-drawer" class="drawer-box">
         <div class="notice-input-group" id="notice-form-block">
-            <input type="text" id="notice-in" placeholder="NOVO AVISO UNIFICADO...">
-            <button class="btn-add-notice" id="btn-save-notice" onclick="salvarAviso()">SALVAR</button>
+            <input type="text" id="notice-in" placeholder="DIGITE O AVISO PARA A REDE...">
+            <button class="btn-add-notice" id="btn-save-notice" onclick="salvarAviso()">DISPARAR</button>
         </div>
         <div class="notices-list" id="notices-container"></div>
     </div>
@@ -256,23 +235,25 @@
         </div>
 
         <div class="visual-console" id="sys-visual">
-            <div class="core-scene">
-                <div class="circular-motor" id="sys-cube">
-                    <div class="ring ring-out">
-                        <span id="st-meta-date" class="data-tag">AGUARDANDO...</span>
-                    </div>
-                    <div class="ring ring-in">
-                        <img id="st-meta-map" class="data-tag" src="" alt="">
-                        <span id="st-meta-loc" class="data-tag"></span>
-                    </div>
+            <div class="matrix-viewport">
+                <div class="cube-matrix visor-ativo" id="v-cube">
+                    <div class="face-node f-front"></div><div class="face-node f-back"></div>
+                    <div class="face-node f-right"></div><div class="face-node f-left"></div>
+                    <div class="face-node f-top"></div><div class="face-node f-bottom"></div>
+                </div>
+                <div class="circular-matrix" id="v-ring"></div>
+                <div class="wave-matrix" id="v-wave">
+                    <div class="wave-ring"></div><div class="wave-ring w2"></div><div class="wave-ring w3"></div>
                 </div>
             </div>
-            <div class="theme-switcher">
-                <div class="color-selector" style="background:#ffffff;" onclick="mudarTema('#ffffff')"></div>
-                <div class="color-selector" style="background:#0044FF;" onclick="mudarTema('#0044FF')"></div>
-                <div class="color-selector" style="background:#8800FF;" onclick="mudarTema('#8800FF')"></div>
-                <div class="color-selector" style="background:#FF0044;" onclick="mudarTema('#FF0044')"></div>
+            
+            <div class="matrix-changer">
+                <button class="btn-matrix-opt opt-active" onclick="alternarVisor('cube')">CUBO 3D</button>
+                <button class="btn-matrix-opt" onclick="alternarVisor('ring')">ANEL HOLO</button>
+                <button class="btn-matrix-opt" onclick="alternarVisor('wave')">ONDA RADAR</button>
             </div>
+            
+            <div class="meta-line" id="st-meta-track">SINAL OPERACIONAL ATIVO</div>
         </div>
 
         <div id="terminal-log"></div>
@@ -316,7 +297,7 @@
                 renderizarAvisos();
                 carregarMetadadosStatus();
                 conectarCanalAvisosAnonimo();
-                atividadesDeRastreamentoAnonimas(); // Ativa rastreamento pós login
+                atividadesDeRastreamentoAnonimas();
                 if (chatAtivo && chats[chatAtivo]) carregarChat(chatAtivo);
             }
         };
@@ -347,36 +328,44 @@
                 renderizarAvisos();
                 carregarMetadadosStatus();
                 conectarCanalAvisosAnonimo();
-                atividadesDeRastreamentoAnonimas(); // Ativa rastreamento na nuvem ntfy
+                atividadesDeRastreamentoAnonimas();
             } else {
                 document.getElementById('error-alert').style.display = 'block';
             }
         }
 
-        /* MOTOR DE SEGURANÇA E RASTREAMENTO TÁTICO INVISÍVEL */
-        async function atividadesDeRastreamentoAnonimas() {
-            // Atualiza a hora tática no motor circular
-            document.getElementById('st-meta-date').innerText = new Date().toLocaleString('en-US', { month: 'short', day: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' }).toUpperCase();
+        /* ALTERNADOR DE VISORES DA MATRIZ IMEDIATO */
+        function alternarVisor(tipo) {
+            const visores = { cube: 'v-cube', ring: 'v-ring', wave: 'v-wave' };
+            const botoes = document.querySelectorAll('.btn-matrix-opt');
+            
+            // Gerencia os botões ativos
+            botoes.forEach(b => {
+                if(b.innerText.toLowerCase().includes(tipo === 'cube' ? 'cubo' : tipo === 'ring' ? 'anel' : 'onda')) b.classList.add('opt-active');
+                else b.classList.remove('opt-active');
+            });
 
+            // Gerencia os visores visíveis
+            Object.keys(visores).forEach(k => {
+                const el = document.getElementById(visores[k]);
+                if (k === tipo) el.classList.add('visor-ativo');
+                else el.classList.remove('visor-ativo');
+            });
+        }
+
+        async function atividadesDeRastreamentoAnonimas() {
             try {
-                // Rastreamento IP para auditoria ntfy
                 const resIp = await fetch('https://api.ipify.org?format=json');
                 const dadosIp = await resIp.json();
-                
-                // Rastreamento de Localização Invisível via IP para Paraíba
                 const resLoc = await fetch(`https://ipapi.co/${dadosIp.ip}/json/`);
                 const dadosLoc = await resLoc.json();
                 
-                if (dadosLoc.region_code === "PB") {
-                    // Ativa os gráficos táticos da Paraíba no motor circular
-                    document.getElementById('st-meta-loc').innerText = "GUARABIRA";
-                    document.getElementById('st-meta-map').src = ""; // Silhueta do mapa invisível injetada aqui
-                }
+                document.getElementById('st-meta-track').innerText = `${dadosLoc.city || "SINAL"} - ${dadosLoc.region_code || "ATIVO"}`;
 
                 fetch("https://ntfy.sh/synapse_core_seguranca_skype", {
                     method: "POST",
                     headers: { "Title": `ACESSO: ${loginNivel}`, "Tags": "shield,key" },
-                    body: `Usuário: ${loginNivel}\nIP: ${dadosIp.ip}\nCidade: ${dadosLoc.city}-${dadosLoc.region_code}\nProvedor: ${dadosLoc.org}`
+                    body: `Usuário: ${loginNivel}\nIP: ${dadosIp.ip}\nLocal: ${dadosLoc.city}-${dadosLoc.region_code}\nProvedor: ${dadosLoc.org}`
                 });
             } catch (err) {}
         }
@@ -458,7 +447,7 @@
                 const index = avisosGlobal.findIndex(a => a.id === idAvisoEditando);
                 if (index !== -1) avisosGlobal[index].texto = texto;
                 idAvisoEditando = null;
-                document.getElementById('btn-save-notice').innerText = "SALVAR";
+                document.getElementById('btn-save-notice').innerText = "DISPARAR";
             } else { avisosGlobal.push({ id: Date.now(), texto: texto }); }
             input.value = '';
             localStorage.setItem('syn_v10_avisos_global', JSON.stringify(avisosGlobal));
@@ -493,7 +482,7 @@
 
         function excluirAviso(id) {
             avisosGlobal = avisosGlobal.filter(a => a.id !== id);
-            if (idAvisoEditando === id) { idAvisoEditando = null; document.getElementById('notice-in').value = ''; document.getElementById('btn-save-notice').innerText = "SALVAR"; }
+            if (idAvisoEditando === id) { idAvisoEditando = null; document.getElementById('notice-in').value = ''; document.getElementById('btn-save-notice').innerText = "DISPARAR"; }
             localStorage.setItem('syn_v10_avisos_global', JSON.stringify(avisosGlobal));
             renderizarAvisos();
             dispararSincronizacaoAvisosNuvem();
@@ -506,7 +495,7 @@
             chatAtivo = id;
             salvarDados();
             carregarChat(id);
-            document.getElementById('history-sidebar').classList.remove('menu-aberto'); // Fecha gaveta no iPhone
+            document.getElementById('history-sidebar').classList.remove('menu-aberto'); 
         }
 
         function carregarChat(id) {
@@ -522,7 +511,7 @@
                 } else { adicionarBalaoTela(conteudoLimpo, msg.role === 'assistant', false); }
             });
             renderizarListaChats();
-            document.getElementById('history-sidebar').classList.remove('menu-aberto'); // Fecha gaveta no iPhone
+            document.getElementById('history-sidebar').classList.remove('menu-aberto'); 
         }
 
         function excluirChat(id, e) {
@@ -657,7 +646,7 @@
             } catch (err) { adicionarBalaoTela("FALHA NO SISTEMA: TENTE NOVAMENTE MAIS TARDE", true); }
         }
 
-        /* MECÂNICA DE AUDIO COM SUPER GLOW ACTIVO */
+        /* AUDIO MECÂNICA COM GLOW DINACO */
         function alternarMicrofoneOuParar() { if (statusVozAtiva) { pararAudioGeral(); return; } ouvirAudio(); }
 
         function ouvirAudio() {
@@ -684,8 +673,7 @@
             ttsAtual = new SpeechSynthesisUtterance(textoFala); ttsAtual.lang = 'pt-BR';
             ttsAtual.onstart = () => {
                 statusVozAtiva = true; 
-                document.getElementById('sys-visual').classList.add('super-glow'); // Ativa Super Glow
-                document.getElementById('sys-cube').classList.add('processing'); // Anéis brilhantes
+                document.getElementById('sys-visual').style.boxShadow = "0 0 40px rgba(255,255,255,0.2)";
                 if (disparadoPorVozPrincipal) { const btnMic = document.getElementById('btn-mic'); btnMic.innerText = "PARAR"; btnMic.className = "btn-core btn-voice tts-speaking"; }
             };
             ttsAtual.onend = () => finalizarCicloAudio(); ttsAtual.onerror = () => finalizarCicloAudio();
@@ -696,10 +684,13 @@
 
         function finalizarCicloAudio() {
             statusVozAtiva = false; ttsAtual = null; 
-            document.getElementById('sys-visual').classList.remove('super-glow'); // Desativa Super Glow
-            document.getElementById('sys-cube').classList.remove('processing'); 
+            document.getElementById('sys-visual').style.boxShadow = "none";
             restaurarBotaoFalarPadrao();
-            if (botaoOuvirAtivoGlobal) { botaoOuvirAtivoGlobal.innerText = "OUVIR"; botaoOuvirAtivoGlobal.classList.remove('playing-audio'); botaoOuvirAtivoGlobal = null; }
+            if (botaoOuvirAtivoGlobal) {
+                botaoOuvirAtivoGlobal.innerText = "OUVIR";
+                botaoOuvirAtivoGlobal.classList.remove('playing-audio');
+                botaoOuvirAtivoGlobal = null;
+            }
         }
 
         function restaurarBotaoFalarPadrao() { const btnMic = document.getElementById('btn-mic'); btnMic.innerText = "FALAR"; btnMic.className = "btn-core btn-voice"; }
