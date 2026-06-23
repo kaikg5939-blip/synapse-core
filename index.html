@@ -131,9 +131,8 @@
         .input-row { display: flex; gap: 10px; width: 100%; align-items: center; }
         .field-container { flex: 1; position: relative; background: rgba(255,255,255,0.03); border-radius: 16px; border: 1px solid var(--border-glass); display: flex; align-items: center; }
         
-        /* BOTÃO SELECIONAR INTEGRADO NA BARRA DE SINAL */
-        .btn-selector-signal { background: transparent; border: none; color: rgba(255,255,255,0.3); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.5px; padding: 14px 0 14px 16px; cursor: pointer; transition: color 0.2s; flex-shrink: 0; text-transform: uppercase; }
-        .btn-selector-signal.core-active-btn { color: #00ff66 !important; }
+        /* BOTÃO INTERRUPTOR DE TROCA PURA SINAL / CORE */
+        .btn-selector-signal { background: transparent; border: none; color: rgba(255,255,255,0.3); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.5px; padding: 14px 0 14px 16px; cursor: pointer; transition: color 0.2s; flex-shrink: 0; text-transform: uppercase; }
         
         .main-input { width: 100%; padding: 14px 16px; background: transparent; border: none; color: #fff; outline: none; font-size: 0.95rem; font-weight: 300; }
         
@@ -329,23 +328,17 @@
             }
         }
 
+        // MUDANÇA DE TEXTO SECA E DIRETA SEM COR VERDE OU POPUPS
         function alternarModoCorePeloSinal() {
             const lblBtn = document.getElementById('lbl-signal-btn');
             if (loginNivel === "MASTER (SKYPE)") {
                 modoCoreAtivoGlobal = !modoCoreAtivoGlobal;
                 if (modoCoreAtivoGlobal) {
                     lblBtn.innerText = "CORE";
-                    lblBtn.classList.add('core-active-btn');
                     document.getElementById('st-motor-lbl').innerText = "CORE MODE ATIVADO // PERFORMANCE TOTAL";
-                    document.getElementById('st-motor-lbl').style.color = "#00ff66";
-                    document.getElementById('sys-visual').style.boxShadow = "0 0 40px rgba(0, 255, 102, 0.25)";
-                    alert("SINAL CORE SELECIONADO: Motores de performance avançados unificados.");
                 } else {
                     lblBtn.innerText = "SINAL";
-                    lblBtn.classList.remove('core-active-btn');
                     document.getElementById('st-motor-lbl').innerText = "SINAL NORMAL // CORE EM PREPARAÇÃO";
-                    document.getElementById('st-motor-lbl').style.color = "rgba(255,255,255,0.7)";
-                    document.getElementById('sys-visual').style.boxShadow = "none";
                 }
             } else {
                 alert("Acesso negado. Liberação pendente pelo desenvolvedor Skype.");
@@ -518,13 +511,15 @@
             chatAtivo = id;
             localStorage.setItem(`syn_v10_ativo_${chaveLogadaGlobal}`, id);
             document.getElementById('terminal-log').innerHTML = '';
-            chats[id].memoria.forEach(msg => {
-                let conteudoLimpo = limparMarkdownMarkdown(msg.content);
-                if(msg.content.includes('http') || msg.content.includes('__IMAGE_URL__')) {
-                    let cleanUrl = msg.content.replace('__IMAGE_URL__:', '').trim();
-                    adicionarBalaoTela(cleanUrl, msg.role === 'assistant', true);
-                } else { adicionarBalaoTela(conteudoLimpo, msg.role === 'assistant', false); }
-            });
+            if (chats[id] && chats[id].memoria) {
+                chats[id].memoria.forEach(msg => {
+                    let conteudoLimpo = limparMarkdownMarkdown(msg.content);
+                    if(msg.content.includes('http') || msg.content.includes('__IMAGE_URL__')) {
+                        let cleanUrl = msg.content.replace('__IMAGE_URL__:', '').trim();
+                        adicionarBalaoTela(cleanUrl, msg.role === 'assistant', true);
+                    } else { adicionarBalaoTela(conteudoLimpo, msg.role === 'assistant', false); }
+                });
+            }
             renderizarListaChats();
             document.getElementById('history-sidebar').classList.remove('menu-aberto'); 
         }
