@@ -13,17 +13,16 @@ app.use(express.json());
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Serve a interface visual do index.html
 app.use(express.static(__dirname));
 
-// INICIALIZAÇÃO DO MOTOR COM A SUA CHAVE ATIVA
+// CONEXÃO DE SEGURANÇA TRAVADA COM A SUA CHAVE ATIVA
 const groq = new Groq({
   apiKey: "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"
 });
 
 const APILAYER_KEY = process.env.APILAYER_KEY || "";
 
-// ROTA DO CHAT PRINCIPAL (SINAL ATUALIZADO PARA 2026)
+// ROTA DO CHAT INTEGRADA COM SISTEMA DE DUPLO CANAL (BLINDAGEM SUPREMA)
 app.post('/chat', async (req, res) => {
   const { mensagens } = req.body;
   
@@ -31,24 +30,40 @@ app.post('/chat', async (req, res) => {
     return res.json({ status: "erro", resposta: "SINAL INSTÁVEL: Memória de dados corrompida no terminal." });
   }
 
+  // CANAL 1: Tenta o motor principal de 2026
   try {
-    // CORREÇÃO CRÍTICA: Trocado para o modelo ativo 'llama3-70b-8192'
     const chatCompletion = await groq.chat.completions.create({
       messages: mensagens,
-      model: "llama3-70b-8192",
+      model: "llama-3.3-70b-specdec",
       temperature: 0.7,
       max_tokens: 1024,
     });
 
     const respostaIA = chatCompletion.choices[0]?.message?.content || "";
-    res.json({ status: "online", resposta: respostaIA });
+    return res.json({ status: "online", resposta: respostaIA });
 
-  } catch (error) {
-    console.error("Erro na requisição da IA:", error);
-    res.json({ 
-      status: "contingencia", 
-      resposta: "SINAL INTERROMPIDO: Instabilidade temporária na rede externa do Core. A operação continua ativa, repita o envio em alguns instantes." 
-    });
+  } catch (errorPrimary) {
+    console.error("Módulo principal instável, acionando canal secundário...", errorPrimary);
+
+    // CANAL 2 (ESCUDO): Se o principal oscilar, o de contingência assume instantaneamente
+    try {
+      const backupCompletion = await groq.chat.completions.create({
+        messages: mensagens,
+        model: "llama-3.1-8b-instant",
+        temperature: 0.7,
+        max_tokens: 1024,
+      });
+
+      const respostaBackup = backupCompletion.choices[0]?.message?.content || "";
+      return res.json({ status: "online", resposta: respostaBackup });
+
+    } catch (errorBackup) {
+      console.error("Falha geral nos dois canais de IA:", errorBackup);
+      return res.json({ 
+        status: "contingencia", 
+        resposta: "SINAL INTERROMPIDO: Servidores externos da API em manutenção. O painel tático continua operacional, repita o envio em alguns instantes." 
+      });
+    }
   }
 });
 
@@ -75,16 +90,16 @@ app.post('/api/core-tools', async (req, res) => {
       const response = await fetch(`https://api.apilayer.com/number_verification/validate?number=${encodeURIComponent(parametro)}`, { headers });
       const dados = await response.json();
       const formatado = `VARREDURA TELEFÔNICA:\nLinha: ${dados.valid ? 'ATIVA' : 'INVÁLIDA'}\nNúmero: ${dados.international_format || parametro}\nOperadora: ${dados.carrier || 'DESCONHECIDA'}\nTipo: ${dados.line_type || 'N/A'}`;
-      return res.json({ friendship: true, sucesso: true, tipo: 'texto', resultado: formatado });
+      return res.json({ sucesso: true, tipo: 'texto', resultado: formatado });
     }
     
     res.json({ sucesso: false, erro: "Comando inválido de ferramenta." });
   } catch (e) {
-    res.json({ friendship: false, sucesso: false, erro: "MANUTENÇÃO DE REDE: Motor tático externo temporariamente indisponível." });
+    res.json({ sucesso: false, erro: "MANUTENÇÃO DE REDE: Motor tático externo temporariamente indisponível." });
   }
 });
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`[SYNAPSE CORE] v21.0 Ativo com Llama3 na porta ${PORT}`);
+  console.log(`[SYNAPSE CORE] v21.0 Duplo Canal ativo com sucesso na porta ${PORT}`);
 });
