@@ -13,36 +13,27 @@ app.use(express.json());
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// Serve a interface visual do index.html
 app.use(express.static(__dirname));
 
-// Inicialização segura da Groq
-let groq = null;
-try {
-  const apiKey = process.env.GROQ_API_KEY || "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";
-  groq = new Groq({ apiKey });
-} catch (e) {
-  console.error("Falha ao iniciar o cliente Groq:", e);
-}
+// INICIALIZAÇÃO DO MOTOR COM A NOVA CHAVE COMPLETA INJETADA DIRECTO
+const groq = new Groq({
+  apiKey: "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"
+});
 
+// Chave da APILayer vinda do ambiente (caso use no futuro para as ferramentas /print e /valida)
 const APILAYER_KEY = process.env.APILAYER_KEY || "";
 
-// ROTA DO CHAT (BLINDAGEM CONTRA QUEDAS)
+// ROTA DO CHAT PRINCIPAL (MÁXIMA ESTABILIDADE)
 app.post('/chat', async (req, res) => {
   const { mensagens } = req.body;
   
   if (!mensagens || !Array.isArray(mensagens)) {
-    return res.json({ status: "erro", resposta: "SINAL INSTÁVEL: O terminal está reestabelecendo a fiação local." });
-  }
-
-  // PLANO B: Se o motor da Groq estiver totalmente fora do ar
-  if (!groq) {
-    return res.json({ 
-      status: "contingencia", 
-      resposta: "CONEXÃO RESTRITA: O motor principal está indisponível no momento. Tente enviar sua requisição novamente mais tarde." 
-    });
+    return res.json({ status: "erro", resposta: "SINAL INSTÁVEL: Memória de dados corrompida no terminal." });
   }
 
   try {
+    // Chamada ao motor Llama com o token novo
     const chatCompletion = await groq.chat.completions.create({
       messages: mensagens,
       model: "llama-3.1-70b-versatile",
@@ -52,22 +43,23 @@ app.post('/chat', async (req, res) => {
 
     const respostaIA = chatCompletion.choices[0]?.message?.content || "";
     res.json({ status: "online", resposta: respostaIA });
+
   } catch (error) {
     console.error("Erro na requisição da IA:", error);
-    // PLANO B de rede: Devolve resposta limpa de sistema em vez de quebrar a tela
+    // PLANO B: Resposta de contingência limpa se a rede externa oscilar
     res.json({ 
       status: "contingencia", 
-      resposta: "SINAL INTERROMPIDO: Instabilidade na rede externa do Core. A operação continua ativa, tente novamente em alguns instantes." 
+      resposta: "SINAL INTERROMPIDO: Instabilidade temporária na rede externa do Core. A operação continua ativa, repita o envio em alguns instantes." 
     });
   }
 });
 
-// ROTA DE FERRAMENTAS APILAYER RESTRITAS
+// ROTA DE REQUISIÇÕES DAS FERRAMENTAS APILAYER
 app.post('/api/core-tools', async (req, res) => {
   const { ferramenta, parametro } = req.body;
   
   if (!APILAYER_KEY) {
-    return res.json({ sucesso: false, erro: "API KEY AUSENTE: Esta ferramenta requer chave APILayer no servidor." });
+    return res.json({ sucesso: false, erro: "API KEY AUSENTE: Esta ferramenta requer chave APILayer configurada no Render." });
   }
   
   const headers = { "apikey": APILAYER_KEY };
@@ -88,13 +80,13 @@ app.post('/api/core-tools', async (req, res) => {
       return res.json({ sucesso: true, tipo: 'texto', resultado: formatado });
     }
     
-    res.json({ sucesso: false, erro: "Comando inválido." });
+    res.json({ sucesso: false, erro: "Comando inválido de ferramenta." });
   } catch (e) {
-    res.json({ sucesso: false, erro: "MANUTENÇÃO DE REDE: Motor de busca externo temporariamente indisponível." });
+    res.json({ sucesso: false, erro: "MANUTENÇÃO DE REDE: Motor tático externo temporariamente indisponível." });
   }
 });
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`[SYNAPSE CORE] v21.0 Blindado rodando na porta ${PORT}`);
+  console.log(`[SYNAPSE CORE] v21.0 Blindado rodando com sucesso na porta ${PORT}`);
 });
