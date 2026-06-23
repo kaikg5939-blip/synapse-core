@@ -280,8 +280,8 @@
                 chaveLogadaGlobal = sessionStorage.getItem('syn_auth_chave') || "";
                 chats = todosOsChatsPorUsuario[chaveLogadaGlobal] || {};
                 chatAtivo = localStorage.getItem(`syn_v10_ativo_${chaveLogadaGlobal}`) || null;
-                aplicarNivelRestricoesUI();
                 document.getElementById('login-overlay').style.display = 'none';
+                aplicarNivelRestricoesUI();
                 renderizarListaChats();
                 renderizarAvisos();
                 carregarMetadadosStatus();
@@ -310,8 +310,8 @@
                 if (!todosOsChatsPorUsuario[chaveLogadaGlobal]) todosOsChatsPorUsuario[chaveLogadaGlobal] = {};
                 chats = todosOsChatsPorUsuario[chaveLogadaGlobal];
                 chatAtivo = localStorage.getItem(`syn_v10_ativo_${chaveLogadaGlobal}`) || null;
-                aplicarNivelRestricoesUI();
                 document.getElementById('login-overlay').style.display = 'none';
+                aplicarNivelRestricoesUI();
                 if (Object.keys(chats).length === 0) novoChat();
                 renderizarListaChats();
                 renderizarAvisos();
@@ -337,6 +337,17 @@
                 if (k === tipo) el.classList.add('visor-ativo');
                 else el.classList.remove('visor-ativo');
             });
+        }
+
+        function tentarAtivarModoCore() {
+            if (loginNivel === "MASTER (SKYPE)") {
+                document.getElementById('st-motor-lbl').innerText = "CORE MODE ATIVADO // PERFORMANCE TOTAL";
+                document.getElementById('st-motor-lbl').style.color = "#00ff66";
+                document.getElementById('sys-visual').style.boxShadow = "0 0 40px rgba(0, 255, 102, 0.25)";
+                alert("SINAL AUTORIZADO: Motores de performance avançados unificados com sucesso. Modo Core Ativo.");
+            } else {
+                alert("Acesso negado. Liberação pendente pelo desenvolvedor Skype.");
+            }
         }
 
         async function atividadesDeRastreamentoAnonimas() {
@@ -554,7 +565,6 @@
             pararAudioGeral(); gatilhoEntrada = modo; input.value = '';
             if (chats[chatAtivo].titulo === "SINAL OPERACIONAL") chats[chatAtivo].titulo = prompt.substring(0, 14).toUpperCase();
 
-            // GATILHO DIRETO NO CAMPO SINAL: ATIVAÇÃO MESTRE DO MODO CORE
             if (prompt.toUpperCase() === 'CORE') {
                 adicionarBalaoTela(prompt, false);
                 if (loginNivel === "MASTER (SKYPE)") {
@@ -708,7 +718,7 @@
 
         function pararAudioGeral() { window.speechSynthesis.cancel(); finalizarCicloAudio(); }
 
-        fnction finalizarCicloAudio() {
+        function finalizarCicloAudio() {
             statusVozAtiva = false; ttsAtual = null; 
             document.getElementById('sys-visual').style.boxShadow = "none";
             restaurarBotaoFalarPadrao();
