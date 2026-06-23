@@ -16,15 +16,14 @@ const __dirname = path.dirname(__filename);
 // Serve a interface visual do index.html
 app.use(express.static(__dirname));
 
-// INICIALIZAÇÃO DO MOTOR COM A NOVA CHAVE COMPLETA INJETADA DIRECTO
+// INICIALIZAÇÃO DO MOTOR COM A SUA CHAVE ATIVA
 const groq = new Groq({
   apiKey: "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"
 });
 
-// Chave da APILayer vinda do ambiente (caso use no futuro para as ferramentas /print e /valida)
 const APILAYER_KEY = process.env.APILAYER_KEY || "";
 
-// ROTA DO CHAT PRINCIPAL (MÁXIMA ESTABILIDADE)
+// ROTA DO CHAT PRINCIPAL (SINAL ATUALIZADO PARA 2026)
 app.post('/chat', async (req, res) => {
   const { mensagens } = req.body;
   
@@ -33,10 +32,10 @@ app.post('/chat', async (req, res) => {
   }
 
   try {
-    // Chamada ao motor Llama com o token novo
+    // CORREÇÃO CRÍTICA: Trocado para o modelo ativo 'llama3-70b-8192'
     const chatCompletion = await groq.chat.completions.create({
       messages: mensagens,
-      model: "llama-3.1-70b-versatile",
+      model: "llama3-70b-8192",
       temperature: 0.7,
       max_tokens: 1024,
     });
@@ -46,7 +45,6 @@ app.post('/chat', async (req, res) => {
 
   } catch (error) {
     console.error("Erro na requisição da IA:", error);
-    // PLANO B: Resposta de contingência limpa se a rede externa oscilar
     res.json({ 
       status: "contingencia", 
       resposta: "SINAL INTERROMPIDO: Instabilidade temporária na rede externa do Core. A operação continua ativa, repita o envio em alguns instantes." 
@@ -77,16 +75,16 @@ app.post('/api/core-tools', async (req, res) => {
       const response = await fetch(`https://api.apilayer.com/number_verification/validate?number=${encodeURIComponent(parametro)}`, { headers });
       const dados = await response.json();
       const formatado = `VARREDURA TELEFÔNICA:\nLinha: ${dados.valid ? 'ATIVA' : 'INVÁLIDA'}\nNúmero: ${dados.international_format || parametro}\nOperadora: ${dados.carrier || 'DESCONHECIDA'}\nTipo: ${dados.line_type || 'N/A'}`;
-      return res.json({ sucesso: true, tipo: 'texto', resultado: formatado });
+      return res.json({ friendship: true, sucesso: true, tipo: 'texto', resultado: formatado });
     }
     
     res.json({ sucesso: false, erro: "Comando inválido de ferramenta." });
   } catch (e) {
-    res.json({ sucesso: false, erro: "MANUTENÇÃO DE REDE: Motor tático externo temporariamente indisponível." });
+    res.json({ friendship: false, sucesso: false, erro: "MANUTENÇÃO DE REDE: Motor tático externo temporariamente indisponível." });
   }
 });
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`[SYNAPSE CORE] v21.0 Blindado rodando com sucesso na porta ${PORT}`);
+  console.log(`[SYNAPSE CORE] v21.0 Ativo com Llama3 na porta ${PORT}`);
 });
