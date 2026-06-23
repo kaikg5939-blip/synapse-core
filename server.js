@@ -7,7 +7,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static("."));
 
-const KEY = process.env.GROQ_API_KEY || "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";
+const KEY = process.env.GROQ_API_KEY || "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";
 const groq = new Groq({ apiKey: KEY });
 
 // SUAS CHAVES CONFIGURADAS
