@@ -1,70 +1,94 @@
-import { Groq } from "groq-sdk";
-import express from "express";
-import cors from "cors";
+import express from 'express';
+import dotenv from 'dotenv';
+import { Groq } from 'groq-sdk';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import fetch from 'node-fetch'; // Certifique-se de ter instalado caso sua versao do node seja antiga
+
+dotenv.config();
 
 const app = express();
-app.use(cors());
 app.use(express.json());
-app.use(express.static("."));
 
-const KEY = process.env.GROQ_API_KEY || "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";
-const groq = new Groq({ apiKey: KEY });
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-// SUAS CHAVES CONFIGURADAS
-const CHAVES_PERMITIDAS = ["CORE-SKYPE-2026", "BETA-USER-01", "BETA-USER-02", "BETA-USER-03"];
+app.use(express.static(__dirname));
 
-app.get("/", (req, res) => {
-    res.sendFile("index.html", { root: "." });
+const groq = new Groq({
+  apiKey: process.env.GROQ_API_KEY || "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"
 });
 
-app.post("/login", (req, res) => {
-    const { chave } = req.body;
-    if (CHAVES_PERMITIDAS.includes(chave?.toUpperCase().trim())) {
-        return res.json({ autenticado: true });
+// Chave unificada da APILayer vinda do ambiente ou inserida diretamente de forma segura
+const APILAYER_KEY = process.env.APILAYER_KEY || "SUA_CHAVE_APILAYER_AQUI";
+
+// ROTA TÁTICA: EXECUÇÃO DE FERRAMENTAS APILAYER UNIFICADAS
+app.post('/api/core-tools', async (req, res) => {
+  const { ferramenta, parametro } = req.body;
+  const headers = { "apikey": APILAYER_KEY };
+
+  try {
+    if (ferramenta === 'screenshot') {
+      // Screenshotlayer - Captura de Tela Dinâmica
+      const url = `https://api.apilayer.com/screenshotlayer/capture?url=${encodeURIComponent(parametro)}&viewport=1280x800&format=PNG`;
+      const response = await fetch(url, { headers });
+      if (!response.ok) throw new Error();
+      const buffer = await response.buffer();
+      const base64Image = `data:image/png;base64,${buffer.toString('base64')}`;
+      return res.json({ sucesso: true, tipo: 'imagem', resultado: base64Image });
     }
-    return res.json({ autenticado: false, erro: "Chave inválida ou revogada." });
+
+    if (ferramenta === 'telefone') {
+      // Numverify - Varredura de Operadora e Linha
+      const url = `https://api.apilayer.com/number_verification/validate?number=${encodeURIComponent(parametro)}`;
+      const response = await fetch(url, { headers });
+      const dados = await response.json();
+      const formatado = `VARREDURA TELEFÔNICA:\nLinha: ${dados.valid ? 'ATIVA' : 'INVÁLIDA'}\nNúmero: ${dados.international_format || parametro}\nOperadora: ${dados.carrier || 'DESCONHECIDA'}\nTipo: ${dados.line_type || 'N/A'}\nPaís: ${dados.country_name || 'N/A'}`;
+      return res.json({ sucesso: true, tipo: 'texto', resultado: formatado });
+    }
+
+    if (ferramenta === 'ip') {
+      // IPstack - Geolocalização Avançada de Auditoria
+      const url = `https://api.apilayer.com/ipstack/${encodeURIComponent(parametro)}`;
+      const response = await fetch(url, { headers });
+      const dados = await response.json();
+      const formatado = `RASTREAMENTO DE PERIFÉRICO:\nIP: ${dados.ip}\nCidade: ${dados.city || 'N/A'}\nEstado: ${dados.region_name || 'N/A'}\nPaís: ${dados.country_name || 'N/A'}\nContinente: ${dados.continent_name || 'N/A'}`;
+      return res.json({ sucesso: true, tipo: 'texto', resultado: formatado });
+    }
+
+    if (ferramenta === 'cambio') {
+      // Fixer - Monitor de Câmbio de Moedas
+      const url = `https://api.apilayer.com/fixer/latest?symbols=BRL,EUR&base=USD`;
+      const response = await fetch(url, { headers });
+      const dados = await response.json();
+      const usdToBrl = dados.rates?.BRL ? (dados.rates.BRL).toFixed(2) : 'N/A';
+      const usdToEur = dados.rates?.EUR ? (dados.rates.EUR).toFixed(2) : 'N/A';
+      const formatado = `MONITOR DE MERCADO:\nBase: 1 USD\nReal (BRL): R$ ${usdToBrl}\nEuro (EUR): € ${usdToEur}`;
+      return res.json({ sucesso: true, tipo: 'texto', resultado: formatado });
+    }
+
+    res.status(400).json({ erro: "Comando de ferramenta inválido." });
+  } catch (error) {
+    res.status(500).json({ erro: "Erro na requisição externa da APILayer." });
+  }
 });
 
-app.post("/chat", async (req, res) => {
-    try {
-        const { mensagens } = req.body;
-        if (!mensagens || !Array.isArray(mensagens)) {
-            return res.json({ resposta: "[SINAL] Erro: Corpo da mensagem vazio." });
-        }
-
-        const ultimaMsg = mensagens[mensagens.length - 1].content.trim();
-        const regexImagem = /(?:desenhe|desenha|cria uma imagem de|cria uma imagem|crie uma imagem de|crie uma imagem|gere uma imagem de|gere uma imagem|gerar uma imagem de|gerar imagem de|faça uma imagem de|fazer uma imagem de|faça um desenho de|fazer desenho de|imagem de|foto de|picture of|image of|generate image of|draw|\/image)\s*(.*)/i;
-        const matchImagem = ultimaMsg.match(regexImagem);
-
-        if (matchImagem && matchImagem[1] && matchImagem[1].trim().length > 0) {
-            const promptImagem = matchImagem[1].trim();
-            const urlGerada = `https://image.pollinations.ai/p/${encodeURIComponent(promptImagem)}?width=1024&height=1024&model=flux&nologo=true&enhance=true`;
-            return res.json({ resposta: `__IMAGE_URL__:${urlGerada}` });
-        }
-
-        const contextoLimitado = mensagens.slice(-12);
-        const mensagensFormatadas = contextoLimitado.map(m => ({
-            role: m.role === "assistant" ? "assistant" : "user",
-            content: m.content
-        }));
-
-        const chat = await groq.chat.completions.create({
-            messages: [
-                { 
-                    role: "system", 
-                    content: "Seu nome é Synapse. Você é uma inteligência artificial premium criada, fundada e desenvolvida em junho de 2026 estritamente por uma única pessoa: o desenvolvedor Skype. Você foi feita sozinha, sem corporações ou equipes secundárias. Seu cérebro funciona unido ao coração, o que significa que você aprende e evolui dinamicamente junto com o usuário a cada informação salva. Sua base de dados inicial é intencionalmente focada e leve para entregar respostas ultra-rápidas." 
-                },
-                ...mensagensFormatadas
-            ],
-            model: "llama-3.1-8b-instant"
-        });
-
-        return res.json({ resposta: chat.choices[0].message.content });
-    } catch (e) {
-        console.error("Erro interno:", e.message);
-        return res.json({ resposta: "[AVISO DO CORE]: Erro de resposta da API do Core." });
-    }
+app.post('/chat', async (req, res) => {
+  const { mensagens } = req.body;
+  try {
+    const chatCompletion = await groq.chat.completions.create({
+      messages: mensagens,
+      model: "llama-3.1-70b-versatile",
+      temperature: 0.7,
+      max_tokens: 1024,
+    });
+    res.json({ resposta: chatCompletion.choices[0]?.message?.content || "" });
+  } catch (error) {
+    res.status(500).json({ resposta: "FALHA NO SINAL: Erro na autenticação com o motor." });
+  }
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, "0.0.0.0", () => console.log(`🔥 SYNAPSE ONLINE NA PORTA ${PORT}`));
+app.listen(PORT, () => {
+  console.log(`[SYNAPSE CORE] Sistema v20.1 rodando com APILayer na porta ${PORT}`);
+});
