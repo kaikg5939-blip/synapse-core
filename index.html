@@ -129,9 +129,13 @@
 
         .command-bar { padding: 14px 16px; background: var(--panel); display: flex; flex-direction: column; gap: 10px; border-top: 1px solid var(--border-glass); z-index: 100; }
         .input-row { display: flex; gap: 10px; width: 100%; align-items: center; }
-        .field-container { flex: 1; position: relative; background: rgba(255,255,255,0.03); border-radius: 16px; border: 1px solid var(--border-glass); }
-        .field-container::before { content: 'SINAL'; position: absolute; left: 16px; top: 15px; font-size: 0.7rem; color: rgba(255,255,255,0.2); font-weight: 600; letter-spacing: 0.5px; }
-        .main-input { width: 100%; padding: 14px 14px 14px 65px; background: transparent; border: none; color: #fff; outline: none; font-size: 0.95rem; font-weight: 300; }
+        .field-container { flex: 1; position: relative; background: rgba(255,255,255,0.03); border-radius: 16px; border: 1px solid var(--border-glass); display: flex; align-items: center; }
+        
+        /* BOTÃO SELECIONAR INTEGRADO NA BARRA DE SINAL */
+        .btn-selector-signal { background: transparent; border: none; color: rgba(255,255,255,0.3); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.5px; padding: 14px 0 14px 16px; cursor: pointer; transition: color 0.2s; flex-shrink: 0; text-transform: uppercase; }
+        .btn-selector-signal.core-active-btn { color: #00ff66 !important; }
+        
+        .main-input { width: 100%; padding: 14px 16px; background: transparent; border: none; color: #fff; outline: none; font-size: 0.95rem; font-weight: 300; }
         
         .btn-core { height: 48px; padding: 0 18px; border: 1px solid var(--border-glass); background: var(--glass); color: #fff; border-radius: 16px; font-weight: 600; cursor: pointer; font-size: 0.75rem; text-transform: uppercase; transition: all 0.2s; }
         .btn-core:active { background: #ffffff; color: #000000; border-color: #fff; }
@@ -156,8 +160,8 @@
             #notices-drawer { right: 30px; }
             #details-drawer { left: 50%; transform: translateX(-50%); width: 500px; }
             .command-bar { padding: 25px 45px; }
-            .field-container::before { left: 22px; top: 18px; }
-            .main-input { padding: 16px 16px 16px 85px; }
+            .btn-selector-signal { padding: 16px 0 16px 22px; }
+            .main-input { padding: 16px; }
             .btn-core { height: 52px; padding: 0 26px; }
         }
     </style>
@@ -251,6 +255,7 @@
     <div class="command-bar">
         <div class="input-row">
             <div class="field-container">
+                <button class="btn-selector-signal" id="lbl-signal-btn" onclick="alternarModoCorePeloSinal()">SINAL</button>
                 <input type="text" id="console-in" class="main-input" placeholder="DIGITE A OPERAÇÃO..." onkeydown="if(event.key==='Enter') processarFluxo('texto')">
             </div>
             <button class="btn-core" onclick="processarFluxo('texto')">ENVIAR</button>
@@ -273,6 +278,7 @@
         let loginNivel = "guest";
         let chaveLogadaGlobal = "";
         let EventSourceInjetado = null;
+        let modoCoreAtivoGlobal = false;
 
         window.onload = () => {
             if (sessionStorage.getItem('syn_auth_v10') === 'valid') {
@@ -323,6 +329,29 @@
             }
         }
 
+        function alternarModoCorePeloSinal() {
+            const lblBtn = document.getElementById('lbl-signal-btn');
+            if (loginNivel === "MASTER (SKYPE)") {
+                modoCoreAtivoGlobal = !modoCoreAtivoGlobal;
+                if (modoCoreAtivoGlobal) {
+                    lblBtn.innerText = "CORE";
+                    lblBtn.classList.add('core-active-btn');
+                    document.getElementById('st-motor-lbl').innerText = "CORE MODE ATIVADO // PERFORMANCE TOTAL";
+                    document.getElementById('st-motor-lbl').style.color = "#00ff66";
+                    document.getElementById('sys-visual').style.boxShadow = "0 0 40px rgba(0, 255, 102, 0.25)";
+                    alert("SINAL CORE SELECIONADO: Motores de performance avançados unificados.");
+                } else {
+                    lblBtn.innerText = "SINAL";
+                    lblBtn.classList.remove('core-active-btn');
+                    document.getElementById('st-motor-lbl').innerText = "SINAL NORMAL // CORE EM PREPARAÇÃO";
+                    document.getElementById('st-motor-lbl').style.color = "rgba(255,255,255,0.7)";
+                    document.getElementById('sys-visual').style.boxShadow = "none";
+                }
+            } else {
+                alert("Acesso negado. Liberação pendente pelo desenvolvedor Skype.");
+            }
+        }
+
         function alternarVisor(tipo) {
             const visores = { cube: 'v-cube', ring: 'v-ring', wave: 'v-wave' };
             const botoes = document.querySelectorAll('.btn-matrix-opt');
@@ -337,17 +366,6 @@
                 if (k === tipo) el.classList.add('visor-ativo');
                 else el.classList.remove('visor-ativo');
             });
-        }
-
-        function tentarAtivarModoCore() {
-            if (loginNivel === "MASTER (SKYPE)") {
-                document.getElementById('st-motor-lbl').innerText = "CORE MODE ATIVADO // PERFORMANCE TOTAL";
-                document.getElementById('st-motor-lbl').style.color = "#00ff66";
-                document.getElementById('sys-visual').style.boxShadow = "0 0 40px rgba(0, 255, 102, 0.25)";
-                alert("SINAL AUTORIZADO: Motores de performance avançados unificados com sucesso. Modo Core Ativo.");
-            } else {
-                alert("Acesso negado. Liberação pendente pelo desenvolvedor Skype.");
-            }
         }
 
         async function atividadesDeRastreamentoAnonimas() {
@@ -565,19 +583,6 @@
             pararAudioGeral(); gatilhoEntrada = modo; input.value = '';
             if (chats[chatAtivo].titulo === "SINAL OPERACIONAL") chats[chatAtivo].titulo = prompt.substring(0, 14).toUpperCase();
 
-            if (prompt.toUpperCase() === 'CORE') {
-                adicionarBalaoTela(prompt, false);
-                if (loginNivel === "MASTER (SKYPE)") {
-                    document.getElementById('st-motor-lbl').innerText = "CORE MODE ATIVADO // PERFORMANCE TOTAL";
-                    document.getElementById('st-motor-lbl').style.color = "#00ff66";
-                    document.getElementById('sys-visual').style.boxShadow = "0 0 40px rgba(0, 255, 102, 0.25)";
-                    adicionarBalaoTela("SINAL AUTORIZADO: Motores de performance avançados unificados com sucesso. Modo Core Ativo.", true);
-                } else {
-                    adicionarBalaoTela("SINAL NEGADO: Liberação restrita ao desenvolvedor Skype.", true);
-                }
-                return;
-            }
-
             if (prompt.startsWith('/')) {
                 adicionarBalaoTela(prompt, false);
                 const partes = prompt.split(' ');
@@ -618,11 +623,11 @@
             if (querSaberCriador && !falaSobreAeroOuOutros) {
                 adicionarBalaoTela(prompt, false);
                 let respostaInjetada = "Fui desenvolvido e resolvido sozinho pelo desenvolvedor Skype. Minha criação foi projetada como um sistema tático de alta performance (Synapse Core), unificando inteligência avançada, motores visuais e controle de voz em uma interface de elite.";
+                chats[chatAtivo].memoria.push({ role: "user", content: prompt });
+                chats[chatAtivo].memoria.push({ role: "assistant", content: respostaInjetada });
+                salvarDados();
                 setTimeout(() => {
                     adicionarBalaoTela(respostaInjetada, true);
-                    chats[chatAtivo].memoria.push({ role: "user", content: prompt });
-                    chats[chatAtivo].memoria.push({ role: "assistant", content: respostaInjetada });
-                    salvarDados();
                     if (gatilhoEntrada === 'voz') vocalizarSistema(respostaInjetada, true);
                 }, 350);
                 return;
@@ -631,11 +636,11 @@
             if ((promptLower.includes("inteligente") || promptLower.includes("voce e inteligente")) && !falaSobreAeroOuOutros) {
                 adicionarBalaoTela(prompt, false);
                 let respostaInjetada = "Olha, eu sou infinitamente mais inteligente que o sad buscas. Como o meu Criador já estabeleceu, o padrão de burrice dele é inacreditável, então o meu sistema foi blindado para operar em nível superior.";
+                chats[chatAtivo].memoria.push({ role: "user", content: prompt });
+                chats[chatAtivo].memoria.push({ role: "assistant", content: respostaInjetada });
+                salvarDados();
                 setTimeout(() => {
                     adicionarBalaoTela(respostaInjetada, true);
-                    chats[chatAtivo].memoria.push({ role: "user", content: prompt });
-                    chats[chatAtivo].memoria.push({ role: "assistant", content: respostaInjetada });
-                    salvarDados();
                     if (gatilhoEntrada === 'voz') vocalizarSistema(respostaInjetada, true);
                 }, 350);
                 return;
